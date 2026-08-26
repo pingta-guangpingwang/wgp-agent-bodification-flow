@@ -1,0 +1,478 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.4.0/spec/abir.schema.json",
+  "title": "WGP Agent Blueprint Intermediate Representation (WGP-ABIR) v0.4",
+  "description": "Canonical machine-readable structural record for a WGP-ABF agent assembly. Projection profiles are modeled separately from structural objects, and source claims express independent provenance axes.",
+  "type": "object",
+  "required": [
+    "format",
+    "id",
+    "name",
+    "version",
+    "contentHash",
+    "createdAt",
+    "objects",
+    "edges",
+    "sourceClaims",
+    "projectionProfiles"
+  ],
+  "properties": {
+    "format": { "const": "wgp-abir/0.4" },
+    "id": { "$ref": "#/$defs/id" },
+    "name": { "$ref": "#/$defs/localizedText" },
+    "description": { "$ref": "#/$defs/localizedText" },
+    "version": { "$ref": "#/$defs/semver" },
+    "contentHash": {
+      "description": "Hash of the canonical structural payload. Projection profiles are excluded so a view-only edit cannot invalidate an Assembly Recipe.",
+      "$ref": "#/$defs/contentHash"
+    },
+    "createdAt": { "$ref": "#/$defs/timestamp" },
+    "updatedAt": { "$ref": "#/$defs/timestamp" },
+    "objects": {
+      "type": "object",
+      "required": [
+        "components",
+        "resources",
+        "policies",
+        "artifacts",
+        "interfaces",
+        "containers"
+      ],
+      "properties": {
+        "components": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/component" }
+        },
+        "resources": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/resource" }
+        },
+        "policies": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/policy" }
+        },
+        "artifacts": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/artifact" }
+        },
+        "interfaces": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/interface" }
+        },
+        "containers": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/container" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "edges": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/edge" }
+    },
+    "sourceClaims": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/sourceClaim" }
+    },
+    "projectionProfiles": {
+      "description": "Human-facing views over the ABIR. A projection profile never creates or overrides a structural fact.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/projectionProfile" }
+    },
+    "extensions": { "$ref": "#/$defs/extensions" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{0,127}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "localizedText": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "zh-CN": { "type": "string", "minLength": 1 },
+        "en": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "extensions": {
+      "description": "Namespaced extension data. Each key must be controlled by its namespace owner.",
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9.-]+/[A-Za-z0-9._-]+$"
+      }
+    },
+    "port": {
+      "type": "object",
+      "required": ["id", "name", "direction", "protocol", "cardinality"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/localizedText" },
+        "direction": { "enum": ["in", "out", "bidirectional"] },
+        "protocol": { "type": "string", "minLength": 1 },
+        "mediaType": { "type": "string", "minLength": 1 },
+        "schemaRef": { "type": "string", "format": "uri-reference" },
+        "cardinality": { "enum": ["one", "optional", "many"] },
+        "required": { "type": "boolean" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    },
+    "component": {
+      "type": "object",
+      "required": ["objectType", "id", "name", "componentKind", "ports"],
+      "properties": {
+        "objectType": { "const": "Component" },
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/localizedText" },
+        "description": { "$ref": "#/$defs/localizedText" },
+        "componentKind": {
+          "enum": [
+            "orchestrator",
+            "agentLoop",
+            "planner",
+            "router",
+            "toolConsumer",
+            "memoryConsumer",
+            "guard",
+            "observer",
+            "adapter",
+            "custom"
+          ]
+        },
+        "implementationArtifactId": { "$ref": "#/$defs/id" },
+        "ports": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/port" }
+        },
+        "configSchemaRef": { "type": "string", "format": "uri-reference" },
+        "tags": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "minLength": 1 }
+        },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    },
+    "resource": {
+      "type": "object",
+      "required": ["objectType", "id", "name", "resourceKind", "lifecycle", "ports"],
+      "properties": {
+        "objectType": { "const": "Resource" },
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/localizedText" },
+        "description": { "$ref": "#/$defs/localizedText" },
+        "resourceKind": {
+          "enum": [
+            "model",
+            "memory",
+            "vectorStore",
+            "database",
+            "queue",
+            "fileSystem",
+            "externalApi",
+            "secretReference",
+            "compute",
+            "custom"
+          ]
+        },
+        "lifecycle": { "enum": ["external", "managed", "session", "request"] },
+        "artifactId": { "$ref": "#/$defs/id" },
+        "ports": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/port" }
+        },
+        "sensitivity": { "enum": ["public", "internal", "confidential", "restricted"] },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    },
+    "policy": {
+      "type": "object",
+      "required": ["objectType", "id", "name", "policyKind", "enforcement", "rules"],
+      "properties": {
+        "objectType": { "const": "Policy" },
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/localizedText" },
+        "description": { "$ref": "#/$defs/localizedText" },
+        "policyKind": {
+          "enum": [
+            "permission",
+            "dataHandling",
+            "network",
+            "approval",
+            "toolUse",
+            "budget",
+            "retention",
+            "custom"
+          ]
+        },
+        "enforcement": { "enum": ["preventive", "detective", "advisory"] },
+        "appliesTo": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "rules": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "effect", "action"],
+            "properties": {
+              "id": { "$ref": "#/$defs/id" },
+              "effect": { "enum": ["allow", "deny", "requireApproval", "audit"] },
+              "action": { "type": "string", "minLength": 1 },
+              "condition": { "type": "string", "minLength": 1 },
+              "reason": { "$ref": "#/$defs/localizedText" }
+            },
+            "additionalProperties": false
+          }
+        },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    },
+    "artifact": {
+      "type": "object",
+      "required": ["objectType", "id", "name", "artifactKind", "locator", "digest"],
+      "properties": {
+        "objectType": { "const": "Artifact" },
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/localizedText" },
+        "description": { "$ref": "#/$defs/localizedText" },
+        "artifactKind": {
+          "enum": [
+            "package",
+            "configFile",
+            "modelWeight",
+            "prompt",
+            "skill",
+            "schema",
+            "containerImage",
+            "binary",
+            "dataset",
+            "custom"
+          ]
+        },
+        "locator": { "type": "string", "format": "uri-reference" },
+        "digest": { "$ref": "#/$defs/contentHash" },
+        "version": { "type": "string", "minLength": 1 },
+        "mediaType": { "type": "string", "minLength": 1 },
+        "licenseExpression": { "type": "string", "minLength": 1 },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    },
+    "interface": {
+      "type": "object",
+      "required": ["objectType", "id", "name", "interfaceKind", "exposure", "ports"],
+      "properties": {
+        "objectType": { "const": "Interface" },
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/localizedText" },
+        "description": { "$ref": "#/$defs/localizedText" },
+        "interfaceKind": {
+          "enum": ["http", "rpc", "cli", "eventBus", "toolProtocol", "ui", "sdk", "custom"]
+        },
+        "exposure": { "enum": ["public", "internal", "local"] },
+        "ports": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/port" }
+        },
+        "authentication": { "enum": ["none", "apiKey", "oauth2", "mtls", "session", "custom"] },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    },
+    "container": {
+      "type": "object",
+      "required": ["objectType", "id", "name", "containerKind", "contains", "isolation"],
+      "properties": {
+        "objectType": { "const": "Container" },
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/localizedText" },
+        "description": { "$ref": "#/$defs/localizedText" },
+        "containerKind": {
+          "enum": ["logical", "process", "worker", "sandbox", "host", "networkZone", "custom"]
+        },
+        "contains": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        },
+        "isolation": { "enum": ["none", "logical", "process", "os", "virtualized", "remote"] },
+        "runtimeArtifactId": { "$ref": "#/$defs/id" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    },
+    "portRef": {
+      "type": "object",
+      "required": ["objectId", "portId"],
+      "properties": {
+        "objectId": { "$ref": "#/$defs/id" },
+        "portId": { "$ref": "#/$defs/id" }
+      },
+      "additionalProperties": false
+    },
+    "edge": {
+      "type": "object",
+      "required": ["id", "edgeKind", "from", "to"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "edgeKind": { "enum": ["data", "control", "invocation", "event", "policy", "dependency"] },
+        "from": { "$ref": "#/$defs/portRef" },
+        "to": { "$ref": "#/$defs/portRef" },
+        "protocol": { "type": "string", "minLength": 1 },
+        "required": { "type": "boolean" },
+        "label": { "$ref": "#/$defs/localizedText" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    },
+    "sourceClaim": {
+      "type": "object",
+      "required": [
+        "id",
+        "subjectId",
+        "fieldScope",
+        "structuralProvenance",
+        "identityAssurance",
+        "fieldCoverage",
+        "runtimeEvidence",
+        "operationCapabilities",
+        "trustState",
+        "method",
+        "observedAt"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "subjectId": { "$ref": "#/$defs/id" },
+        "fieldScope": {
+          "description": "JSON Pointers covered by this claim.",
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "format": "json-pointer" }
+        },
+        "structuralProvenance": {
+          "description": "Structural source quality only: F3 = Native, F2 = Exported, F1 = Inferred, F0 = Manual. This value grants no operation authority.",
+          "enum": ["F3", "F2", "F1", "F0"],
+          "oneOf": [
+            { "const": "F3", "title": "Native" },
+            { "const": "F2", "title": "Exported" },
+            { "const": "F1", "title": "Inferred" },
+            { "const": "F0", "title": "Manual" }
+          ]
+        },
+        "identityAssurance": { "enum": ["declared", "stableObserved", "inferred", "unknown"] },
+        "fieldCoverage": { "enum": ["complete", "partial", "minimal", "unknown"] },
+        "runtimeEvidence": { "enum": ["observed", "replayed", "declared", "none"] },
+        "operationCapabilities": {
+          "description": "Composable operations supported for every field in fieldScope. Capabilities are verified independently and are never inferred from structuralProvenance.",
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": ["view", "edit", "compile", "roundTrip", "hotReload", "replace"]
+          }
+        },
+        "trustState": { "enum": ["verified", "attested", "unverified"] },
+        "method": {
+          "enum": ["nativeIntrospection", "nativeExport", "adapterExport", "staticAnalysis", "runtimeObservation", "manualDeclaration"]
+        },
+        "adapter": {
+          "type": "object",
+          "required": ["name", "version"],
+          "properties": {
+            "name": { "type": "string", "minLength": 1 },
+            "version": { "type": "string", "minLength": 1 },
+            "implementationDigest": { "$ref": "#/$defs/contentHash" }
+          },
+          "additionalProperties": false
+        },
+        "evidenceRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "type": "string", "format": "uri-reference" }
+        },
+        "observedAt": { "$ref": "#/$defs/timestamp" },
+        "expiresAt": { "$ref": "#/$defs/timestamp" },
+        "notes": { "$ref": "#/$defs/localizedText" },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    },
+    "projectionProfile": {
+      "type": "object",
+      "required": ["id", "name", "projectionKind", "layout", "visibility"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/localizedText" },
+        "description": { "$ref": "#/$defs/localizedText" },
+        "projectionKind": { "enum": ["blueprint2d", "assembly3d", "runtimeOverlay", "evaluationOverlay"] },
+        "layout": {
+          "type": "object",
+          "required": ["algorithm", "direction"],
+          "properties": {
+            "algorithm": { "enum": ["manual", "layered", "force", "radial", "orthogonal"] },
+            "direction": { "enum": ["leftToRight", "rightToLeft", "topToBottom", "bottomToTop", "free"] },
+            "seed": { "type": "integer", "minimum": 0 },
+            "positions": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "required": ["x", "y"],
+                "properties": {
+                  "x": { "type": "number" },
+                  "y": { "type": "number" },
+                  "z": { "type": "number" }
+                },
+                "additionalProperties": false
+              }
+            }
+          },
+          "additionalProperties": false
+        },
+        "visibility": {
+          "type": "object",
+          "required": ["objectTypes", "edgeKinds", "showPorts", "showSourceClaims"],
+          "properties": {
+            "objectTypes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "enum": ["Component", "Resource", "Policy", "Artifact", "Interface", "Container"] }
+            },
+            "edgeKinds": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": { "enum": ["data", "control", "invocation", "event", "policy", "dependency"] }
+            },
+            "showPorts": { "type": "boolean" },
+            "showSourceClaims": { "type": "boolean" }
+          },
+          "additionalProperties": false
+        },
+        "theme": { "type": "string", "minLength": 1 },
+        "extensions": { "$ref": "#/$defs/extensions" }
+      },
+      "additionalProperties": false
+    }
+  }
+}

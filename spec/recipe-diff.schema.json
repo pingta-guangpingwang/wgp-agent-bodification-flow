@@ -1,0 +1,384 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.4.0/spec/recipe-diff.schema.json",
+  "title": "WGP-ABF RecipeDiff v0.4",
+  "description": "A guarded, auditable transaction over an Assembly Recipe. Hash preconditions prevent stale writes; compensation records define recoverable inverse actions.",
+  "type": "object",
+  "required": [
+    "format",
+    "id",
+    "createdAt",
+    "recipeId",
+    "baseVersion",
+    "baseContentHash",
+    "targetVersion",
+    "targetContentHash",
+    "atomic",
+    "dryRun",
+    "restartRequired",
+    "preconditions",
+    "riskAssessments",
+    "operations",
+    "compensation"
+  ],
+  "properties": {
+    "format": { "const": "wgp-recipe-diff/0.4" },
+    "id": { "$ref": "#/$defs/id" },
+    "createdAt": { "$ref": "#/$defs/timestamp" },
+    "createdBy": { "type": "string", "minLength": 1 },
+    "recipeId": { "$ref": "#/$defs/id" },
+    "baseVersion": { "$ref": "#/$defs/semver" },
+    "baseContentHash": { "$ref": "#/$defs/contentHash" },
+    "targetVersion": { "$ref": "#/$defs/semver" },
+    "targetContentHash": { "$ref": "#/$defs/contentHash" },
+    "atomic": {
+      "description": "When true, either every operation commits or none commits.",
+      "type": "boolean"
+    },
+    "dryRun": {
+      "description": "When true, validation and planning run without committing changes.",
+      "type": "boolean"
+    },
+    "restartRequired": {
+      "description": "Aggregate restart requirement for the transaction.",
+      "type": "boolean"
+    },
+    "preconditions": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/precondition" }
+    },
+    "riskAssessments": {
+      "description": "Risk records that must be reviewed before this transaction is applied.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/riskAssessment" }
+    },
+    "operations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/operation" }
+    },
+    "compensation": { "$ref": "#/$defs/compensationPlan" },
+    "approval": {
+      "type": "object",
+      "required": ["required", "state"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "state": { "enum": ["notRequired", "pending", "approved", "rejected"] },
+        "approver": { "type": "string", "minLength": 1 },
+        "approvedAt": { "$ref": "#/$defs/timestamp" }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{0,127}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "precondition": {
+      "type": "object",
+      "required": ["kind", "required"],
+      "properties": {
+        "kind": { "enum": ["contentHash", "pathExists", "pathValue", "recipeVersion"] },
+        "required": { "type": "boolean" },
+        "path": { "type": "string", "format": "json-pointer" },
+        "expectedHash": { "$ref": "#/$defs/contentHash" },
+        "expectedExists": { "type": "boolean" },
+        "expectedValue": {},
+        "expectedVersion": { "$ref": "#/$defs/semver" }
+      },
+      "allOf": [
+        {
+          "if": { "properties": { "kind": { "const": "contentHash" } }, "required": ["kind"] },
+          "then": {
+            "properties": { "expectedHash": { "$ref": "#/$defs/contentHash" } },
+            "required": ["expectedHash"]
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "pathExists" } }, "required": ["kind"] },
+          "then": {
+            "properties": {
+              "path": { "type": "string", "format": "json-pointer" },
+              "expectedExists": { "type": "boolean" }
+            },
+            "required": ["path", "expectedExists"]
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "pathValue" } }, "required": ["kind"] },
+          "then": {
+            "properties": {
+              "path": { "type": "string", "format": "json-pointer" },
+              "expectedValue": {}
+            },
+            "required": ["path", "expectedValue"]
+          }
+        },
+        {
+          "if": { "properties": { "kind": { "const": "recipeVersion" } }, "required": ["kind"] },
+          "then": {
+            "properties": { "expectedVersion": { "$ref": "#/$defs/semver" } },
+            "required": ["expectedVersion"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "operationPrecondition": {
+      "type": "object",
+      "required": ["path", "exists", "contentHash"],
+      "properties": {
+        "path": { "type": "string", "format": "json-pointer" },
+        "exists": { "type": "boolean" },
+        "contentHash": { "$ref": "#/$defs/contentHash" }
+      },
+      "additionalProperties": false
+    },
+    "riskApproval": {
+      "type": "object",
+      "required": ["required", "state"],
+      "properties": {
+        "required": { "type": "boolean" },
+        "state": { "enum": ["notRequired", "pending", "approved", "rejected"] },
+        "policyId": { "$ref": "#/$defs/id" },
+        "approver": { "type": "string", "minLength": 1 },
+        "approvedAt": { "$ref": "#/$defs/timestamp" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "required": { "const": false } },
+            "required": ["required"]
+          },
+          "then": {
+            "properties": { "state": { "const": "notRequired" } },
+            "required": ["state"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "required": { "const": true } },
+            "required": ["required"]
+          },
+          "then": {
+            "properties": { "state": { "enum": ["pending", "approved", "rejected"] } },
+            "required": ["state"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "state": { "const": "approved" } },
+            "required": ["state"]
+          },
+          "then": {
+            "properties": {
+              "approver": { "type": "string", "minLength": 1 },
+              "approvedAt": { "$ref": "#/$defs/timestamp" }
+            },
+            "required": ["approver", "approvedAt"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "riskAssessment": {
+      "type": "object",
+      "required": [
+        "id",
+        "category",
+        "severity",
+        "affectedPaths",
+        "description",
+        "mitigation",
+        "residualRisk",
+        "approval"
+      ],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "category": {
+          "enum": [
+            "availability",
+            "dataIntegrity",
+            "security",
+            "privacy",
+            "cost",
+            "compatibility",
+            "compliance",
+            "externalSideEffect",
+            "operational"
+          ]
+        },
+        "severity": { "enum": ["low", "medium", "high", "critical"] },
+        "affectedPaths": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "format": "json-pointer" }
+        },
+        "description": { "type": "string", "minLength": 1 },
+        "mitigation": {
+          "type": "object",
+          "required": ["actions", "verification"],
+          "properties": {
+            "actions": {
+              "type": "array",
+              "minItems": 1,
+              "items": { "type": "string", "minLength": 1 }
+            },
+            "verification": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "residualRisk": {
+          "type": "object",
+          "required": ["severity", "description"],
+          "properties": {
+            "severity": { "enum": ["low", "medium", "high", "critical"] },
+            "description": { "type": "string", "minLength": 1 }
+          },
+          "additionalProperties": false
+        },
+        "approval": { "$ref": "#/$defs/riskApproval" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "severity": { "enum": ["high", "critical"] } },
+            "required": ["severity"]
+          },
+          "then": {
+            "properties": {
+              "approval": {
+                "allOf": [
+                  { "$ref": "#/$defs/riskApproval" },
+                  {
+                    "type": "object",
+                    "properties": { "required": { "const": true } },
+                    "required": ["required"]
+                  }
+                ]
+              }
+            },
+            "required": ["approval"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "inverseOperation": {
+      "type": "object",
+      "required": ["op", "path"],
+      "properties": {
+        "op": { "enum": ["add", "remove", "replace", "move", "copy", "test"] },
+        "path": { "type": "string", "format": "json-pointer" },
+        "from": { "type": "string", "format": "json-pointer" },
+        "value": {},
+        "precondition": { "$ref": "#/$defs/operationPrecondition" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "op": { "enum": ["add", "replace", "test"] } },
+            "required": ["op"]
+          },
+          "then": {
+            "properties": { "value": {} },
+            "required": ["value"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "op": { "enum": ["move", "copy"] } },
+            "required": ["op"]
+          },
+          "then": {
+            "properties": { "from": { "type": "string", "format": "json-pointer" } },
+            "required": ["from"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "operation": {
+      "type": "object",
+      "required": ["id", "op", "path", "precondition", "restartRequired", "compensation"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "op": { "enum": ["add", "remove", "replace", "move", "copy", "test"] },
+        "path": { "type": "string", "format": "json-pointer" },
+        "from": { "type": "string", "format": "json-pointer" },
+        "value": {},
+        "precondition": { "$ref": "#/$defs/operationPrecondition" },
+        "restartRequired": { "type": "boolean" },
+        "reason": { "type": "string", "minLength": 1 },
+        "compensation": { "$ref": "#/$defs/inverseOperation" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "op": { "enum": ["add", "replace", "test"] } },
+            "required": ["op"]
+          },
+          "then": {
+            "properties": { "value": {} },
+            "required": ["value"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "op": { "enum": ["move", "copy"] } },
+            "required": ["op"]
+          },
+          "then": {
+            "properties": { "from": { "type": "string", "format": "json-pointer" } },
+            "required": ["from"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "compensationPlan": {
+      "type": "object",
+      "description": "Transaction-level recovery plan. operation.compensation restores recipe state; externalSideEffects records compensating actions for effects outside the recipe document.",
+      "required": ["strategy", "trigger", "verifyAfterCompensation", "externalSideEffects"],
+      "properties": {
+        "strategy": { "enum": ["automatic", "manual", "none"] },
+        "trigger": { "enum": ["anyFailure", "verificationFailure", "operatorDecision", "never"] },
+        "verifyAfterCompensation": { "type": "boolean" },
+        "timeoutMs": { "type": "integer", "minimum": 1 },
+        "externalSideEffects": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/externalSideEffectCompensation" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "externalSideEffectCompensation": {
+      "type": "object",
+      "required": ["effectId", "description", "action", "verification", "idempotent", "owner", "status"],
+      "properties": {
+        "effectId": { "$ref": "#/$defs/id" },
+        "description": { "type": "string", "minLength": 1 },
+        "action": { "type": "string", "minLength": 1 },
+        "verification": { "type": "string", "minLength": 1 },
+        "idempotent": { "type": "boolean" },
+        "owner": { "type": "string", "minLength": 1 },
+        "status": { "enum": ["planned", "ready", "applied", "verified", "failed"] }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,38 @@
+name: Interoperability report / 互操作报告
+description: Share importer, compiler, replay, or conformance evidence for one platform. / 分享某个平台的导入、编译、回放或合规证据。
+title: "[interop] "
+labels: ["interoperability"]
+body:
+  - type: input
+    id: platform
+    attributes:
+      label: Platform and pinned version / 平台与固定版本
+    validations:
+      required: true
+  - type: input
+    id: adapter
+    attributes:
+      label: Adapter version or commit / 适配器版本或提交
+    validations:
+      required: true
+  - type: dropdown
+    id: level
+    attributes:
+      label: Claimed level / 声明等级
+      options: [C0, C1, C2, C3, Projection Conformance only]
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and known semantic loss / 证据与已知语义损失
+      description: Link reproducible, non-sensitive fixtures and name every exception.
+    validations:
+      required: true
+  - type: checkboxes
+    id: scope
+    attributes:
+      label: Claim boundary / 声明边界
+      options:
+        - label: I am not implying endorsement or official certification. / 我没有暗示官方背书或认证。
+          required: true

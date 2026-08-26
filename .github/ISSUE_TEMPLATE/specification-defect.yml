@@ -1,0 +1,39 @@
+name: Specification defect / 规范缺陷
+description: Report an inconsistency in the whitepaper, schema, example, or validator. / 报告白皮书、Schema、样例或验证器中的不一致。
+title: "[spec] "
+labels: ["specification"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version / 版本
+      description: Name the whitepaper series, schema ID, validator version, or immutable tag.
+      placeholder: v0.4.0 / wgp-abir/0.4
+    validations:
+      required: true
+  - type: input
+    id: location
+    attributes:
+      label: Exact location / 精确位置
+      placeholder: whitepaper chapter, schema JSON Pointer, or file path
+    validations:
+      required: true
+  - type: textarea
+    id: observed
+    attributes:
+      label: Observed problem / 发现的问题
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected meaning or validation / 预期语义或验证结果
+    validations:
+      required: true
+  - type: checkboxes
+    id: safety
+    attributes:
+      label: Public-data check / 公开数据检查
+      options:
+        - label: I removed credentials, personal data, and confidential implementation details. / 我已移除密钥、个人数据和机密实现细节。
+          required: true

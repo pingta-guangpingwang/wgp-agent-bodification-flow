@@ -1,0 +1,191 @@
+{
+  "format": "wgp-evaluation/0.4",
+  "evaluationId": "evaluation.max-tokens-01",
+  "title": {
+    "zh-CN": "响应预算变更的配对评测",
+    "en": "Paired Evaluation of a Response-budget Change"
+  },
+  "createdAt": "2026-08-26T09:30:00Z",
+  "subject": {
+    "abirId": "agent.minimal-chat",
+    "scope": "component",
+    "objectIds": ["component.orchestrator"]
+  },
+  "baseline": {
+    "label": "baseline",
+    "recipeId": "recipe.minimal-chat",
+    "recipeVersion": "0.4.0",
+    "recipeContentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "candidate": {
+    "label": "candidate",
+    "recipeId": "recipe.minimal-chat",
+    "recipeVersion": "0.4.1",
+    "recipeContentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "recipeDiffId": "diff.raise-max-tokens"
+  },
+  "protocol": {
+    "design": "pairedControlled",
+    "claimCeiling": "controlledExperiment",
+    "fixture": {
+      "id": "fixture.greeting",
+      "contentHash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "caseIds": ["fixture.greeting"]
+    },
+    "modelStreamControl": {
+      "mode": "pinnedReplay",
+      "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "notes": {
+        "zh-CN": "固定模型输出仅控制模型流差异，不代表总方差为零，也不单独证明因果关系。",
+        "en": "Pinned model output controls model-stream differences only; it neither makes total variance zero nor establishes causality by itself."
+      }
+    },
+    "environmentControls": [
+      {
+        "name": "operating-system",
+        "valueDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+        "status": "pinned"
+      },
+      {
+        "name": "runtime-load",
+        "valueDigest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+        "status": "measured"
+      }
+    ],
+    "repetitionsPerVariant": 1,
+    "randomSeeds": [42],
+    "preregistered": false,
+    "successCriteria": [
+      { "metricId": "metric.success-rate", "operator": "gte", "threshold": 1 },
+      { "metricId": "metric.latency-ms", "operator": "lte", "threshold": 1000 }
+    ]
+  },
+  "trials": [
+    {
+      "trialId": "trial.baseline-01",
+      "variant": "baseline",
+      "runId": "run.example-paired-01",
+      "fixtureCaseId": "fixture.greeting",
+      "seed": 42,
+      "recipeContentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "environmentDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "modelStreamDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "status": "passed",
+      "metricValues": {
+        "metric.latency-ms": 800,
+        "metric.success-rate": 1
+      },
+      "eventIds": [
+        "11111111-1111-4111-8111-111111111111",
+        "22222222-2222-4222-8222-222222222222",
+        "33333333-3333-4333-8333-333333333333",
+        "44444444-4444-4444-8444-444444444444"
+      ]
+    },
+    {
+      "trialId": "trial.candidate-01",
+      "variant": "candidate",
+      "runId": "run.example-paired-02",
+      "fixtureCaseId": "fixture.greeting",
+      "seed": 42,
+      "recipeContentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "environmentDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "modelStreamDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "status": "passed",
+      "metricValues": {
+        "metric.latency-ms": 780,
+        "metric.success-rate": 1
+      },
+      "eventIds": [
+        "55555555-5555-4555-8555-555555555555",
+        "66666666-6666-4666-8666-666666666666",
+        "77777777-7777-4777-8777-777777777777",
+        "88888888-8888-4888-8888-888888888888"
+      ]
+    }
+  ],
+  "metrics": [
+    {
+      "id": "metric.latency-ms",
+      "name": { "zh-CN": "端到端延迟", "en": "End-to-end latency" },
+      "unit": "ms",
+      "direction": "lowerIsBetter",
+      "aggregation": "mean"
+    },
+    {
+      "id": "metric.success-rate",
+      "name": { "zh-CN": "成功率", "en": "Success rate" },
+      "unit": "ratio",
+      "direction": "higherIsBetter",
+      "aggregation": "rate"
+    }
+  ],
+  "results": [
+    {
+      "metricId": "metric.latency-ms",
+      "baseline": { "n": 1, "value": 800, "standardDeviation": 0 },
+      "candidate": { "n": 1, "value": 780, "standardDeviation": 0 },
+      "absoluteDelta": -20,
+      "relativeDelta": -0.025,
+      "uncertainty": { "method": "none", "available": false }
+    },
+    {
+      "metricId": "metric.success-rate",
+      "baseline": { "n": 1, "value": 1, "standardDeviation": 0 },
+      "candidate": { "n": 1, "value": 1, "standardDeviation": 0 },
+      "absoluteDelta": 0,
+      "relativeDelta": 0,
+      "uncertainty": { "method": "none", "available": false }
+    }
+  ],
+  "claims": [
+    {
+      "id": "claim.conditional-latency",
+      "maturity": "controlledExperiment",
+      "attribution": "conditionalAssociation",
+      "statement": {
+        "zh-CN": "在固定样例、随机种子、模型输出流和所列环境条件下，候选配方本次运行的观测延迟低 20 ms。",
+        "en": "With the fixture, seed, model-output stream, and listed environment conditions fixed, the candidate recipe showed 20 ms lower observed latency in this run."
+      },
+      "scope": {
+        "zh-CN": "仅限本示例的单次配对运行。",
+        "en": "Limited to the single paired run in this example."
+      },
+      "evidenceEventIds": [
+        "44444444-4444-4444-8444-444444444444",
+        "88888888-8888-4888-8888-888888888888"
+      ],
+      "assumptions": [
+        {
+          "zh-CN": "两个运行使用相同的回放模型流。",
+          "en": "Both runs used the same replayed model stream."
+        }
+      ],
+      "limitations": [
+        {
+          "zh-CN": "单次样本无法估计不确定性，也不足以支持可泛化或因果结论。",
+          "en": "A single sample cannot estimate uncertainty and is insufficient for a generalizable or causal conclusion."
+        }
+      ]
+    }
+  ],
+  "limitations": [
+    {
+      "zh-CN": "这是结构规范示例，不是性能基准；摘要值仅用于演示证据链。",
+      "en": "This is a structural specification example, not a benchmark; summary values exist only to demonstrate the evidence chain."
+    },
+    {
+      "zh-CN": "固定模型输出减少一种方差来源，但调度、计时和系统负载仍可能变化。",
+      "en": "Pinned model output reduces one source of variance, while scheduling, timing, and system load may still vary."
+    }
+  ],
+  "decision": {
+    "outcome": "inconclusive",
+    "rationale": {
+      "zh-CN": "样本量不足；应增加配对重复运行并报告不确定性后再决定是否采用候选配方。",
+      "en": "The sample is too small; add paired repetitions and report uncertainty before deciding whether to adopt the candidate."
+    },
+    "decidedAt": "2026-08-26T09:30:00Z",
+    "decidedBy": "example.operator"
+  }
+}

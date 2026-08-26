@@ -1,0 +1,340 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.4.0/spec/evaluation.schema.json",
+  "title": "WGP-ABF Evaluation Record v0.4",
+  "description": "Evidence-backed comparison of a baseline and candidate assembly. Claim maturity and attribution are explicit; pinned model output controls one source of variance but does not establish causality by itself.",
+  "type": "object",
+  "required": [
+    "format",
+    "evaluationId",
+    "title",
+    "createdAt",
+    "subject",
+    "baseline",
+    "candidate",
+    "protocol",
+    "trials",
+    "metrics",
+    "results",
+    "claims",
+    "limitations",
+    "decision"
+  ],
+  "properties": {
+    "format": { "const": "wgp-evaluation/0.4" },
+    "evaluationId": { "$ref": "#/$defs/id" },
+    "title": { "$ref": "#/$defs/localizedText" },
+    "createdAt": { "$ref": "#/$defs/timestamp" },
+    "subject": {
+      "type": "object",
+      "required": ["abirId", "scope", "objectIds"],
+      "properties": {
+        "abirId": { "$ref": "#/$defs/id" },
+        "scope": { "enum": ["component", "agent", "system"] },
+        "objectIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/id" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "baseline": { "$ref": "#/$defs/variant" },
+    "candidate": { "$ref": "#/$defs/variant" },
+    "protocol": { "$ref": "#/$defs/protocol" },
+    "trials": {
+      "type": "array",
+      "minItems": 2,
+      "items": { "$ref": "#/$defs/trial" }
+    },
+    "metrics": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/metric" }
+    },
+    "results": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/result" }
+    },
+    "claims": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/claim" }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/localizedText" }
+    },
+    "decision": {
+      "type": "object",
+      "required": ["outcome", "rationale", "decidedAt"],
+      "properties": {
+        "outcome": { "enum": ["acceptCandidate", "rejectCandidate", "inconclusive"] },
+        "rationale": { "$ref": "#/$defs/localizedText" },
+        "decidedAt": { "$ref": "#/$defs/timestamp" },
+        "decidedBy": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{0,127}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "timestamp": { "type": "string", "format": "date-time" },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "uuid": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$"
+    },
+    "localizedText": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "zh-CN": { "type": "string", "minLength": 1 },
+        "en": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "variant": {
+      "type": "object",
+      "required": ["label", "recipeId", "recipeVersion", "recipeContentHash"],
+      "properties": {
+        "label": { "enum": ["baseline", "candidate"] },
+        "recipeId": { "$ref": "#/$defs/id" },
+        "recipeVersion": { "$ref": "#/$defs/semver" },
+        "recipeContentHash": { "$ref": "#/$defs/contentHash" },
+        "recipeDiffId": { "$ref": "#/$defs/id" }
+      },
+      "additionalProperties": false
+    },
+    "environmentControl": {
+      "type": "object",
+      "required": ["name", "valueDigest", "status"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "valueDigest": { "$ref": "#/$defs/contentHash" },
+        "status": { "enum": ["pinned", "measured", "uncontrolled"] },
+        "notes": { "$ref": "#/$defs/localizedText" }
+      },
+      "additionalProperties": false
+    },
+    "protocol": {
+      "type": "object",
+      "required": [
+        "design",
+        "claimCeiling",
+        "fixture",
+        "modelStreamControl",
+        "environmentControls",
+        "repetitionsPerVariant",
+        "randomSeeds",
+        "preregistered",
+        "successCriteria"
+      ],
+      "properties": {
+        "design": { "enum": ["observational", "regression", "pairedControlled", "randomizedControlled"] },
+        "claimCeiling": { "enum": ["observation", "regression", "controlledExperiment", "causalClaim"] },
+        "fixture": {
+          "type": "object",
+          "required": ["id", "contentHash", "caseIds"],
+          "properties": {
+            "id": { "$ref": "#/$defs/id" },
+            "contentHash": { "$ref": "#/$defs/contentHash" },
+            "caseIds": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "$ref": "#/$defs/id" }
+            }
+          },
+          "additionalProperties": false
+        },
+        "modelStreamControl": {
+          "type": "object",
+          "required": ["mode", "contentHash"],
+          "properties": {
+            "mode": { "enum": ["live", "recordedReplay", "pinnedReplay"] },
+            "contentHash": { "$ref": "#/$defs/contentHash" },
+            "notes": { "$ref": "#/$defs/localizedText" }
+          },
+          "additionalProperties": false
+        },
+        "environmentControls": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/environmentControl" }
+        },
+        "repetitionsPerVariant": { "type": "integer", "minimum": 1 },
+        "randomSeeds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "integer", "minimum": 0 }
+        },
+        "preregistered": { "type": "boolean" },
+        "successCriteria": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["metricId", "operator", "threshold"],
+            "properties": {
+              "metricId": { "$ref": "#/$defs/id" },
+              "operator": { "enum": ["lt", "lte", "gt", "gte", "eq"] },
+              "threshold": { "type": "number" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "trial": {
+      "type": "object",
+      "required": [
+        "trialId",
+        "variant",
+        "runId",
+        "fixtureCaseId",
+        "seed",
+        "recipeContentHash",
+        "environmentDigest",
+        "modelStreamDigest",
+        "status",
+        "metricValues",
+        "eventIds"
+      ],
+      "properties": {
+        "trialId": { "$ref": "#/$defs/id" },
+        "variant": { "enum": ["baseline", "candidate"] },
+        "runId": { "$ref": "#/$defs/id" },
+        "fixtureCaseId": { "$ref": "#/$defs/id" },
+        "seed": { "type": "integer", "minimum": 0 },
+        "recipeContentHash": { "$ref": "#/$defs/contentHash" },
+        "environmentDigest": { "$ref": "#/$defs/contentHash" },
+        "modelStreamDigest": { "$ref": "#/$defs/contentHash" },
+        "status": { "enum": ["passed", "failed", "invalid"] },
+        "metricValues": {
+          "type": "object",
+          "minProperties": 1,
+          "propertyNames": { "pattern": "^[A-Za-z][A-Za-z0-9._:-]{0,127}$" },
+          "additionalProperties": { "type": "number" }
+        },
+        "eventIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/uuid" }
+        },
+        "invalidReason": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    },
+    "metric": {
+      "type": "object",
+      "required": ["id", "name", "unit", "direction", "aggregation"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "name": { "$ref": "#/$defs/localizedText" },
+        "unit": { "type": "string", "minLength": 1 },
+        "direction": { "enum": ["higherIsBetter", "lowerIsBetter", "target"] },
+        "target": { "type": "number" },
+        "aggregation": { "enum": ["mean", "median", "p50", "p90", "p95", "p99", "rate", "sum"] }
+      },
+      "additionalProperties": false
+    },
+    "summaryStats": {
+      "type": "object",
+      "required": ["n", "value"],
+      "properties": {
+        "n": { "type": "integer", "minimum": 1 },
+        "value": { "type": "number" },
+        "standardDeviation": { "type": "number", "minimum": 0 }
+      },
+      "additionalProperties": false
+    },
+    "result": {
+      "type": "object",
+      "required": ["metricId", "baseline", "candidate", "absoluteDelta", "relativeDelta", "uncertainty"],
+      "properties": {
+        "metricId": { "$ref": "#/$defs/id" },
+        "baseline": { "$ref": "#/$defs/summaryStats" },
+        "candidate": { "$ref": "#/$defs/summaryStats" },
+        "absoluteDelta": { "type": "number" },
+        "relativeDelta": { "type": "number" },
+        "uncertainty": {
+          "type": "object",
+          "required": ["method", "available"],
+          "properties": {
+            "method": { "enum": ["none", "bootstrap", "pairedT", "wilcoxon", "permutation", "custom"] },
+            "available": { "type": "boolean" },
+            "confidenceLevel": { "type": "number", "exclusiveMinimum": 0, "exclusiveMaximum": 1 },
+            "lower": { "type": "number" },
+            "upper": { "type": "number" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "claim": {
+      "type": "object",
+      "required": ["id", "maturity", "attribution", "statement", "scope", "evidenceEventIds", "assumptions", "limitations"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "maturity": { "enum": ["observation", "regression", "controlledExperiment", "causalClaim"] },
+        "attribution": { "enum": ["descriptive", "conditionalAssociation", "causal"] },
+        "statement": { "$ref": "#/$defs/localizedText" },
+        "scope": { "$ref": "#/$defs/localizedText" },
+        "evidenceEventIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/uuid" }
+        },
+        "assumptions": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/localizedText" }
+        },
+        "limitations": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/localizedText" }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "maturity": { "const": "causalClaim" } },
+            "required": ["maturity"]
+          },
+          "then": {
+            "properties": { "attribution": { "const": "causal" } }
+          }
+        },
+        {
+          "if": {
+            "properties": { "maturity": { "enum": ["observation", "regression"] } },
+            "required": ["maturity"]
+          },
+          "then": {
+            "not": { "properties": { "attribution": { "const": "causal" } }, "required": ["attribution"] }
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "format": "wgp-recipe-diff/0.4",
+  "id": "diff.invalid-external-compensation",
+  "createdAt": "2026-08-26T10:05:00Z",
+  "recipeId": "recipe.example",
+  "baseVersion": "0.4.0",
+  "baseContentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "targetVersion": "0.4.1",
+  "targetContentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "atomic": true,
+  "dryRun": false,
+  "restartRequired": false,
+  "preconditions": [
+    {
+      "kind": "contentHash",
+      "required": true,
+      "expectedHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "riskAssessments": [
+    {
+      "id": "risk.external-notification",
+      "category": "externalSideEffect",
+      "severity": "high",
+      "affectedPaths": ["/componentBindings/0/enabled"],
+      "description": "The operation may publish a notification outside the recipe store.",
+      "mitigation": {
+        "actions": ["Use a deduplication key for the notification."],
+        "verification": "Confirm the external notification state by effect id."
+      },
+      "residualRisk": {
+        "severity": "medium",
+        "description": "The external service may be unavailable during compensation."
+      },
+      "approval": {
+        "required": true,
+        "state": "pending",
+        "policyId": "policy.external-effect"
+      }
+    }
+  ],
+  "operations": [
+    {
+      "id": "operation.example",
+      "op": "replace",
+      "path": "/componentBindings/0/enabled",
+      "value": true,
+      "precondition": {
+        "path": "/componentBindings/0/enabled",
+        "exists": true,
+        "contentHash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      },
+      "restartRequired": false,
+      "compensation": {
+        "op": "replace",
+        "path": "/componentBindings/0/enabled",
+        "value": false
+      }
+    }
+  ],
+  "compensation": {
+    "strategy": "manual",
+    "trigger": "anyFailure",
+    "verifyAfterCompensation": true,
+    "externalSideEffects": [
+      {
+        "effectId": "effect.notification",
+        "description": "A notification sent to an external service.",
+        "action": "Cancel the notification using its deduplication key.",
+        "verification": "Read back the notification state and confirm it is cancelled.",
+        "idempotent": true,
+        "owner": "integration.operator"
+      }
+    ]
+  },
+  "approval": {
+    "required": true,
+    "state": "pending"
+  }
+}

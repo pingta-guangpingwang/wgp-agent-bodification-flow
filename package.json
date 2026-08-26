@@ -1,0 +1,24 @@
+{
+  "name": "wgp-agent-bodification-flow",
+  "version": "0.4.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.19.0",
+  "description": "Validation and publication tooling for the WGP-ABF public draft.",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow.git"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "release:bundle": "python scripts/build_release.py",
+    "validate": "node scripts/validate_examples.mjs && node scripts/validate_repository.mjs"
+  },
+  "devDependencies": {
+    "ajv": "8.20.0",
+    "ajv-formats": "3.0.1"
+  }
+}

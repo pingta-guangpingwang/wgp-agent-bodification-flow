@@ -1,0 +1,17 @@
+WGP-ABF uses a file-scoped dual-license model.
+
+1. Whitepaper text, README files, governance prose, and original visual assets
+   are licensed under Creative Commons Attribution 4.0 International
+   (CC BY 4.0). The full text is in LICENSES/CC-BY-4.0.txt.
+
+2. JSON Schemas, examples, scripts, validators, and reference software are
+   licensed under the Apache License, Version 2.0. The full text is in
+   LICENSES/Apache-2.0.txt.
+
+3. Third-party material remains under its stated license and must be recorded
+   in an adjacent provenance or notice file.
+
+4. Project names, logos, certification marks, and endorsement rights are not
+   granted by either license. See TRADEMARKS.md.
+
+SPDX identifiers in individual files take precedence when present.

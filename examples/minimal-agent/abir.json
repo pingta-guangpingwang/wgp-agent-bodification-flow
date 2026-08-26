@@ -1,0 +1,303 @@
+{
+  "format": "wgp-abir/0.4",
+  "id": "agent.minimal-chat",
+  "name": {
+    "zh-CN": "最小聊天智能体",
+    "en": "Minimal Chat Agent"
+  },
+  "description": {
+    "zh-CN": "展示六类结构对象、端口级连线、多轴来源声明与独立投影视图的最小 ABIR。",
+    "en": "A minimal ABIR demonstrating six structural object classes, port-level edges, multi-axis source claims, and an independent projection profile."
+  },
+  "version": "0.4.0",
+  "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "createdAt": "2026-08-26T09:00:00Z",
+  "objects": {
+    "components": [
+      {
+        "objectType": "Component",
+        "id": "component.orchestrator",
+        "name": {
+          "zh-CN": "对话编排器",
+          "en": "Conversation Orchestrator"
+        },
+        "componentKind": "orchestrator",
+        "implementationArtifactId": "artifact.orchestrator-package",
+        "ports": [
+          {
+            "id": "input.in",
+            "name": { "zh-CN": "用户输入", "en": "User input" },
+            "direction": "in",
+            "protocol": "wgp.message/v1",
+            "mediaType": "application/json",
+            "cardinality": "one",
+            "required": true
+          },
+          {
+            "id": "output.out",
+            "name": { "zh-CN": "助手输出", "en": "Assistant output" },
+            "direction": "out",
+            "protocol": "wgp.message/v1",
+            "mediaType": "application/json",
+            "cardinality": "one",
+            "required": true
+          },
+          {
+            "id": "model.request",
+            "name": { "zh-CN": "模型请求", "en": "Model request" },
+            "direction": "out",
+            "protocol": "wgp.model/v1",
+            "mediaType": "application/json",
+            "cardinality": "one",
+            "required": true
+          },
+          {
+            "id": "model.response",
+            "name": { "zh-CN": "模型响应", "en": "Model response" },
+            "direction": "in",
+            "protocol": "wgp.model/v1",
+            "mediaType": "application/json",
+            "cardinality": "one",
+            "required": true
+          }
+        ],
+        "tags": ["minimal", "chat"]
+      }
+    ],
+    "resources": [
+      {
+        "objectType": "Resource",
+        "id": "resource.model.deepseek",
+        "name": {
+          "zh-CN": "DeepSeek 模型服务",
+          "en": "DeepSeek Model Service"
+        },
+        "resourceKind": "model",
+        "lifecycle": "external",
+        "ports": [
+          {
+            "id": "invoke.in",
+            "name": { "zh-CN": "推理请求", "en": "Inference request" },
+            "direction": "in",
+            "protocol": "wgp.model/v1",
+            "mediaType": "application/json",
+            "cardinality": "many",
+            "required": true
+          },
+          {
+            "id": "completion.out",
+            "name": { "zh-CN": "推理结果", "en": "Inference result" },
+            "direction": "out",
+            "protocol": "wgp.model/v1",
+            "mediaType": "application/json",
+            "cardinality": "many",
+            "required": true
+          }
+        ],
+        "sensitivity": "internal"
+      }
+    ],
+    "policies": [
+      {
+        "objectType": "Policy",
+        "id": "policy.tool-approval",
+        "name": {
+          "zh-CN": "高风险操作审批",
+          "en": "High-risk Action Approval"
+        },
+        "policyKind": "approval",
+        "enforcement": "preventive",
+        "appliesTo": ["component.orchestrator"],
+        "rules": [
+          {
+            "id": "rule.require-approval",
+            "effect": "requireApproval",
+            "action": "tool.execute.highRisk",
+            "reason": {
+              "zh-CN": "高风险工具必须由用户确认。",
+              "en": "High-risk tools require user confirmation."
+            }
+          }
+        ]
+      }
+    ],
+    "artifacts": [
+      {
+        "objectType": "Artifact",
+        "id": "artifact.orchestrator-package",
+        "name": {
+          "zh-CN": "编排器实现包",
+          "en": "Orchestrator Implementation Package"
+        },
+        "artifactKind": "package",
+        "locator": "https://example.org/packages/minimal-orchestrator-0.4.0.tgz",
+        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "version": "0.4.0",
+        "mediaType": "application/gzip",
+        "licenseExpression": "Apache-2.0"
+      },
+      {
+        "objectType": "Artifact",
+        "id": "artifact.system-prompt",
+        "name": {
+          "zh-CN": "系统提示词",
+          "en": "System Prompt"
+        },
+        "artifactKind": "prompt",
+        "locator": "file:./system-prompt.md",
+        "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+        "version": "1",
+        "mediaType": "text/markdown",
+        "licenseExpression": "CC-BY-4.0"
+      }
+    ],
+    "interfaces": [
+      {
+        "objectType": "Interface",
+        "id": "interface.chat.http",
+        "name": {
+          "zh-CN": "聊天 HTTP 接口",
+          "en": "Chat HTTP Interface"
+        },
+        "interfaceKind": "http",
+        "exposure": "local",
+        "ports": [
+          {
+            "id": "request.out",
+            "name": { "zh-CN": "请求输出", "en": "Request output" },
+            "direction": "out",
+            "protocol": "wgp.message/v1",
+            "mediaType": "application/json",
+            "cardinality": "many",
+            "required": true
+          },
+          {
+            "id": "response.in",
+            "name": { "zh-CN": "响应输入", "en": "Response input" },
+            "direction": "in",
+            "protocol": "wgp.message/v1",
+            "mediaType": "application/json",
+            "cardinality": "many",
+            "required": true
+          }
+        ],
+        "authentication": "session"
+      }
+    ],
+    "containers": [
+      {
+        "objectType": "Container",
+        "id": "container.local-process",
+        "name": {
+          "zh-CN": "本地智能体进程",
+          "en": "Local Agent Process"
+        },
+        "containerKind": "process",
+        "contains": [
+          "component.orchestrator",
+          "interface.chat.http"
+        ],
+        "isolation": "process"
+      }
+    ]
+  },
+  "edges": [
+    {
+      "id": "edge.user-input",
+      "edgeKind": "data",
+      "from": { "objectId": "interface.chat.http", "portId": "request.out" },
+      "to": { "objectId": "component.orchestrator", "portId": "input.in" },
+      "protocol": "wgp.message/v1",
+      "required": true
+    },
+    {
+      "id": "edge.model-request",
+      "edgeKind": "invocation",
+      "from": { "objectId": "component.orchestrator", "portId": "model.request" },
+      "to": { "objectId": "resource.model.deepseek", "portId": "invoke.in" },
+      "protocol": "wgp.model/v1",
+      "required": true
+    },
+    {
+      "id": "edge.model-response",
+      "edgeKind": "data",
+      "from": { "objectId": "resource.model.deepseek", "portId": "completion.out" },
+      "to": { "objectId": "component.orchestrator", "portId": "model.response" },
+      "protocol": "wgp.model/v1",
+      "required": true
+    },
+    {
+      "id": "edge.assistant-output",
+      "edgeKind": "data",
+      "from": { "objectId": "component.orchestrator", "portId": "output.out" },
+      "to": { "objectId": "interface.chat.http", "portId": "response.in" },
+      "protocol": "wgp.message/v1",
+      "required": true
+    }
+  ],
+  "sourceClaims": [
+    {
+      "id": "claim.orchestrator-native",
+      "subjectId": "component.orchestrator",
+      "fieldScope": ["/objects/components/0"],
+      "structuralProvenance": "F3",
+      "identityAssurance": "stableObserved",
+      "fieldCoverage": "complete",
+      "runtimeEvidence": "observed",
+      "operationCapabilities": ["view", "edit", "compile", "roundTrip", "replace"],
+      "trustState": "verified",
+      "method": "nativeIntrospection",
+      "adapter": {
+        "name": "minimal-agent-adapter",
+        "version": "0.4.0",
+        "implementationDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+      },
+      "evidenceRefs": ["events.jsonl"],
+      "observedAt": "2026-08-26T09:00:00Z"
+    },
+    {
+      "id": "claim.model-declared",
+      "subjectId": "resource.model.deepseek",
+      "fieldScope": ["/objects/resources/0"],
+      "structuralProvenance": "F0",
+      "identityAssurance": "declared",
+      "fieldCoverage": "partial",
+      "runtimeEvidence": "observed",
+      "operationCapabilities": ["view"],
+      "trustState": "attested",
+      "method": "manualDeclaration",
+      "evidenceRefs": ["events.jsonl"],
+      "observedAt": "2026-08-26T09:00:00Z",
+      "notes": {
+        "zh-CN": "运行事件证明该服务被调用，但不把人工声明提升为原生结构来源。",
+        "en": "Runtime events show that the service was called; they do not promote a manual declaration to native structural provenance."
+      }
+    }
+  ],
+  "projectionProfiles": [
+    {
+      "id": "projection.blueprint-default",
+      "name": {
+        "zh-CN": "默认二维工程图",
+        "en": "Default 2D Blueprint"
+      },
+      "description": {
+        "zh-CN": "ABIR 的可编辑人机视图；布局不属于智能体运行结构。",
+        "en": "An editable human view over ABIR; layout is not part of the agent runtime structure."
+      },
+      "projectionKind": "blueprint2d",
+      "layout": {
+        "algorithm": "layered",
+        "direction": "leftToRight",
+        "seed": 42
+      },
+      "visibility": {
+        "objectTypes": ["Component", "Resource", "Policy", "Artifact", "Interface", "Container"],
+        "edgeKinds": ["data", "invocation", "policy", "dependency"],
+        "showPorts": true,
+        "showSourceClaims": true
+      },
+      "theme": "wgp-blueprint-light"
+    }
+  ]
+}

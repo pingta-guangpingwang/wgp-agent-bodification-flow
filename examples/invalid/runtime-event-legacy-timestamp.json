@@ -1,0 +1,19 @@
+{
+  "format": "wgp-runtime-event/0.4",
+  "eventId": "99999999-9999-4999-8999-999999999999",
+  "runId": "run.invalid-legacy-time",
+  "sequence": 0,
+  "timestamp": "2026-08-26T10:00:00Z",
+  "eventType": "run.started",
+  "storageClass": "durable",
+  "origin": "primary",
+  "replayRole": "input",
+  "producer": {
+    "name": "invalid-example",
+    "version": "0.4.0",
+    "instanceId": "runtime.invalid"
+  },
+  "subject": { "abirId": "agent.example" },
+  "payload": {},
+  "redaction": { "state": "none", "removedFields": [] }
+}

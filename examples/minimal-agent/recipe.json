@@ -1,0 +1,109 @@
+{
+  "format": "wgp-assembly-recipe/0.4",
+  "id": "recipe.minimal-chat",
+  "name": {
+    "zh-CN": "最小聊天智能体装配配方",
+    "en": "Minimal Chat Agent Assembly Recipe"
+  },
+  "version": "0.4.0",
+  "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "createdAt": "2026-08-26T09:05:00Z",
+  "abir": {
+    "id": "agent.minimal-chat",
+    "version": "0.4.0",
+    "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "componentBindings": [
+    {
+      "componentId": "component.orchestrator",
+      "implementationArtifactId": "artifact.orchestrator-package",
+      "enabled": true,
+      "config": {
+        "systemPromptArtifactId": "artifact.system-prompt",
+        "maxTokens": 2048,
+        "stream": true
+      },
+      "configSchemaRef": "https://example.org/schemas/minimal-orchestrator-config.schema.json"
+    }
+  ],
+  "resourceBindings": [
+    {
+      "resourceId": "resource.model.deepseek",
+      "provider": "deepseek",
+      "endpoint": "https://api.deepseek.com/",
+      "settings": {
+        "model": "deepseek-chat",
+        "temperature": 0.2
+      },
+      "credentialRefs": ["credential.deepseek-api-key"]
+    }
+  ],
+  "policyBindings": [
+    {
+      "policyId": "policy.tool-approval",
+      "enforcedBy": ["component.orchestrator"],
+      "mode": "enforce"
+    }
+  ],
+  "containerPlacements": [
+    {
+      "containerId": "container.local-process",
+      "objectIds": ["component.orchestrator", "interface.chat.http"],
+      "limits": {
+        "cpu": 1,
+        "memoryMiB": 512,
+        "timeoutMs": 120000
+      }
+    }
+  ],
+  "interfaceBindings": [
+    {
+      "interfaceId": "interface.chat.http",
+      "enabled": true,
+      "settings": {
+        "host": "127.0.0.1",
+        "port": 3080,
+        "path": "/chat"
+      }
+    }
+  ],
+  "runtime": {
+    "engine": {
+      "name": "node",
+      "version": "24.6.0"
+    },
+    "entryComponentId": "component.orchestrator",
+    "environment": {
+      "requiredVariables": ["DEEPSEEK_API_KEY"],
+      "optionalVariables": ["DEEPSEEK_BASE_URL"]
+    },
+    "startup": {
+      "command": "node",
+      "arguments": ["./dist/start.mjs", "--recipe", "./recipe.json"],
+      "workingDirectory": "."
+    },
+    "restartPolicy": "onFailure"
+  },
+  "verification": [
+    {
+      "id": "check.recipe-schema",
+      "kind": "schema",
+      "required": true,
+      "command": "validate recipe.json",
+      "timeoutMs": 10000,
+      "expected": { "valid": true }
+    },
+    {
+      "id": "check.chat-smoke",
+      "kind": "smoke",
+      "required": true,
+      "command": "run fixture.greeting",
+      "timeoutMs": 30000,
+      "expected": { "eventType": "agent.response.completed" }
+    }
+  ],
+  "metadata": {
+    "example": true,
+    "specVersion": "0.4"
+  }
+}

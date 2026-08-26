@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Security report / 安全报告
+    url: https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow/security/advisories/new
+    about: Report vulnerabilities privately; never post credentials or personal data in a public issue. / 请私密报告漏洞，不要在公开 Issue 中提交密钥或个人数据。

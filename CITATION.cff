@@ -1,0 +1,19 @@
+cff-version: 1.2.0
+message: "If you use WGP-ABF, please cite this report and preserve attribution. / 如使用 WGP-ABF，请引用本报告并保留署名。"
+title: "WGP Agent Bodification Flow (WGP-ABF): An Engineering Framework for Agent Blueprints, Evidence-Backed Evaluation, and Validated Component Replacement"
+type: report
+version: "0.4.0"
+date-released: "2026-08-26"
+authors:
+  - family-names: Wang
+    given-names: Guangping
+    alias: "王广平"
+license: CC-BY-4.0
+repository-code: "https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow"
+url: "https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow"
+keywords:
+  - agent engineering
+  - agent configuration
+  - agent observability
+  - agent evaluation
+  - visual programming

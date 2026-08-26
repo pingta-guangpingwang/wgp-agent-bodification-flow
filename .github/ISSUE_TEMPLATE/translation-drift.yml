@@ -1,0 +1,18 @@
+name: Translation drift / 翻译差异
+description: Report meaning or section alignment that differs between Chinese and English. / 报告中英文语义或章节对齐差异。
+title: "[translation] "
+labels: ["translation"]
+body:
+  - type: input
+    id: section
+    attributes:
+      label: Shared section ID / 对应章节编号
+      placeholder: 7 or Appendix B
+    validations:
+      required: true
+  - type: textarea
+    id: difference
+    attributes:
+      label: Difference and proposed correction / 差异与建议修正
+    validations:
+      required: true

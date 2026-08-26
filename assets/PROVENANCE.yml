@@ -1,0 +1,46 @@
+schema_version: "1.0"
+project: "WGP Agent Bodification Flow (WGP-ABF)"
+principal_author: "Wang Guangping / 王广平"
+license: "CC-BY-4.0"
+generated_at: "2026-08-26"
+
+assets:
+  - path: "images/wgp-abf-cover-art-v0.4.png"
+    sha256: "0d9f5cefd11f8e484d8e8d557e5131ab9ef773c6f753b7a47fff8d634bda9ef0"
+    type: "AI-assisted original raster illustration"
+    tool: "OpenAI built-in ImageGen"
+    direction: "Wang Guangping / 王广平"
+    prompt_summary: >-
+      Premium A4 portrait editorial technical illustration of a modular AI-agent
+      assembly transitioning from a two-dimensional blueprint into a restrained
+      three-dimensional exploded system. Visible modules represent model, memory,
+      tools, permissions, runtime, evidence, and rollback. Navy, cyan, white, and
+      amber palette; large title-safe negative space; no text, logos, faces, or
+      watermark.
+    human_review: >-
+      Selected for conceptual fidelity, visual hierarchy, publication suitability,
+      and absence of third-party logos or identifiable people.
+
+  - path: "diagrams/wgp-abf-system-map.png"
+    sha256: "0cd69a9461223686ecbcd180f01e6f24426d163b595dd818dedff411276ccdd6"
+    type: "Script-rendered original diagram"
+    source: "../scripts/render_diagrams.py"
+    authoring: "Content designed for WGP-ABF v0.4 and rendered with Pillow"
+
+  - path: "diagrams/wgp-abf-nine-stage-flow.png"
+    sha256: "35e8078a1d5556cdb5a53d1389eb3816bdf6a935d4a63af503d1354d4c40b609"
+    type: "Script-rendered original diagram"
+    source: "../scripts/render_diagrams.py"
+    authoring: "Content designed for WGP-ABF v0.4 and rendered with Pillow"
+
+  - path: "diagrams/wgp-abf-evolution-loop.png"
+    sha256: "6aa0902f40731bf2c26769f9f886e85437ba77db046f8039cb79b160a5d0d807"
+    type: "Script-rendered original diagram"
+    source: "../scripts/render_diagrams.py"
+    authoring: "Content designed for WGP-ABF v0.4 and rendered with Pillow"
+
+  - path: "diagrams/wgp-abf-fidelity-matrix.png"
+    sha256: "4eecfad82927e03600b4b85ca482e386575cc30eb678a3d8caaba69563413632"
+    type: "Script-rendered original diagram"
+    source: "../scripts/render_diagrams.py"
+    authoring: "Content designed for WGP-ABF v0.4 and rendered with Pillow"
