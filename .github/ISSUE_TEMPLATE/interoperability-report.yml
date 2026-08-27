@@ -22,6 +22,21 @@ body:
       options: [C0, C1, C2, C3, Projection Conformance only]
     validations:
       required: true
+  - type: dropdown
+    id: interchangeability
+    attributes:
+      label: Interchangeability evidence / 互换证据
+      description: Select only for a directed A→B assessment under one pinned CompatibilityProfile; this is independent from C0–C3.
+      options: [Not assessed, I0 Closed, I1 Adapter-wrapped, I2 Interface-conformant, I3 Behavior-verified, I4 Evidence-backed controlled interchangeability]
+    validations:
+      required: true
+  - type: textarea
+    id: exact-references
+    attributes:
+      label: Exact releases and profile / 精确发布与 Profile
+      description: Provide id + version + contentHash for the baseline, candidate, package, profile, suite, and report when applicable. Do not use latest or a version range.
+    validations:
+      required: true
   - type: textarea
     id: evidence
     attributes:

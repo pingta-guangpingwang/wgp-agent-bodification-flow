@@ -2,9 +2,9 @@
 
 # Build and publication guide / 构建与发布指南
 
-The checked-in Markdown, diagrams, PDFs, schemas, examples, and release checksums are the authoritative v0.4.0 artifacts. The scripts provide the source used to build this release; byte-identical output requires the same inputs, dependency versions, fonts, and platform rendering behavior.
+The checked-in Markdown, diagrams, PDFs, schemas, examples, and release checksums are the authoritative v0.5.0 artifacts. The scripts provide the source used to build this release; byte-identical output requires the same inputs, dependency versions, fonts, and platform rendering behavior.
 
-仓库内的 Markdown、图表、PDF、Schema、示例和发布校验和是 v0.4.0 的权威产物。脚本记录了本次发布所用构建源；若要求字节完全一致，需要保持输入、依赖版本、字体和平台渲染行为一致。
+仓库内的 Markdown、图表、PDF、Schema、示例和发布校验和是 v0.5.0 的权威产物。脚本记录了本次发布所用构建源；若要求字节完全一致，需要保持输入、依赖版本、字体和平台渲染行为一致。
 
 ## Prerequisites / 前置条件
 

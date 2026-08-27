@@ -1,5 +1,5 @@
 {
-  "format": "wgp-abir/0.4",
+  "format": "wgp-abir/0.5",
   "id": "agent.minimal-chat",
   "name": {
     "zh-CN": "最小聊天智能体",
@@ -9,7 +9,7 @@
     "zh-CN": "展示六类结构对象、端口级连线、多轴来源声明与独立投影视图的最小 ABIR。",
     "en": "A minimal ABIR demonstrating six structural object classes, port-level edges, multi-axis source claims, and an independent projection profile."
   },
-  "version": "0.4.0",
+  "version": "0.5.0",
   "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "createdAt": "2026-08-26T09:00:00Z",
   "objects": {
@@ -130,9 +130,9 @@
           "en": "Orchestrator Implementation Package"
         },
         "artifactKind": "package",
-        "locator": "https://example.org/packages/minimal-orchestrator-0.4.0.tgz",
+        "locator": "https://example.org/packages/minimal-orchestrator-0.5.0.tgz",
         "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "version": "0.4.0",
+        "version": "0.5.0",
         "mediaType": "application/gzip",
         "licenseExpression": "Apache-2.0"
       },
@@ -249,7 +249,7 @@
       "method": "nativeIntrospection",
       "adapter": {
         "name": "minimal-agent-adapter",
-        "version": "0.4.0",
+        "version": "0.5.0",
         "implementationDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
       },
       "evidenceRefs": ["events.jsonl"],

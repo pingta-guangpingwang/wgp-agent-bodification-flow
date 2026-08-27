@@ -96,7 +96,7 @@ def render_system_map() -> None:
     draw.text((625, 525), "2D blueprint: authoritative editing projection", font=font(15), fill=MUTED)
 
     boxes = [
-        ((90, 180, 500, 350), "结构协议 / Structure", "ABIR · 来源声明 · 字段能力\n对象、强类型边、配方与差分", CYAN),
+        ((90, 180, 500, 350), "标准件与结构 / Standard Parts", "StandardPartDescriptor · ABIR\n装配面、强类型边、配方与差分", CYAN),
         ((1100, 180, 1510, 350), "运行协议 / Runtime", "存储 · 来源 · 回放角色三轴\n事件、因果顺序、回放与审计", BLUE),
         ((90, 610, 500, 780), "证据协议 / Evidence", "三级评测 · 双重评分\n样本量、方差、置信区间", GREEN),
         ((1100, 610, 1510, 780), "呈现投影 / Presentation", "机体视图 · 三维视图\n只读投影，不保存第二份结构", AMBER),
@@ -118,7 +118,7 @@ def render_nine_stage_flow() -> None:
     stages = [
         ("01", "导入与拆解", "Import & Decompose"),
         ("02", "模块显形", "Reveal Modules"),
-        ("03", "组件显形", "Reveal Components"),
+        ("03", "标准件归一", "Normalize Parts"),
         ("04", "关系显形", "Type Relationships"),
         ("05", "生成图纸", "Build Blueprint"),
         ("06", "装配改装", "Assemble & Modify"),
@@ -205,12 +205,91 @@ def render_fidelity_matrix() -> None:
     save(image, "wgp-abf-fidelity-matrix.png")
 
 
+def render_standard_parts() -> None:
+    image, draw = canvas(
+        "智能体标准件生态 / Standard-part Ecosystem",
+        "不统一内部实现，只标准化装配面；百花齐放负责创新，标准件负责组合",
+    )
+
+    draw.rounded_rectangle((55, 155, 445, 675), radius=28, fill="#092944", outline=BLUE, width=3)
+    draw.text((85, 180), "多样实现 / Diverse Implementations", font=font(23, True), fill=WHITE)
+    draw.text((86, 220), "内部自由演进，外部声明可装配事实", font=font(16), fill=MUTED)
+    implementation_boxes = [
+        ((85, 270, 250, 360), "模型 / Model", "ABIR: Resource", CYAN),
+        ((270, 270, 415, 360), "记忆 / Memory", "ABIR: Resource", GREEN),
+        ((85, 385, 250, 475), "工具 / Tool", "ABIR: Component", AMBER),
+        ((270, 385, 415, 475), "技能 / Skill", "ABIR: Artifact", BLUE),
+        ((85, 500, 250, 590), "工作流", "ABIR: Component", RED),
+        ((270, 500, 415, 590), "界面 / UI", "ABIR: Interface", CYAN),
+    ]
+    for box, label, part_kind, accent in implementation_boxes:
+        draw.rounded_rectangle(box, radius=18, fill=PANEL, outline=accent, width=3)
+        label_box = draw.textbbox((0, 0), label, font=font(18, True))
+        label_width = label_box[2] - label_box[0]
+        draw.text((box[0] + (box[2] - box[0] - label_width) / 2, box[1] + 21), label, font=font(18, True), fill=WHITE)
+        kind_box = draw.textbbox((0, 0), part_kind, font=font(12))
+        kind_width = kind_box[2] - kind_box[0]
+        draw.text((box[0] + (box[2] - box[0] - kind_width) / 2, box[1] + 57), part_kind, font=font(12), fill=MUTED)
+
+    draw.rounded_rectangle((520, 155, 1055, 675), radius=32, fill="#0a3356", outline=CYAN, width=4)
+    draw.text((560, 180), "StandardPartDescriptor", font=font(27, True), fill=WHITE)
+    draw.text((560, 225), "标准化装配面 / Standardized Assembly Surface", font=font(18, True), fill=CYAN)
+    descriptor_rows = [
+        ("身份与版本", "Identity · Version · Kind"),
+        ("端口与能力", "Typed Ports · Capabilities"),
+        ("依赖与权限", "Runtime · Dependencies · Permissions"),
+        ("状态与迁移", "State Schema · Migration"),
+        ("兼容与生命周期", "Compatibility · Lifecycle"),
+        ("证据与供应链", "Conformance · Evidence · Provenance"),
+    ]
+    for index, (zh, en) in enumerate(descriptor_rows):
+        y1 = 275 + index * 59
+        draw.rounded_rectangle((555, y1, 1020, y1 + 46), radius=12, fill=PANEL_ALT, outline=GRID, width=2)
+        draw.text((575, y1 + 10), zh, font=font(17, True), fill=WHITE)
+        draw.text((735, y1 + 12), en, font=font(14), fill=MUTED)
+
+    arrow(draw, (445, 415), (520, 415), CYAN, 5)
+    draw.text((451, 374), "声明", font=font(16, True), fill=CYAN)
+    draw.text((448, 442), "Declare", font=font(13), fill=MUTED)
+
+    draw.rounded_rectangle((1130, 155, 1545, 675), radius=28, fill="#092944", outline=GREEN, width=3)
+    draw.text((1160, 180), "开放生态 / Open Ecosystem", font=font(23, True), fill=WHITE)
+    ecosystem_rows = [
+        ((1160, 245, 1515, 325), "1 发现 / Registry", "签名描述符与版本索引", CYAN),
+        ((1160, 345, 1515, 425), "2 求解 / Compatibility", "端口、策略、运行时与状态约束", BLUE),
+        ((1160, 445, 1515, 525), "3 验证 / Conformance", "测试向量、证据和互换等级", GREEN),
+        ((1160, 545, 1515, 625), "4 替换 / Replacement", "迁移、验收、回滚与副作用补偿", AMBER),
+    ]
+    for box, title, subtitle, accent in ecosystem_rows:
+        rounded_box(draw, box, title, subtitle, accent=accent, title_size=18, subtitle_size=14)
+    arrow(draw, (1055, 415), (1130, 415), GREEN, 5)
+    draw.text((1066, 374), "验证", font=font(16, True), fill=GREEN)
+    draw.text((1063, 442), "Verify", font=font(13), fill=MUTED)
+
+    ladder_x = [55, 353, 651, 949, 1247, 1545]
+    ladder = [
+        ("I0 封闭", "Closed", RED),
+        ("I1 适配", "Adapter-wrapped", AMBER),
+        ("I2 可装配", "Interface-conformant", BLUE),
+        ("I3 可替换", "Behavior-verified", CYAN),
+        ("I4 受控互换", "Migration + rollback evidence", GREEN),
+    ]
+    for index, (title, subtitle, accent) in enumerate(ladder):
+        box = (ladder_x[index], 725, ladder_x[index + 1], 840)
+        draw.rectangle(box, fill=PANEL if index % 2 == 0 else PANEL_ALT, outline=accent, width=3)
+        draw.text((box[0] + 20, 748), title, font=font(19, True), fill=accent)
+        draw.text((box[0] + 20, 790), subtitle, font=font(14), fill=MUTED)
+    draw.text((60, 690), "互换成熟度 / Interchangeability maturity（独立于 F3–F0 结构来源）", font=font(18, True), fill=WHITE)
+    save(image, "wgp-abf-standard-parts.png")
+
+
 def main() -> None:
     render_system_map()
     render_nine_stage_flow()
     render_evolution_loop()
     render_fidelity_matrix()
-    print(f"Rendered 4 diagrams to {OUTPUT}")
+    render_standard_parts()
+    print(f"Rendered 5 diagrams to {OUTPUT}")
 
 
 if __name__ == "__main__":

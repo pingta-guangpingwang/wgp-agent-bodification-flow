@@ -89,7 +89,7 @@ for (const match of provenanceSource.matchAll(provenanceEntry)) {
   const actual = crypto.createHash("sha256").update(fs.readFileSync(asset)).digest("hex");
   if (actual !== expected) fail(`asset provenance checksum mismatch: ${relative}`);
 }
-if (provenanceCount !== 5) fail(`PROVENANCE.yml contains ${provenanceCount} hashed assets; expected 5`);
+if (provenanceCount !== 6) fail(`PROVENANCE.yml contains ${provenanceCount} hashed assets; expected 6`);
 if (!failures.length) pass("asset provenance checksums");
 
 const archiveReadme = fs.readFileSync(path.join(root, "archive", "v0.3", "README.md"), "utf8");
@@ -102,9 +102,9 @@ if (!failures.length) pass("v0.3 source archive checksum");
 const releaseDirectory = path.join(root, "output", "release");
 const checksumPath = path.join(releaseDirectory, "SHA256SUMS.txt");
 const artifactLocations = new Map([
-  ["WGP-ABF-Whitepaper-v0.4.0-zh-CN.pdf", path.join(root, "output", "pdf", "WGP-ABF-Whitepaper-v0.4.0-zh-CN.pdf")],
-  ["WGP-ABF-Whitepaper-v0.4.0-en.pdf", path.join(root, "output", "pdf", "WGP-ABF-Whitepaper-v0.4.0-en.pdf")],
-  ["WGP-ABF-Spec-Bundle-v0.4.0.zip", path.join(releaseDirectory, "WGP-ABF-Spec-Bundle-v0.4.0.zip")],
+  ["WGP-ABF-Whitepaper-v0.5.0-zh-CN.pdf", path.join(root, "output", "pdf", "WGP-ABF-Whitepaper-v0.5.0-zh-CN.pdf")],
+  ["WGP-ABF-Whitepaper-v0.5.0-en.pdf", path.join(root, "output", "pdf", "WGP-ABF-Whitepaper-v0.5.0-en.pdf")],
+  ["WGP-ABF-Spec-Bundle-v0.5.0.zip", path.join(releaseDirectory, "WGP-ABF-Spec-Bundle-v0.5.0.zip")],
 ]);
 
 if (!fs.existsSync(checksumPath)) {
@@ -137,7 +137,7 @@ if (!fs.existsSync(checksumPath)) {
 const citation = fs.readFileSync(path.join(root, "CITATION.cff"), "utf8");
 for (const required of [
   'cff-version: 1.2.0',
-  'version: "0.4.0"',
+  'version: "0.5.0"',
   'repository-code: "https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow"',
 ]) {
   if (!citation.includes(required)) fail(`CITATION.cff is missing: ${required}`);

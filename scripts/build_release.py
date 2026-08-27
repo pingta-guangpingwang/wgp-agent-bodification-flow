@@ -9,10 +9,10 @@ from zipfile import ZIP_DEFLATED, ZipFile, ZipInfo
 
 
 ROOT = Path(__file__).resolve().parents[1]
-VERSION = "0.4.0"
+VERSION = "0.5.0"
 BUNDLE_NAME = f"WGP-ABF-Spec-Bundle-v{VERSION}.zip"
 ARCHIVE_ROOT = f"wgp-abf-spec-bundle-v{VERSION}"
-FIXED_ZIP_TIME = (2026, 8, 26, 0, 0, 0)
+FIXED_ZIP_TIME = (2026, 8, 27, 0, 0, 0)
 
 INCLUDED_ROOT_FILES = (
     "README.md",
@@ -36,10 +36,10 @@ INCLUDED_ROOT_FILES = (
     "package.json",
     "pnpm-lock.yaml",
 )
-INCLUDED_TREES = ("LICENSES", "spec", "examples", "whitepaper", "assets", "archive", "governance", "output/pdf")
+INCLUDED_TREES = ("LICENSES", "spec", "examples", "whitepaper", "assets", "archive", "governance")
 PDF_NAMES = (
-    "WGP-ABF-Whitepaper-v0.4.0-zh-CN.pdf",
-    "WGP-ABF-Whitepaper-v0.4.0-en.pdf",
+    "WGP-ABF-Whitepaper-v0.5.0-zh-CN.pdf",
+    "WGP-ABF-Whitepaper-v0.5.0-en.pdf",
 )
 
 
@@ -57,6 +57,7 @@ def bundle_files() -> list[Path]:
     """Return the sorted repository-relative files included in the bundle."""
 
     files = [ROOT / name for name in INCLUDED_ROOT_FILES]
+    files.extend(ROOT / "output" / "pdf" / name for name in PDF_NAMES)
     files.extend(path for path in (ROOT / "scripts").glob("*") if path.suffix in {".mjs", ".py"})
     for tree in INCLUDED_TREES:
         files.extend(path for path in (ROOT / tree).rglob("*") if path.is_file())

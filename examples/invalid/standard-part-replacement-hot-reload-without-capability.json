@@ -1,0 +1,108 @@
+{
+  "planId": "plan.orchestrator-restart",
+  "version": "0.5.0",
+  "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+  "fromPart": {
+    "partId": "component.orchestrator",
+    "version": "0.5.0",
+    "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+  },
+  "toPart": {
+    "partId": "component.orchestrator",
+    "version": "0.5.1",
+    "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+  },
+  "replacementMode": "hotReload",
+  "recipeDiffRef": {
+    "id": "diff.raise-max-tokens",
+    "version": "0.5.1",
+    "contentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "recipePrecondition": {
+    "id": "recipe.minimal-chat",
+    "version": "0.5.0",
+    "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+  },
+  "riskAssessmentIds": [
+    "risk.restart-availability"
+  ],
+  "requiredAdapterCapabilities": [
+    {
+      "sourceClaimId": "claim.orchestrator-native",
+      "fieldScope": [
+        "/objects/components/0"
+      ],
+      "operationCapabilities": [
+        "view",
+        "edit",
+        "compile",
+        "roundTrip",
+        "replace"
+      ]
+    }
+  ],
+  "failurePolicy": {
+    "onPreconditionFailure": "abort",
+    "onStepFailure": "rollback",
+    "onAcceptanceFailure": "rollback",
+    "onRollbackFailure": "escalate",
+    "recipeDiffCompensationRequired": true,
+    "compensateExternalSideEffects": false
+  },
+  "steps": [
+    {
+      "stepId": "step.preflight",
+      "phase": "preflight",
+      "action": "Validate exact recipe hash, descriptor pins, permissions, and risk approvals.",
+      "restartRequired": false,
+      "verificationTestVectorIds": [
+        "test.surface-contract"
+      ]
+    },
+    {
+      "stepId": "step.switch",
+      "phase": "switch",
+      "action": "Apply the guarded RecipeDiff and restart the local process.",
+      "restartRequired": true,
+      "verificationTestVectorIds": [
+        "test.acceptance"
+      ]
+    },
+    {
+      "stepId": "step.verify-rollback",
+      "phase": "verify",
+      "action": "Run acceptance and rollback verification before committing the replacement.",
+      "restartRequired": false,
+      "verificationTestVectorIds": [
+        "test.acceptance",
+        "test.rollback"
+      ]
+    }
+  ],
+  "profileRef": {
+    "id": "profile.orchestrator-controlled",
+    "version": "0.5.0",
+    "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "migrationReportRefs": [
+    {
+      "id": "report.orchestrator-conformance",
+      "version": "0.5.0",
+      "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "acceptanceReportRefs": [
+    {
+      "id": "report.orchestrator-conformance",
+      "version": "0.5.0",
+      "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ],
+  "rollbackReportRefs": [
+    {
+      "id": "report.orchestrator-conformance",
+      "version": "0.5.0",
+      "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
+  ]
+}

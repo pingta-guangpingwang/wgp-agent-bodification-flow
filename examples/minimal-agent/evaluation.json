@@ -1,5 +1,5 @@
 {
-  "format": "wgp-evaluation/0.4",
+  "format": "wgp-evaluation/0.5",
   "evaluationId": "evaluation.max-tokens-01",
   "title": {
     "zh-CN": "响应预算变更的配对评测",
@@ -14,13 +14,13 @@
   "baseline": {
     "label": "baseline",
     "recipeId": "recipe.minimal-chat",
-    "recipeVersion": "0.4.0",
+    "recipeVersion": "0.5.0",
     "recipeContentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
   },
   "candidate": {
     "label": "candidate",
     "recipeId": "recipe.minimal-chat",
-    "recipeVersion": "0.4.1",
+    "recipeVersion": "0.5.1",
     "recipeContentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
     "recipeDiffId": "diff.raise-max-tokens"
   },

@@ -1,0 +1,17 @@
+{
+  "statusRecordId": "status.report-orchestrator.2",
+  "reportRef": {
+    "id": "report.orchestrator-conformance",
+    "version": "0.5.0",
+    "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "revision": 2,
+  "recordHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+  "previousRecordHash": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+  "action": "revoke",
+  "recordedAt": "2026-08-27T08:12:00Z",
+  "reason": {
+    "zh-CN": "负例：报告在 assessment 之后被外部状态链撤销，旧 assessment 当前不再可采信。",
+    "en": "Negative fixture: the external status chain revoked the report after assessment, so the old assessment is no longer currently admissible."
+  }
+}

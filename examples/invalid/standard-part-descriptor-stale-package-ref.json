@@ -1,0 +1,257 @@
+{
+  "format": "wgp-standard-part-descriptor/0.5",
+  "descriptorVersion": "0.5.0",
+  "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+  "createdAt": "2026-08-27T08:00:00Z",
+  "identity": {
+    "partId": "component.orchestrator",
+    "name": {
+      "zh-CN": "标准对话编排器",
+      "en": "Standard Conversation Orchestrator"
+    },
+    "description": {
+      "zh-CN": "通过标准消息与模型端口装配的最小对话编排标准件。",
+      "en": "A minimal conversation-orchestration standard part assembled through standard message and model ports."
+    },
+    "version": "0.5.0",
+    "partKind": "component",
+    "roles": [
+      "orchestrator",
+      "agentLoop"
+    ],
+    "publisher": {
+      "publisherId": "publisher.wgp-abf",
+      "name": {
+        "zh-CN": "WGP-ABF 参考实现",
+        "en": "WGP-ABF Reference Implementation"
+      },
+      "url": "https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow"
+    },
+    "releaseChannel": "stable"
+  },
+  "assembly": {
+    "surfaces": [
+      {
+        "surfaceId": "surface.chat",
+        "category": "data",
+        "standard": {
+          "standardId": "standard.wgp-message",
+          "version": "1.0.0",
+          "specRef": "https://example.org/standards/wgp-message/v1",
+          "contentHash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        },
+        "ports": [
+          {
+            "portId": "chat.input",
+            "abirPortId": "input.in",
+            "direction": "in",
+            "protocolId": "wgp.message",
+            "protocolVersion": "v1",
+            "schemaRef": "https://example.org/schemas/wgp-message.schema.json",
+            "schemaContentHash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+            "mediaType": "application/json",
+            "cardinality": "one",
+            "required": true,
+            "compatibilityKey": "wgp.message.input/v1"
+          },
+          {
+            "portId": "chat.output",
+            "abirPortId": "output.out",
+            "direction": "out",
+            "protocolId": "wgp.message",
+            "protocolVersion": "v1",
+            "schemaRef": "https://example.org/schemas/wgp-message.schema.json",
+            "schemaContentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+            "mediaType": "application/json",
+            "cardinality": "one",
+            "required": true,
+            "compatibilityKey": "wgp.message.output/v1"
+          }
+        ]
+      },
+      {
+        "surfaceId": "surface.model-client",
+        "category": "control",
+        "standard": {
+          "standardId": "standard.wgp-model",
+          "version": "1.0.0",
+          "specRef": "https://example.org/standards/wgp-model/v1",
+          "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        },
+        "ports": [
+          {
+            "portId": "model.request",
+            "abirPortId": "model.request",
+            "direction": "out",
+            "protocolId": "wgp.model",
+            "protocolVersion": "v1",
+            "schemaRef": "https://example.org/schemas/wgp-model-request.schema.json",
+            "schemaContentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+            "mediaType": "application/json",
+            "cardinality": "one",
+            "required": true,
+            "compatibilityKey": "wgp.model.request/v1"
+          },
+          {
+            "portId": "model.response",
+            "abirPortId": "model.response",
+            "direction": "in",
+            "protocolId": "wgp.model",
+            "protocolVersion": "v1",
+            "schemaRef": "https://example.org/schemas/wgp-model-response.schema.json",
+            "schemaContentHash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+            "mediaType": "application/json",
+            "cardinality": "one",
+            "required": true,
+            "compatibilityKey": "wgp.model.response/v1"
+          }
+        ]
+      }
+    ]
+  },
+  "configuration": {
+    "schemaRef": "https://example.org/schemas/minimal-orchestrator-config.schema.json",
+    "schemaDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+    "defaultsRef": "https://example.org/config/minimal-orchestrator-defaults.json",
+    "secretFields": [],
+    "unknownFieldPolicy": "reject"
+  },
+  "capabilities": [
+    {
+      "capabilityId": "capability.chat-orchestration",
+      "version": "1.0.0",
+      "operations": [
+        "acceptMessage",
+        "invokeModel",
+        "emitMessage"
+      ],
+      "surfaceIds": [
+        "surface.chat",
+        "surface.model-client"
+      ]
+    }
+  ],
+  "requirements": {
+    "runtime": {
+      "engines": [
+        {
+          "name": "node",
+          "versionRange": ">=22.19"
+        }
+      ],
+      "platforms": [
+        {
+          "os": "any",
+          "architecture": "any"
+        }
+      ],
+      "minimumResources": {
+        "cpuCores": 1,
+        "memoryMiB": 256,
+        "storageMiB": 64,
+        "accelerator": "none"
+      },
+      "network": "outbound"
+    },
+    "dependencies": [],
+    "permissions": [
+      {
+        "permissionId": "permission.deepseek-credential",
+        "scope": "credential",
+        "actions": [
+          "read"
+        ],
+        "resources": [
+          "credential.deepseek-api-key"
+        ],
+        "required": true,
+        "justification": {
+          "zh-CN": "调用已绑定的模型服务。",
+          "en": "Invoke the bound model service."
+        }
+      }
+    ]
+  },
+  "state": {
+    "mode": "stateless",
+    "persistence": "none",
+    "migrations": []
+  },
+  "packageRef": {
+    "id": "package.orchestrator",
+    "version": "0.5.0",
+    "contentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+  },
+  "compatibilityProfileRefs": [
+    {
+      "id": "profile.orchestrator-controlled",
+      "version": "0.5.0",
+      "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+    }
+  ],
+  "conformanceSuiteRefs": [
+    {
+      "id": "suite.orchestrator",
+      "version": "0.5.0",
+      "contentHash": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+    }
+  ],
+  "lifecycle": {
+    "install": {
+      "strategies": [
+        "offline"
+      ],
+      "entrypoint": "file:./lifecycle/install.mjs",
+      "preconditions": [
+        "Package digest and signature are verified."
+      ],
+      "verificationTestVectorIds": [
+        "test.surface-contract",
+        "test.acceptance"
+      ],
+      "requiresApproval": false
+    },
+    "replace": {
+      "strategies": [
+        "restart"
+      ],
+      "entrypoint": "file:./lifecycle/replace.mjs",
+      "preconditions": [
+        "RecipeDiff preconditions and risk approvals pass."
+      ],
+      "verificationTestVectorIds": [
+        "test.acceptance",
+        "test.rollback"
+      ],
+      "requiresApproval": false
+    },
+    "rollback": {
+      "strategies": [
+        "restart"
+      ],
+      "entrypoint": "file:./lifecycle/rollback.mjs",
+      "preconditions": [
+        "The prior package and recipe snapshot remain available."
+      ],
+      "verificationTestVectorIds": [
+        "test.rollback"
+      ],
+      "requiresApproval": false,
+      "retainedVersions": 2
+    },
+    "uninstall": {
+      "strategies": [
+        "offline"
+      ],
+      "entrypoint": "file:./lifecycle/uninstall.mjs",
+      "preconditions": [
+        "No active run references the standard part."
+      ],
+      "verificationTestVectorIds": [
+        "test.surface-contract"
+      ],
+      "requiresApproval": true,
+      "residualState": "none"
+    }
+  }
+}

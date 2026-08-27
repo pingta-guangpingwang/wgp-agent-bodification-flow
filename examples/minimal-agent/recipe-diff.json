@@ -1,12 +1,12 @@
 {
-  "format": "wgp-recipe-diff/0.4",
+  "format": "wgp-recipe-diff/0.5",
   "id": "diff.raise-max-tokens",
   "createdAt": "2026-08-26T09:10:00Z",
   "createdBy": "example.operator",
   "recipeId": "recipe.minimal-chat",
-  "baseVersion": "0.4.0",
+  "baseVersion": "0.5.0",
   "baseContentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-  "targetVersion": "0.4.1",
+  "targetVersion": "0.5.1",
   "targetContentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "atomic": true,
   "dryRun": false,
@@ -20,7 +20,7 @@
     {
       "kind": "recipeVersion",
       "required": true,
-      "expectedVersion": "0.4.0"
+      "expectedVersion": "0.5.0"
     },
     {
       "kind": "pathValue",
@@ -34,8 +34,11 @@
       "id": "risk.restart-availability",
       "category": "availability",
       "severity": "medium",
-      "affectedPaths": ["/componentBindings/0/config/maxTokens"],
-      "description": "Applying the candidate configuration requires a process restart and may briefly interrupt the local chat interface.",
+      "affectedPaths": [
+        "/standardPartBindings/0/descriptorRef",
+        "/componentBindings/0/config/maxTokens"
+      ],
+      "description": "Replacing the pinned standard part and applying the candidate configuration require a process restart and may briefly interrupt the local chat interface.",
       "mitigation": {
         "actions": [
           "Run the schema and smoke checks before commit.",
@@ -54,6 +57,37 @@
     }
   ],
   "operations": [
+    {
+      "id": "operation.replace-standard-part",
+      "op": "replace",
+      "path": "/standardPartBindings/0/descriptorRef",
+      "value": {
+        "partId": "component.orchestrator",
+        "version": "0.5.1",
+        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "precondition": {
+        "path": "/standardPartBindings/0/descriptorRef",
+        "exists": true,
+        "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "restartRequired": true,
+      "reason": "Move the recipe from the exact source standard part to the assessed target standard part.",
+      "compensation": {
+        "op": "replace",
+        "path": "/standardPartBindings/0/descriptorRef",
+        "value": {
+          "partId": "component.orchestrator",
+          "version": "0.5.0",
+          "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        },
+        "precondition": {
+          "path": "/standardPartBindings/0/descriptorRef",
+          "exists": true,
+          "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      }
+    },
     {
       "id": "operation.replace-max-tokens",
       "op": "replace",
@@ -84,6 +118,18 @@
     "verifyAfterCompensation": true,
     "timeoutMs": 30000,
     "externalSideEffects": []
+  },
+  "replacementPlanRef": {
+    "standardPart": {
+      "partId": "component.orchestrator",
+      "version": "0.5.0",
+      "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+    },
+    "plan": {
+      "id": "plan.orchestrator-restart",
+      "version": "0.5.0",
+      "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+    }
   },
   "approval": {
     "required": false,
