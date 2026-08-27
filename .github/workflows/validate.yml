@@ -23,9 +23,40 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
       - uses: pnpm/action-setup@v4
         with:
           version: 11.19.0
           run_install: false
       - run: pnpm install --frozen-lockfile
+      - run: python -B scripts/test_release_bundle.py
       - run: pnpm run validate
+      - name: Verify the bundle without Git metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          offline_dir="$(mktemp -d)"
+          python_bin="$(command -v python)"
+          cp scripts/verify_release_bundle.py "$offline_dir/"
+          cp output/release/WGP-ABF-Spec-Bundle-v0.6.0.zip "$offline_dir/"
+          test ! -e "$offline_dir/.git"
+          (
+            cd "$offline_dir"
+            PATH="" "$python_bin" -B verify_release_bundle.py --bundle WGP-ABF-Spec-Bundle-v0.6.0.zip
+          )
+      - name: Rebuild the release twice reproducibly
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -B scripts/build_release.py
+          first_hash="$(sha256sum output/release/WGP-ABF-Spec-Bundle-v0.6.0.zip | cut -d ' ' -f 1)"
+          python -B scripts/build_release.py
+          second_hash="$(sha256sum output/release/WGP-ABF-Spec-Bundle-v0.6.0.zip | cut -d ' ' -f 1)"
+          test "$first_hash" = "$second_hash"
+          git diff --exit-code -- \
+            output/release/WGP-ABF-Spec-Bundle-v0.6.0.zip \
+            output/release/WGP-ABF-v0.6.0-SHA256SUMS.txt
+      - run: python -m pip install --requirement requirements-build.txt
+      - run: python scripts/validate_pdfs.py

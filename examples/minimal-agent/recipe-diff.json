@@ -1,13 +1,13 @@
 {
-  "format": "wgp-recipe-diff/0.5",
+  "format": "wgp-recipe-diff/0.6",
   "id": "diff.raise-max-tokens",
   "createdAt": "2026-08-26T09:10:00Z",
   "createdBy": "example.operator",
   "recipeId": "recipe.minimal-chat",
-  "baseVersion": "0.5.0",
-  "baseContentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-  "targetVersion": "0.5.1",
-  "targetContentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+  "baseVersion": "0.6.0",
+  "baseContentHash": "sha256:eaf9de1637c178a54204a5357b0da2463e8cc652aa252601b9d0471aae859777",
+  "targetVersion": "0.6.1",
+  "targetContentHash": "sha256:644c3f1fada27316ba8777591bc4c64548047b5b70eecd17cfa35054eae12092",
   "atomic": true,
   "dryRun": false,
   "restartRequired": true,
@@ -15,12 +15,12 @@
     {
       "kind": "contentHash",
       "required": true,
-      "expectedHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      "expectedHash": "sha256:eaf9de1637c178a54204a5357b0da2463e8cc652aa252601b9d0471aae859777"
     },
     {
       "kind": "recipeVersion",
       "required": true,
-      "expectedVersion": "0.5.0"
+      "expectedVersion": "0.6.0"
     },
     {
       "kind": "pathValue",
@@ -36,7 +36,8 @@
       "severity": "medium",
       "affectedPaths": [
         "/standardPartBindings/0/descriptorRef",
-        "/componentBindings/0/config/maxTokens"
+        "/componentBindings/0/config/maxTokens",
+        "/standardPartBindings/0/packageRef"
       ],
       "description": "Replacing the pinned standard part and applying the candidate configuration require a process restart and may briefly interrupt the local chat interface.",
       "mitigation": {
@@ -62,14 +63,14 @@
       "op": "replace",
       "path": "/standardPartBindings/0/descriptorRef",
       "value": {
-        "partId": "component.orchestrator",
-        "version": "0.5.1",
-        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        "partId": "component.orchestrator-alternative",
+        "version": "0.6.1",
+        "contentHash": "sha256:5827e8a91e2af3fa2d41368ca087dbb7b2d77c1154505b96e81620f6a0ba1f6f"
       },
       "precondition": {
         "path": "/standardPartBindings/0/descriptorRef",
         "exists": true,
-        "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        "contentHash": "sha256:cc42f0a6d90a2b6957201eb0c1c03d234725ac6db3aac251e8b8336b317a12bd"
       },
       "restartRequired": true,
       "reason": "Move the recipe from the exact source standard part to the assessed target standard part.",
@@ -78,13 +79,44 @@
         "path": "/standardPartBindings/0/descriptorRef",
         "value": {
           "partId": "component.orchestrator",
-          "version": "0.5.0",
-          "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+          "version": "0.6.0",
+          "contentHash": "sha256:e12468fcdae13ef4c87e4058664fb383a4dd5e09c6172a8d8645f1f57226efbf"
         },
         "precondition": {
           "path": "/standardPartBindings/0/descriptorRef",
           "exists": true,
-          "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+          "contentHash": "sha256:67bf994d83fc28facc13968dadebf023f4494a2beb0ffd0e2526c717fd9fe566"
+        }
+      }
+    },
+    {
+      "id": "operation.replace-standard-part-package",
+      "op": "replace",
+      "path": "/standardPartBindings/0/packageRef",
+      "value": {
+        "id": "package.orchestrator",
+        "version": "0.6.1",
+        "contentHash": "sha256:ad801064864c7fbd48c7213493194d52089c8d6f6e62a860fb959cc8c25374c3"
+      },
+      "precondition": {
+        "path": "/standardPartBindings/0/packageRef",
+        "exists": true,
+        "contentHash": "sha256:94a08ecee5c22f59e9b44ff0604207d22ac1a9b87980483ca56af48dbfeff8ab"
+      },
+      "restartRequired": true,
+      "reason": "Replace the source implementation package with the target part's independently pinned package.",
+      "compensation": {
+        "op": "replace",
+        "path": "/standardPartBindings/0/packageRef",
+        "value": {
+          "id": "package.orchestrator",
+          "version": "0.6.0",
+          "contentHash": "sha256:4314ce8df784b3697f64f8175620af8193efdbcde47fbfb6f98f214bf7c80e84"
+        },
+        "precondition": {
+          "path": "/standardPartBindings/0/packageRef",
+          "exists": true,
+          "contentHash": "sha256:710e56500b8fb683a25c0001cc6851903dcc60904739a493560d684c1063453c"
         }
       }
     },
@@ -96,7 +128,7 @@
       "precondition": {
         "path": "/componentBindings/0/config/maxTokens",
         "exists": true,
-        "contentHash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+        "contentHash": "sha256:bfa0ec8bdf2946547879d50a68687ea32e2fa628db187357415858b633d194d9"
       },
       "restartRequired": true,
       "reason": "Increase the response budget for the controlled candidate evaluation.",
@@ -107,7 +139,7 @@
         "precondition": {
           "path": "/componentBindings/0/config/maxTokens",
           "exists": true,
-          "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+          "contentHash": "sha256:8b926d75599a618e21f1341318e66517be26e18cc7496783d2b59758c1333be8"
         }
       }
     }
@@ -122,13 +154,13 @@
   "replacementPlanRef": {
     "standardPart": {
       "partId": "component.orchestrator",
-      "version": "0.5.0",
-      "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      "version": "0.6.0",
+      "contentHash": "sha256:e12468fcdae13ef4c87e4058664fb383a4dd5e09c6172a8d8645f1f57226efbf"
     },
     "plan": {
       "id": "plan.orchestrator-restart",
-      "version": "0.5.0",
-      "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+      "version": "0.6.0",
+      "contentHash": "sha256:4f90d7d7f66a90b83bf0fcba97d04ff3f2a7d980342f74e70eef0a4e0dd7c093"
     }
   },
   "approval": {

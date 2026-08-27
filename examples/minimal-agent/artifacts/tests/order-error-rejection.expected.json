@@ -1,0 +1,9 @@
+{
+  "outcome": "rejected",
+  "reasons": [
+    "attempt-exceeds-limit",
+    "idempotency-key-forbidden",
+    "ordering-metadata-forbidden",
+    "unknown-error-policy-mismatch"
+  ]
+}

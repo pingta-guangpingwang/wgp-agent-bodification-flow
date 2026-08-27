@@ -1,25 +1,25 @@
 {
   "assessmentId": "assessment.orchestrator-i4",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "contentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "sourcePart": {
     "partId": "component.orchestrator",
-    "version": "0.5.1",
+    "version": "0.6.1",
     "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
   },
   "targetPart": {
     "partId": "component.orchestrator",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
   },
   "profileRef": {
     "id": "profile.orchestrator-controlled",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
   },
   "environmentRef": {
     "id": "environment.local-node",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
   },
   "assessedLevel": "I4",
@@ -28,28 +28,28 @@
     "I1": [
       {
         "id": "report.orchestrator-conformance",
-        "version": "0.5.0",
+        "version": "0.6.0",
         "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       }
     ],
     "I2": [
       {
         "id": "report.orchestrator-conformance",
-        "version": "0.5.0",
+        "version": "0.6.0",
         "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       }
     ],
     "I3": [
       {
         "id": "report.orchestrator-conformance",
-        "version": "0.5.0",
+        "version": "0.6.0",
         "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       }
     ],
     "I4": [
       {
         "id": "report.orchestrator-conformance",
-        "version": "0.5.0",
+        "version": "0.6.0",
         "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
       }
     ]
@@ -58,7 +58,8 @@
   "expiresAt": "2027-08-27T08:10:00Z",
   "replacementPlanRef": {
     "id": "plan.orchestrator-restart",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
-  }
+  },
+  "contractCompatibilityAssessmentRefs": []
 }

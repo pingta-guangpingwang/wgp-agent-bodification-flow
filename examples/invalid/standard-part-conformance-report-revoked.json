@@ -2,7 +2,7 @@
   "statusRecordId": "status.report-orchestrator.2",
   "reportRef": {
     "id": "report.orchestrator-conformance",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
   },
   "revision": 2,

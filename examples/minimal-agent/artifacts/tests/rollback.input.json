@@ -1,0 +1,5 @@
+{
+  "sourceRecipePath": "examples/minimal-agent/recipe.json",
+  "targetRecipePath": "examples/minimal-agent/recipe-target.json",
+  "recipeDiffPath": "examples/minimal-agent/recipe-diff.json"
+}

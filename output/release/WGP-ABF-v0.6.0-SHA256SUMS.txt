@@ -1,0 +1,3 @@
+cd3e0205ceea7dbb758319b8dbdfd765bc3a5333bee174be4afdd8f771103401  WGP-ABF-Whitepaper-v0.6.0-zh-CN.pdf
+424908c5c3eb3fe5d8bdfe55444e8dd0bca40282c8af10c09b890ade477e59e7  WGP-ABF-Whitepaper-v0.6.0-en.pdf
+41811fd186caa42b40e80bf0d9d15d266e8f7b5e5ee4d463b96508576927d5a5  WGP-ABF-Spec-Bundle-v0.6.0.zip

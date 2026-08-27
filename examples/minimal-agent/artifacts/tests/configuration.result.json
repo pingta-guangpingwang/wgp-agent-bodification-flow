@@ -1,0 +1,9 @@
+{
+  "outcome": "passed",
+  "schemaValid": true,
+  "defaultsApplied": true,
+  "overriddenFields": [
+    "maxTokens"
+  ],
+  "resolvedMaxTokens": 4096
+}

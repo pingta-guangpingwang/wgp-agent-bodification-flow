@@ -1,0 +1,2165 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/spec/module-data-contract.schema.json",
+  "title": "WGP-ABF Module Data Contract v0.6",
+  "description": "A machine-readable contract for data and exchange-protocol alignment at agent-module boundaries. It standardizes assembly data, field meaning, and execution semantics without constraining either module's internal implementation.",
+  "type": "object",
+  "required": [
+    "format",
+    "specificationVersion",
+    "contentHash",
+    "createdAt",
+    "identity",
+    "roles",
+    "structures",
+    "channels",
+    "compatibility"
+  ],
+  "properties": {
+    "format": {
+      "const": "wgp-module-data-contract/0.6"
+    },
+    "specificationVersion": {
+      "const": "0.6.0"
+    },
+    "contentHash": {
+      "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+      "$ref": "#/$defs/contentHash"
+    },
+    "createdAt": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "identity": {
+      "$ref": "#/$defs/contractIdentity"
+    },
+    "roles": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "$ref": "#/$defs/role"
+      }
+    },
+    "structures": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/dataStructure"
+      }
+    },
+    "channels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/channel"
+      }
+    },
+    "compatibility": {
+      "$ref": "#/$defs/compatibilityPolicy"
+    },
+    "extensions": {
+      "$ref": "#/$defs/extensions"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{0,127}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "localizedText": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "zh-CN": {
+          "type": "string",
+          "minLength": 1
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9.-]+/[A-Za-z0-9._-]+$",
+        "type": "string"
+      }
+    },
+    "exactDocumentRef": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "contentHash"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "exactContractRef": {
+      "type": "object",
+      "required": [
+        "contractId",
+        "version",
+        "contentHash"
+      ],
+      "properties": {
+        "contractId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "exactArtifactRef": {
+      "type": "object",
+      "required": [
+        "artifactId",
+        "version",
+        "contentHash"
+      ],
+      "properties": {
+        "artifactId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "schemaBundleEntry": {
+      "type": "object",
+      "required": [
+        "schemaId",
+        "schemaRef",
+        "schemaContentHash"
+      ],
+      "properties": {
+        "schemaId": {
+          "$ref": "#/$defs/id"
+        },
+        "schemaRef": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "schemaContentHash": {
+          "description": "SHA-256 of the RFC 8785 canonical UTF-8 JSON serialization of the complete Schema document. Whitespace and object-member order in the source file do not affect this digest.",
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "schemaResolutionRecord": {
+      "description": "Optional deployment-local resolution metadata for one exact schema. It is not part of ModuleDataContract or SchemaBundle identity.",
+      "type": "object",
+      "required": ["schemaRef", "schemaContentHash", "locator"],
+      "properties": {
+        "schemaRef": { "type": "string", "format": "uri" },
+        "schemaContentHash": {
+          "description": "SHA-256 of the RFC 8785 canonical UTF-8 JSON serialization of the complete Schema document.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "locator": { "type": "string", "format": "uri-reference" }
+      },
+      "additionalProperties": false
+    },
+    "schemaRefClosureEntry": {
+      "description": "One resolved external $ref edge. Together the entries must equal the complete transitive external-reference closure found in the bundled schema documents.",
+      "type": "object",
+      "required": [
+        "sourceSchemaRef",
+        "jsonPointer",
+        "targetSchemaRef",
+        "targetSchemaContentHash"
+      ],
+      "properties": {
+        "sourceSchemaRef": {
+          "type": "string",
+          "format": "uri"
+        },
+        "jsonPointer": {
+          "type": "string",
+          "format": "json-pointer"
+        },
+        "targetSchemaRef": {
+          "type": "string",
+          "format": "uri"
+        },
+        "targetSchemaContentHash": {
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "schemaBundle": {
+      "description": "An immutable bundle whose content hash covers every listed schema and the complete transitive external-$ref closure.",
+      "type": "object",
+      "required": [
+        "bundleId",
+        "version",
+        "contentHash",
+        "dialect",
+        "entries",
+        "externalRefClosure"
+      ],
+      "properties": {
+        "bundleId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted and every externalRefClosure member included.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "dialect": {
+          "type": "string",
+          "format": "uri"
+        },
+        "entries": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/schemaBundleEntry"
+          }
+        },
+        "externalRefClosure": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/schemaRefClosureEntry"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "contractAspect": {
+      "enum": [
+        "schema",
+        "fieldSemantics",
+        "protocol",
+        "streaming",
+        "ordering",
+        "delivery",
+        "timeout",
+        "error",
+        "retry",
+        "idempotency",
+        "cancellation",
+        "state"
+      ]
+    },
+    "contractChannelMapping": {
+      "type": "object",
+      "required": [
+        "sourceChannelId",
+        "sourceRoleId",
+        "targetChannelId",
+        "targetRoleId"
+      ],
+      "properties": {
+        "sourceChannelId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceRoleId": {
+          "$ref": "#/$defs/id"
+        },
+        "targetChannelId": {
+          "$ref": "#/$defs/id"
+        },
+        "targetRoleId": {
+          "$ref": "#/$defs/id"
+        }
+      },
+      "additionalProperties": false
+    },
+    "contractAspectResult": {
+      "type": "object",
+      "required": [
+        "sourceChannelId",
+        "sourceRoleId",
+        "targetChannelId",
+        "targetRoleId",
+        "aspect",
+        "status",
+        "evidenceArtifactRefs"
+      ],
+      "properties": {
+        "sourceChannelId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourceRoleId": {
+          "$ref": "#/$defs/id"
+        },
+        "targetChannelId": {
+          "$ref": "#/$defs/id"
+        },
+        "targetRoleId": {
+          "$ref": "#/$defs/id"
+        },
+        "aspect": {
+          "$ref": "#/$defs/contractAspect"
+        },
+        "status": {
+          "enum": [
+            "exact",
+            "compatible",
+            "migrationRequired",
+            "incompatible"
+          ]
+        },
+        "evidenceArtifactRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactArtifactRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "contractCompatibilityAssessment": {
+      "description": "A directed, time-bounded compatibility result for two exact ModuleDataContracts. It is independent from whole-part I0-I4 interchangeability.",
+      "type": "object",
+      "required": [
+        "assessmentId",
+        "version",
+        "contentHash",
+        "sourceContract",
+        "targetContract",
+        "direction",
+        "method",
+        "profileRef",
+        "environmentRef",
+        "outcome",
+        "channelMappings",
+        "aspectResults",
+        "assessedAt",
+        "expiresAt"
+      ],
+      "properties": {
+        "assessmentId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "sourceContract": {
+          "$ref": "#/$defs/exactContractRef"
+        },
+        "targetContract": {
+          "$ref": "#/$defs/exactContractRef"
+        },
+        "direction": {
+          "description": "The assessment always evaluates sourceContract to targetContract. Reverse compatibility requires a separate assessment with swapped exact references.",
+          "const": "sourceToTarget"
+        },
+        "method": {
+          "enum": [
+            "exactDigest",
+            "boundedChecker",
+            "adapterEvidence"
+          ]
+        },
+        "profileRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "environmentRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "checkerArtifactRef": {
+          "$ref": "#/$defs/exactArtifactRef"
+        },
+        "adapterArtifactRef": {
+          "$ref": "#/$defs/exactArtifactRef"
+        },
+        "outcome": {
+          "enum": [
+            "exact",
+            "compatible",
+            "migrationRequired",
+            "incompatible"
+          ]
+        },
+        "channelMappings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/contractChannelMapping"
+          }
+        },
+        "aspectResults": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/contractAspectResult"
+          }
+        },
+        "evidenceArtifactRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactArtifactRef"
+          }
+        },
+        "migrationPlanRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "assessedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "outcome": {
+                "const": "migrationRequired"
+              }
+            },
+            "required": [
+              "outcome"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "migrationPlanRef": {
+                "$ref": "#/$defs/exactDocumentRef"
+              }
+            },
+            "required": [
+              "migrationPlanRef"
+            ],
+            "type": "object"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "boundedChecker"
+              }
+            },
+            "required": [
+              "method"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "checkerArtifactRef": {
+                "$ref": "#/$defs/exactArtifactRef"
+              },
+              "evidenceArtifactRefs": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": [
+              "checkerArtifactRef",
+              "evidenceArtifactRefs"
+            ],
+            "type": "object"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "method": {
+                "const": "adapterEvidence"
+              }
+            },
+            "required": [
+              "method"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "adapterArtifactRef": {
+                "$ref": "#/$defs/exactArtifactRef"
+              },
+              "evidenceArtifactRefs": {
+                "type": "array",
+                "minItems": 1
+              }
+            },
+            "required": [
+              "adapterArtifactRef",
+              "evidenceArtifactRefs"
+            ],
+            "type": "object"
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "fieldMigration": {
+      "type": "object",
+      "required": [
+        "sourceStructureId",
+        "sourcePointer",
+        "dataLossPolicy"
+      ],
+      "properties": {
+        "sourceStructureId": {
+          "$ref": "#/$defs/id"
+        },
+        "sourcePointer": {
+          "type": "string",
+          "format": "json-pointer"
+        },
+        "targetPointer": {
+          "type": "string",
+          "format": "json-pointer"
+        },
+        "targetStructureId": {
+          "$ref": "#/$defs/id"
+        },
+        "transformArtifactRef": {
+          "$ref": "#/$defs/exactArtifactRef"
+        },
+        "dataLossPolicy": {
+          "enum": [
+            "preserve",
+            "reject",
+            "explicitDrop"
+          ]
+        },
+        "dropApprovalRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "dataLossPolicy": {
+                "const": "explicitDrop"
+              }
+            },
+            "required": [
+              "dataLossPolicy"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "dropApprovalRef": {
+                "$ref": "#/$defs/exactDocumentRef"
+              },
+              "targetPointer": false,
+              "targetStructureId": false,
+              "transformArtifactRef": false
+            },
+            "required": [
+              "dropApprovalRef"
+            ],
+            "type": "object"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "dataLossPolicy": {
+                "enum": ["preserve", "reject"]
+              }
+            },
+            "required": ["dataLossPolicy"],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "targetStructureId": { "$ref": "#/$defs/id" },
+              "targetPointer": { "type": "string", "format": "json-pointer" }
+            },
+            "required": ["targetStructureId", "targetPointer"],
+            "type": "object"
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "dataLossApproval": {
+      "description": "A directed, time-bounded approval for dropping one exact source field while migrating between two exact Contracts. It is independent from permission policy and never approves another pointer by implication.",
+      "type": "object",
+      "required": [
+        "approvalId",
+        "version",
+        "contentHash",
+        "sourceContract",
+        "targetContract",
+        "sourceStructureId",
+        "sourcePointer",
+        "decision",
+        "decidedBy",
+        "decidedAt",
+        "expiresAt"
+      ],
+      "properties": {
+        "approvalId": { "$ref": "#/$defs/id" },
+        "version": { "$ref": "#/$defs/semver" },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "sourceContract": { "$ref": "#/$defs/exactContractRef" },
+        "targetContract": { "$ref": "#/$defs/exactContractRef" },
+        "sourceStructureId": { "$ref": "#/$defs/id" },
+        "sourcePointer": { "type": "string", "format": "json-pointer" },
+        "decision": { "enum": ["approved", "rejected"] },
+        "decidedBy": { "$ref": "#/$defs/id" },
+        "decidedAt": { "$ref": "#/$defs/timestamp" },
+        "expiresAt": { "$ref": "#/$defs/timestamp" },
+        "rationale": { "$ref": "#/$defs/localizedText" }
+      },
+      "additionalProperties": false
+    },
+    "contractMigrationPlan": {
+      "description": "A directed migration plan between two exact ModuleDataContracts. The source contract never reverse-references this plan, avoiding a content-hash cycle.",
+      "type": "object",
+      "required": [
+        "planId",
+        "version",
+        "contentHash",
+        "fromContract",
+        "toContract",
+        "direction",
+        "lossPolicy",
+        "atomicity",
+        "idempotent",
+        "resumable",
+        "checkpointPolicy",
+        "channelMappings",
+        "fieldMigrations",
+        "stateStructureMappings",
+        "migrationArtifactRef",
+        "rollbackArtifactRef",
+        "conformanceSuiteRefs",
+        "steps"
+      ],
+      "properties": {
+        "planId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "fromContract": {
+          "$ref": "#/$defs/exactContractRef"
+        },
+        "toContract": {
+          "$ref": "#/$defs/exactContractRef"
+        },
+        "direction": {
+          "const": "fromTo"
+        },
+        "lossPolicy": {
+          "enum": [
+            "preserve",
+            "reject",
+            "explicitDrop"
+          ]
+        },
+        "atomicity": {
+          "enum": [
+            "allOrNothing",
+            "checkpointed",
+            "bestEffort"
+          ]
+        },
+        "idempotent": {
+          "type": "boolean"
+        },
+        "resumable": {
+          "type": "boolean"
+        },
+        "checkpointPolicy": {
+          "type": "object",
+          "required": [
+            "mode"
+          ],
+          "properties": {
+            "mode": {
+              "enum": [
+                "none",
+                "perStep",
+                "interval"
+              ]
+            },
+            "intervalItems": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "checkpointArtifactRef": {
+              "$ref": "#/$defs/exactArtifactRef"
+            }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": {
+                  "mode": {
+                    "const": "interval"
+                  }
+                },
+                "required": [
+                  "mode"
+                ],
+                "type": "object"
+              },
+              "then": {
+                "properties": {
+                  "intervalItems": {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                },
+                "required": [
+                  "intervalItems"
+                ],
+                "type": "object"
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "mode": {
+                  "enum": ["perStep", "interval"]
+                }
+              },
+              "required": ["mode"],
+              "type": "object"
+            },
+            "then": {
+              "properties": {
+                "checkpointArtifactRef": {
+                  "$ref": "#/$defs/exactArtifactRef"
+                }
+              },
+              "required": ["checkpointArtifactRef"],
+              "type": "object"
+            }
+          }
+          ],
+          "additionalProperties": false
+        },
+        "channelMappings": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/contractChannelMapping"
+          }
+        },
+        "fieldMigrations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/fieldMigration"
+          }
+        },
+        "stateStructureMappings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "sourceStructureId",
+              "targetStructureId",
+              "sourceVersionField",
+              "targetVersionField"
+            ],
+            "properties": {
+              "sourceStructureId": {
+                "$ref": "#/$defs/id"
+              },
+              "targetStructureId": {
+                "$ref": "#/$defs/id"
+              },
+              "sourceVersionField": {
+                "type": "string",
+                "format": "json-pointer"
+              },
+              "targetVersionField": {
+                "type": "string",
+                "format": "json-pointer"
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "migrationArtifactRef": {
+          "$ref": "#/$defs/exactArtifactRef"
+        },
+        "rollbackArtifactRef": {
+          "$ref": "#/$defs/exactArtifactRef"
+        },
+        "conformanceSuiteRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "resumable": {
+                "const": true
+              }
+            },
+            "required": [
+              "resumable"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "idempotent": {
+                "const": true
+              },
+              "checkpointPolicy": {
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "perStep",
+                      "interval"
+                    ]
+                  }
+                },
+                "type": "object"
+              }
+            },
+            "type": "object"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "lossPolicy": {
+                "const": "reject"
+              }
+            },
+            "required": [
+              "lossPolicy"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "fieldMigrations": {
+                "not": {
+                  "contains": {
+                    "type": "object",
+                    "properties": {
+                      "dataLossPolicy": {
+                        "const": "explicitDrop"
+                      }
+                    },
+                    "required": [
+                      "dataLossPolicy"
+                    ]
+                  },
+                  "type": "array"
+                }
+              }
+            },
+            "type": "object"
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "publisher": {
+      "type": "object",
+      "required": [
+        "publisherId",
+        "name"
+      ],
+      "properties": {
+        "publisherId": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false
+    },
+    "contractIdentity": {
+      "type": "object",
+      "required": [
+        "contractId",
+        "name",
+        "version",
+        "status",
+        "publisher"
+      ],
+      "properties": {
+        "contractId": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "description": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "status": {
+          "enum": [
+            "draft",
+            "stable",
+            "deprecated",
+            "retired"
+          ]
+        },
+        "publisher": {
+          "$ref": "#/$defs/publisher"
+        }
+      },
+      "additionalProperties": false
+    },
+    "role": {
+      "type": "object",
+      "required": [
+        "roleId",
+        "kind",
+        "name",
+        "responsibility"
+      ],
+      "properties": {
+        "roleId": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "producer",
+            "consumer"
+          ]
+        },
+        "name": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "responsibility": {
+          "$ref": "#/$defs/localizedText"
+        }
+      },
+      "additionalProperties": false
+    },
+    "schemaIdentity": {
+      "type": "object",
+      "required": [
+        "schemaRef",
+        "schemaContentHash",
+        "schemaBundleRef",
+        "dialect",
+        "payloadMediaType",
+        "payloadEncoding"
+      ],
+      "properties": {
+        "schemaRef": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "schemaContentHash": {
+          "description": "SHA-256 of the RFC 8785 canonical UTF-8 JSON serialization of the complete Schema document. This is a canonical JSON digest, not a raw-file byte digest.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "schemaBundleRef": {
+          "description": "Exact bundle pin whose content hash covers this schema and the complete transitive external-$ref closure.",
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "dialect": {
+          "type": "string",
+          "format": "uri"
+        },
+        "payloadMediaType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "payloadEncoding": {
+          "enum": [
+            "utf-8",
+            "utf-16le",
+            "base64",
+            "binary"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "unit": {
+      "type": "object",
+      "required": [
+        "system",
+        "code"
+      ],
+      "properties": {
+        "system": {
+          "enum": [
+            "UCUM",
+            "SI",
+            "custom"
+          ]
+        },
+        "code": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "fieldSemantic": {
+      "type": "object",
+      "required": [
+        "path",
+        "meaning",
+        "required",
+        "nullable",
+        "classification"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "format": "json-pointer"
+        },
+        "meaning": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "nullable": {
+          "type": "boolean"
+        },
+        "defaultValue": {},
+        "unit": {
+          "$ref": "#/$defs/unit"
+        },
+        "valueEncoding": {
+          "type": "string",
+          "minLength": 1
+        },
+        "classification": {
+          "enum": [
+            "public",
+            "internal",
+            "confidential",
+            "secret"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": [
+              "defaultValue"
+            ],
+            "properties": {
+              "defaultValue": {
+                "type": "null"
+              }
+            },
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "nullable": {
+                "const": true
+              }
+            },
+            "type": "object"
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "dataStructure": {
+      "type": "object",
+      "required": [
+        "structureId",
+        "kind",
+        "schema",
+        "fields",
+        "unknownFieldPolicy"
+      ],
+      "properties": {
+        "structureId": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "message",
+            "streamChunk",
+            "streamEnd",
+            "error",
+            "event",
+            "stateSnapshot",
+            "stateDelta"
+          ]
+        },
+        "schema": {
+          "$ref": "#/$defs/schemaIdentity"
+        },
+        "fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/fieldSemantic"
+          }
+        },
+        "unknownFieldPolicy": {
+          "enum": [
+            "reject",
+            "ignore",
+            "preserve"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "protocol": {
+      "type": "object",
+      "required": [
+        "protocolId",
+        "protocolVersion",
+        "framingMediaType",
+        "framingEncoding"
+      ],
+      "properties": {
+        "protocolId": {
+          "$ref": "#/$defs/id"
+        },
+        "protocolVersion": {
+          "type": "string",
+          "pattern": "^v[0-9]+(?:\\.[0-9]+){0,2}$"
+        },
+        "framingMediaType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "framingEncoding": {
+          "enum": [
+            "utf-8",
+            "utf-16le",
+            "base64",
+            "binary"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "ordering": {
+      "type": "object",
+      "required": [
+        "mode",
+        "gapPolicy"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "none",
+            "perProducer",
+            "perKey",
+            "total"
+          ]
+        },
+        "sequenceField": {
+          "type": "string",
+          "format": "json-pointer"
+        },
+        "keyField": {
+          "type": "string",
+          "format": "json-pointer"
+        },
+        "gapPolicy": {
+          "enum": [
+            "fail",
+            "buffer",
+            "skip"
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "enum": [
+                  "perProducer",
+                  "total"
+                ]
+              }
+            },
+            "required": [
+              "mode"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "sequenceField": {
+                "type": "string",
+                "format": "json-pointer"
+              }
+            },
+            "required": [
+              "sequenceField"
+            ],
+            "type": "object"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "perKey"
+              }
+            },
+            "required": [
+              "mode"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "sequenceField": {
+                "type": "string",
+                "format": "json-pointer"
+              },
+              "keyField": {
+                "type": "string",
+                "format": "json-pointer"
+              }
+            },
+            "required": [
+              "sequenceField",
+              "keyField"
+            ],
+            "type": "object"
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "timeout": {
+      "type": "object",
+      "required": [
+        "durationMs",
+        "startsAt",
+        "onTimeout"
+      ],
+      "properties": {
+        "durationMs": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "startsAt": {
+          "enum": [
+            "accepted",
+            "firstByte",
+            "lastProgress"
+          ]
+        },
+        "onTimeout": {
+          "enum": [
+            "error",
+            "cancel",
+            "retry"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "retry": {
+      "type": "object",
+      "required": [
+        "maxAttempts",
+        "strategy",
+        "initialDelayMs",
+        "maxDelayMs",
+        "jitter",
+        "retryOn"
+      ],
+      "properties": {
+        "maxAttempts": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "strategy": {
+          "enum": [
+            "none",
+            "fixed",
+            "exponential"
+          ]
+        },
+        "initialDelayMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "maxDelayMs": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "jitter": {
+          "type": "boolean"
+        },
+        "retryOn": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "timeout",
+              "transportError",
+              "backpressure",
+              "retryableError"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "idempotency": {
+      "type": "object",
+      "required": [
+        "mode",
+        "duplicatePolicy"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "none",
+            "required",
+            "transport"
+          ]
+        },
+        "duplicatePolicy": {
+          "enum": [
+            "accept",
+            "reject",
+            "returnPrevious",
+            "coalesce"
+          ]
+        },
+        "keyPointer": {
+          "type": "string",
+          "format": "json-pointer"
+        },
+        "scope": {
+          "enum": [
+            "channel",
+            "producer",
+            "consumer",
+            "session"
+          ]
+        },
+        "retentionMs": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "required"
+              }
+            },
+            "required": [
+              "mode"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "keyPointer": {
+                "type": "string",
+                "format": "json-pointer"
+              },
+              "scope": {
+                "enum": [
+                  "channel",
+                  "producer",
+                  "consumer",
+                  "session"
+                ]
+              },
+              "retentionMs": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "duplicatePolicy": {
+                "enum": [
+                  "reject",
+                  "returnPrevious",
+                  "coalesce"
+                ]
+              }
+            },
+            "required": [
+              "keyPointer",
+              "scope",
+              "retentionMs"
+            ],
+            "type": "object"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "none"
+              }
+            },
+            "required": [
+              "mode"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "duplicatePolicy": {
+                "const": "accept"
+              }
+            },
+            "type": "object"
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "cancellation": {
+      "type": "object",
+      "required": [
+        "supported",
+        "propagation",
+        "terminal"
+      ],
+      "properties": {
+        "supported": {
+          "type": "boolean"
+        },
+        "propagation": {
+          "enum": [
+            "none",
+            "downstream",
+            "bidirectional"
+          ]
+        },
+        "terminal": {
+          "const": true
+        },
+        "acknowledgementTimeoutMs": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "supported": {
+                "const": true
+              }
+            },
+            "required": [
+              "supported"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "acknowledgementTimeoutMs": {
+                "type": "integer",
+                "minimum": 1
+              }
+            },
+            "required": [
+              "acknowledgementTimeoutMs"
+            ],
+            "type": "object"
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "errorHandling": {
+      "type": "object",
+      "required": [
+        "classificationField",
+        "retryableField",
+        "terminalField",
+        "unknownError"
+      ],
+      "properties": {
+        "classificationField": {
+          "type": "string",
+          "format": "json-pointer"
+        },
+        "retryableField": {
+          "type": "string",
+          "format": "json-pointer"
+        },
+        "terminalField": {
+          "type": "string",
+          "format": "json-pointer"
+        },
+        "unknownError": {
+          "type": "object",
+          "required": [
+            "classification",
+            "retryable",
+            "terminal"
+          ],
+          "properties": {
+            "classification": {
+              "enum": [
+                "transient",
+                "permanent",
+                "throttled",
+                "cancelled",
+                "unknown"
+              ]
+            },
+            "retryable": {
+              "type": "boolean"
+            },
+            "terminal": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
+    "reliability": {
+      "type": "object",
+      "required": [
+        "timeout",
+        "retry",
+        "idempotency",
+        "delivery",
+        "cancellation",
+        "errorHandling"
+      ],
+      "properties": {
+        "timeout": {
+          "$ref": "#/$defs/timeout"
+        },
+        "retry": {
+          "$ref": "#/$defs/retry"
+        },
+        "idempotency": {
+          "$ref": "#/$defs/idempotency"
+        },
+        "delivery": {
+          "enum": [
+            "bestEffort",
+            "atMostOnce",
+            "atLeastOnce",
+            "effectivelyOnce"
+          ]
+        },
+        "cancellation": {
+          "$ref": "#/$defs/cancellation"
+        },
+        "errorHandling": {
+          "$ref": "#/$defs/errorHandling"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "retry": {
+                "type": "object",
+                "properties": {
+                  "maxAttempts": {
+                    "minimum": 2,
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "maxAttempts"
+                ]
+              }
+            },
+            "required": [
+              "retry"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "idempotency": {
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "enum": [
+                      "required",
+                      "transport"
+                    ]
+                  }
+                }
+              }
+            },
+            "type": "object"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "timeout": {
+                "type": "object",
+                "properties": {
+                  "onTimeout": {
+                    "const": "retry"
+                  }
+                },
+                "required": [
+                  "onTimeout"
+                ]
+              }
+            },
+            "required": [
+              "timeout"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "retry": {
+                "type": "object",
+                "properties": {
+                  "maxAttempts": {
+                    "minimum": 2,
+                    "type": "number"
+                  }
+                }
+              }
+            },
+            "type": "object"
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "retry": {
+                "type": "object",
+                "properties": {
+                  "strategy": {
+                    "const": "none"
+                  }
+                },
+                "required": [
+                  "strategy"
+                ]
+              }
+            },
+            "required": [
+              "retry"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "retry": {
+                "type": "object",
+                "properties": {
+                  "maxAttempts": {
+                    "const": 1
+                  },
+                  "initialDelayMs": {
+                    "const": 0
+                  },
+                  "maxDelayMs": {
+                    "const": 0
+                  },
+                  "retryOn": {
+                    "maxItems": 0,
+                    "type": "array"
+                  }
+                }
+              }
+            },
+            "type": "object"
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "messageSemantics": {
+      "type": "object",
+      "required": [
+        "payloadStructureId",
+        "errorStructureId",
+        "ordering"
+      ],
+      "properties": {
+        "payloadStructureId": {
+          "$ref": "#/$defs/id"
+        },
+        "responseStructureId": {
+          "$ref": "#/$defs/id"
+        },
+        "errorStructureId": {
+          "$ref": "#/$defs/id"
+        },
+        "ordering": {
+          "$ref": "#/$defs/ordering"
+        }
+      },
+      "additionalProperties": false
+    },
+    "backpressure": {
+      "type": "object",
+      "required": [
+        "strategy",
+        "maxInFlight",
+        "overflowPolicy",
+        "acknowledgement"
+      ],
+      "properties": {
+        "strategy": {
+          "enum": [
+            "demand",
+            "window",
+            "buffer"
+          ]
+        },
+        "maxInFlight": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "overflowPolicy": {
+          "enum": [
+            "block",
+            "dropOldest",
+            "dropNewest",
+            "fail"
+          ]
+        },
+        "acknowledgement": {
+          "enum": [
+            "none",
+            "perChunk",
+            "window"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "streamSemantics": {
+      "type": "object",
+      "required": [
+        "chunk",
+        "end",
+        "error",
+        "ordering",
+        "backpressure"
+      ],
+      "properties": {
+        "chunk": {
+          "type": "object",
+          "required": [
+            "structureId",
+            "maxBytes"
+          ],
+          "properties": {
+            "structureId": {
+              "$ref": "#/$defs/id"
+            },
+            "maxBytes": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "additionalProperties": false
+        },
+        "end": {
+          "type": "object",
+          "required": [
+            "structureId",
+            "required",
+            "exactlyOnce"
+          ],
+          "properties": {
+            "structureId": {
+              "$ref": "#/$defs/id"
+            },
+            "required": {
+              "const": true
+            },
+            "exactlyOnce": {
+              "const": true
+            }
+          },
+          "additionalProperties": false
+        },
+        "error": {
+          "type": "object",
+          "required": [
+            "structureId",
+            "terminal",
+            "partialDataPolicy"
+          ],
+          "properties": {
+            "structureId": {
+              "$ref": "#/$defs/id"
+            },
+            "terminal": {
+              "type": "boolean"
+            },
+            "partialDataPolicy": {
+              "enum": [
+                "discard",
+                "retainMarkedIncomplete",
+                "consumerDecides"
+              ]
+            }
+          },
+          "additionalProperties": false
+        },
+        "ordering": {
+          "$ref": "#/$defs/ordering"
+        },
+        "backpressure": {
+          "$ref": "#/$defs/backpressure"
+        }
+      },
+      "additionalProperties": false
+    },
+    "eventSemantics": {
+      "type": "object",
+      "required": [
+        "eventStructureId",
+        "errorStructureId",
+        "ordering"
+      ],
+      "properties": {
+        "eventStructureId": {
+          "$ref": "#/$defs/id"
+        },
+        "errorStructureId": {
+          "$ref": "#/$defs/id"
+        },
+        "ordering": {
+          "$ref": "#/$defs/ordering"
+        }
+      },
+      "additionalProperties": false
+    },
+    "stateSemantics": {
+      "type": "object",
+      "required": [
+        "snapshotStructureId",
+        "deltaStructureId",
+        "errorStructureId",
+        "ordering",
+        "consistency",
+        "conflictPolicy",
+        "versionField"
+      ],
+      "properties": {
+        "snapshotStructureId": {
+          "$ref": "#/$defs/id"
+        },
+        "deltaStructureId": {
+          "$ref": "#/$defs/id"
+        },
+        "errorStructureId": {
+          "$ref": "#/$defs/id"
+        },
+        "ordering": {
+          "$ref": "#/$defs/ordering"
+        },
+        "consistency": {
+          "enum": [
+            "strong",
+            "causal",
+            "eventual"
+          ]
+        },
+        "conflictPolicy": {
+          "enum": [
+            "reject",
+            "lastWriteWins",
+            "merge",
+            "applicationDefined"
+          ]
+        },
+        "versionField": {
+          "type": "string",
+          "format": "json-pointer"
+        }
+      },
+      "additionalProperties": false
+    },
+    "channel": {
+      "type": "object",
+      "required": [
+        "channelId",
+        "interaction",
+        "producerRoleId",
+        "consumerRoleIds",
+        "protocol",
+        "connectionCardinality",
+        "reliability"
+      ],
+      "properties": {
+        "channelId": {
+          "$ref": "#/$defs/id"
+        },
+        "interaction": {
+          "enum": [
+            "message",
+            "stream",
+            "event",
+            "state"
+          ]
+        },
+        "producerRoleId": {
+          "$ref": "#/$defs/id"
+        },
+        "consumerRoleIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "protocol": {
+          "$ref": "#/$defs/protocol"
+        },
+        "connectionCardinality": {
+          "description": "Allowed number of bound consumer connections. This is not payload or message cardinality.",
+          "enum": [
+            "one",
+            "many"
+          ]
+        },
+        "reliability": {
+          "$ref": "#/$defs/reliability"
+        },
+        "message": {
+          "$ref": "#/$defs/messageSemantics"
+        },
+        "stream": {
+          "$ref": "#/$defs/streamSemantics"
+        },
+        "event": {
+          "$ref": "#/$defs/eventSemantics"
+        },
+        "state": {
+          "$ref": "#/$defs/stateSemantics"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "connectionCardinality": {
+                "const": "one"
+              }
+            },
+            "required": [
+              "connectionCardinality"
+            ],
+            "type": "object"
+          },
+          "then": {
+            "properties": {
+              "consumerRoleIds": {
+                "type": "array",
+                "maxItems": 1
+              }
+            },
+            "type": "object"
+          }
+        }
+      ],
+      "oneOf": [
+        {
+          "properties": {
+            "interaction": {
+              "const": "message"
+            },
+            "message": {
+              "$ref": "#/$defs/messageSemantics"
+            },
+            "stream": false,
+            "event": false,
+            "state": false
+          },
+          "required": [
+            "message"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "interaction": {
+              "const": "stream"
+            },
+            "stream": {
+              "$ref": "#/$defs/streamSemantics"
+            },
+            "message": false,
+            "event": false,
+            "state": false
+          },
+          "required": [
+            "stream"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "interaction": {
+              "const": "event"
+            },
+            "event": {
+              "$ref": "#/$defs/eventSemantics"
+            },
+            "message": false,
+            "stream": false,
+            "state": false
+          },
+          "required": [
+            "event"
+          ],
+          "type": "object"
+        },
+        {
+          "properties": {
+            "interaction": {
+              "const": "state"
+            },
+            "state": {
+              "$ref": "#/$defs/stateSemantics"
+            },
+            "message": false,
+            "stream": false,
+            "event": false
+          },
+          "required": [
+            "state"
+          ],
+          "type": "object"
+        }
+      ],
+      "additionalProperties": false
+    },
+    "compatibilityPolicy": {
+      "type": "object",
+      "required": [
+        "mode",
+        "unknownFieldPolicy",
+        "fieldRemoval",
+        "semanticChange",
+        "protocolChange"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "strict",
+            "backward",
+            "forward",
+            "full"
+          ]
+        },
+        "unknownFieldPolicy": {
+          "enum": [
+            "reject",
+            "ignore",
+            "preserve"
+          ]
+        },
+        "fieldRemoval": {
+          "enum": [
+            "forbidden",
+            "majorVersionOnly"
+          ]
+        },
+        "semanticChange": {
+          "enum": [
+            "forbidden",
+            "majorVersionOnly"
+          ]
+        },
+        "protocolChange": {
+          "enum": [
+            "forbidden",
+            "majorVersionOnly"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "eventsPath": "examples/minimal-agent/events.jsonl",
+  "consumerPayloadPath": "examples/minimal-agent/artifacts/model-response-orchestrator.json",
+  "responseEventId": "77777777-7777-4777-8777-777777777777"
+}

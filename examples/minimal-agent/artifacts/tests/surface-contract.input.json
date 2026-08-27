@@ -1,0 +1,24 @@
+{
+  "bindings": [
+    {
+      "bindingId": "contract-binding.model-request",
+      "sourceContractPath": "examples/minimal-agent/module-data-contract.json",
+      "sourceChannelId": "channel.model-request",
+      "sourceRoleId": "role.orchestrator-model-output",
+      "targetContractPath": "examples/minimal-agent/module-data-contract-target.json",
+      "targetChannelId": "channel.model-request",
+      "targetRoleId": "role.model-provider-input",
+      "resolution": "compatible"
+    },
+    {
+      "bindingId": "contract-binding.model-response",
+      "sourceContractPath": "examples/minimal-agent/module-data-contract-target.json",
+      "sourceChannelId": "channel.model-response",
+      "sourceRoleId": "role.model-provider-output",
+      "targetContractPath": "examples/minimal-agent/module-data-contract.json",
+      "targetChannelId": "channel.model-response",
+      "targetRoleId": "role.orchestrator-model-input",
+      "resolution": "adapter"
+    }
+  ]
+}

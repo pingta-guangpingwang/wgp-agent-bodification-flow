@@ -53,8 +53,8 @@ GRID = colors.HexColor("#c9d7e1")
 AMBER = colors.HexColor("#ffb838")
 
 
-def register_fonts() -> None:
-    """Register user-supplied or system fonts used by both editions."""
+def register_fonts() -> tuple[Path, Path, Path]:
+    """Register the open fonts used by both editions and return their paths."""
 
     regular, bold, monospace = publication_fonts()
     pdfmetrics.registerFont(TTFont("WGPBody", str(regular)))
@@ -67,6 +67,7 @@ def register_fonts() -> None:
         italic="WGPBody",
         boldItalic="WGPBold",
     )
+    return regular, bold, monospace
 
 
 class Rule(Flowable):
@@ -304,12 +305,42 @@ def inline_markup(text: str) -> str:
     return value
 
 
+def split_markdown_row(line: str) -> list[str]:
+    """Split a Markdown table row without treating code-span pipes as separators."""
+
+    value = line.strip().strip("|")
+    cells: list[str] = []
+    cell: list[str] = []
+    in_code = False
+    escaped = False
+    for character in value:
+        if escaped:
+            cell.append(character)
+            escaped = False
+            continue
+        if character == "\\":
+            escaped = True
+            cell.append(character)
+            continue
+        if character == "`":
+            in_code = not in_code
+            cell.append(character)
+            continue
+        if character == "|" and not in_code:
+            cells.append("".join(cell).strip())
+            cell.clear()
+            continue
+        cell.append(character)
+    cells.append("".join(cell).strip())
+    return cells
+
+
 def table_from_markdown(lines: list[str], styles: dict[str, ParagraphStyle], available_width: float) -> Table:
     """Create a styled table from contiguous pipe-delimited Markdown rows."""
 
     rows: list[list[Paragraph]] = []
     for index, line in enumerate(lines):
-        cells = [cell.strip() for cell in line.strip().strip("|").split("|")]
+        cells = split_markdown_row(line)
         if index == 1 and all(re.fullmatch(r":?-{3,}:?", cell) for cell in cells):
             continue
         cell_style = styles["table_header"] if index == 0 else styles["table_cell"]
@@ -324,6 +355,7 @@ def table_from_markdown(lines: list[str], styles: dict[str, ParagraphStyle], ava
             [
                 ("BACKGROUND", (0, 0), (-1, 0), PANEL),
                 ("TEXTCOLOR", (0, 0), (-1, 0), colors.white),
+                ("FONTNAME", (0, 0), (-1, -1), "WGPBody"),
                 ("FONTNAME", (0, 0), (-1, 0), "WGPBold"),
                 ("GRID", (0, 0), (-1, -1), 0.55, GRID),
                 ("VALIGN", (0, 0), (-1, -1), "TOP"),
@@ -402,7 +434,11 @@ def markdown_story(path: Path, styles: dict[str, ParagraphStyle], available_widt
             flush_paragraph()
             flush_bullets()
             if in_code:
-                story.append(Preformatted("\n".join(code_lines), styles["code"], maxLineLength=104))
+                story.append(
+                    KeepTogether(
+                        [Preformatted("\n".join(code_lines), styles["code"], maxLineLength=104)]
+                    )
+                )
                 code_lines.clear()
                 in_code = False
             else:
@@ -432,8 +468,16 @@ def markdown_story(path: Path, styles: dict[str, ParagraphStyle], available_widt
             relative = image_match.group(2)
             if "cover-art" not in relative:
                 image_path = (path.parent / relative).resolve()
-                story.append(Spacer(1, 2 * mm))
-                story.append(image_flowable(image_path, available_width))
+                figure: list[Flowable] = [Spacer(1, 2 * mm), image_flowable(image_path, available_width)]
+                caption_index = index + 1
+                while caption_index < len(lines) and not lines[caption_index].strip():
+                    caption_index += 1
+                if caption_index < len(lines) and re.match(
+                    r"^\*\*(?:Figure|图\s*\d+)", lines[caption_index].strip()
+                ):
+                    figure.append(Paragraph(inline_markup(lines[caption_index].strip()), styles["caption"]))
+                    index = caption_index
+                story.append(KeepTogether(figure))
             index += 1
             continue
 
@@ -517,13 +561,13 @@ def draw_cover(canvas, doc: WhitepaperDocument, *, language: str) -> None:
     canvas.drawString(18 * mm, PAGE_HEIGHT - 41 * mm, "WGP AGENT BODIFICATION FLOW")
     if language == "zh":
         title = "WGP 智能体机体化流程（WGP-ABF）"
-        subtitle = "智能体工程图纸、证据化评测与验证式标准件替换框架"
-        edition = "版本 0.5 · 中英双语图解公开草案"
+        subtitle = "关键模块数据契约、智能体工程图纸与证据化标准件替换框架"
+        edition = "版本 0.6 · 中英双语图解公开草案"
         author = "概念提出者与主要作者：王广平"
     else:
         title = "WGP Agent Bodification Flow (WGP-ABF)"
-        subtitle = "Agent Blueprints, Evidence-Backed Evaluation, and Validated Standard-Part Replacement"
-        edition = "Version 0.5 · Bilingual Illustrated Public Draft"
+        subtitle = "Module Data Contracts, Agent Engineering Blueprints, and Evidence-Governed Evolution"
+        edition = "Version 0.6 · Bilingual Illustrated Public Draft"
         author = "Originator and Principal Author: Wang Guangping"
     canvas.setFont("WGPBold", 25 if language == "zh" else 23)
     canvas.drawString(18 * mm, PAGE_HEIGHT - 57 * mm, title)
@@ -548,7 +592,7 @@ def draw_body_page(canvas, doc: WhitepaperDocument, *, language: str) -> None:
     canvas.line(20 * mm, PAGE_HEIGHT - 16 * mm, PAGE_WIDTH - 20 * mm, PAGE_HEIGHT - 16 * mm)
     canvas.setFont("WGPBold", 7.8)
     canvas.setFillColor(MUTED)
-    canvas.drawString(20 * mm, PAGE_HEIGHT - 12.3 * mm, "WGP-ABF · PUBLIC DRAFT 0.5")
+    canvas.drawString(20 * mm, PAGE_HEIGHT - 12.3 * mm, "WGP-ABF · PUBLIC DRAFT 0.6")
     right = "中文图解版" if language == "zh" else "English illustrated edition"
     canvas.drawRightString(PAGE_WIDTH - 20 * mm, PAGE_HEIGHT - 12.3 * mm, right)
     canvas.line(20 * mm, 15 * mm, PAGE_WIDTH - 20 * mm, 15 * mm)
@@ -577,10 +621,27 @@ def build_one(*, language: str, source: Path, destination: Path) -> None:
         rightMargin=right,
         topMargin=top,
         bottomMargin=bottom,
-        title="WGP Agent Bodification Flow (WGP-ABF)",
+        title=(
+            "WGP 智能体机体化流程（WGP-ABF）：模块数据契约、智能体工程图纸与证据化演进框架"
+            if language == "zh"
+            else "WGP Agent Bodification Flow (WGP-ABF): Module Data Contracts, "
+            "Agent Engineering Blueprints, and Evidence-Governed Evolution"
+        ),
         author="Wang Guangping / 王广平",
-        subject="Bilingual illustrated public draft 0.5",
+        subject=(
+            "模块数据契约、智能体工程图纸与证据化演进框架；版本 0.6.0 公开草案"
+            if language == "zh"
+            else "Module Data Contracts, Agent Engineering Blueprints, and Evidence-Governed Evolution; "
+            "version 0.6.0 public draft"
+        ),
         creator="WGP-ABF deterministic PDF builder",
+        invariant=1,
+        pageCompression=1,
+        lang="zh-CN" if language == "zh" else "en-US",
+        displayDocTitle=True,
+        initialFontName="WGPBody",
+        initialFontSize=10,
+        initialLeading=15,
     )
     document.addPageTemplates(
         [
@@ -594,24 +655,25 @@ def build_one(*, language: str, source: Path, destination: Path) -> None:
         ParagraphStyle(
             "TOC1",
             fontName="WGPBold",
-            fontSize=10,
-            leading=15,
+            fontSize=10 if language == "zh" else 9.5,
+            leading=15 if language == "zh" else 14,
             textColor=PANEL,
             leftIndent=0,
             firstLineIndent=0,
-            spaceBefore=2 * mm,
+            spaceBefore=(2 if language == "zh" else 1.2) * mm,
         ),
         ParagraphStyle(
             "TOC2",
             fontName="WGPBody",
-            fontSize=8.5,
-            leading=13,
+            fontSize=8.5 if language == "zh" else 8.2,
+            leading=13 if language == "zh" else 12,
             textColor=MUTED,
             leftIndent=7 * mm,
             firstLineIndent=0,
         ),
     ]
     toc.dotsMinLevel = 0
+    toc.tableStyle = TableStyle([("FONTNAME", (0, 0), (-1, -1), "WGPBody")])
     toc_title = "目录" if language == "zh" else "Contents"
     note = (
         "本版为公开草案。机器语义以仓库中的 Schema 与一致性测试为准。"
@@ -637,16 +699,17 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--language", choices=["zh", "en", "both"], default="both")
     args = parser.parse_args()
-    register_fonts()
+    fonts = register_fonts()
+    print("Publication fonts: " + ", ".join(str(path) for path in fonts))
     OUTPUT.mkdir(parents=True, exist_ok=True)
     jobs = {
         "zh": (
-            ROOT / "whitepaper" / "WGP-ABF_Whitepaper_v0.5.zh-CN.md",
-            OUTPUT / "WGP-ABF-Whitepaper-v0.5.0-zh-CN.pdf",
+            ROOT / "whitepaper" / "WGP-ABF_Whitepaper_v0.6.zh-CN.md",
+            OUTPUT / "WGP-ABF-Whitepaper-v0.6.0-zh-CN.pdf",
         ),
         "en": (
-            ROOT / "whitepaper" / "WGP-ABF_Whitepaper_v0.5.en.md",
-            OUTPUT / "WGP-ABF-Whitepaper-v0.5.0-en.pdf",
+            ROOT / "whitepaper" / "WGP-ABF_Whitepaper_v0.6.en.md",
+            OUTPUT / "WGP-ABF-Whitepaper-v0.6.0-en.pdf",
         ),
     }
     selected: Iterable[str] = jobs if args.language == "both" else [args.language]

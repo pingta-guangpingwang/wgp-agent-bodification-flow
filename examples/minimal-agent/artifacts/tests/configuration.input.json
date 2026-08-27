@@ -1,0 +1,7 @@
+{
+  "recipePath": "examples/minimal-agent/recipe-target.json",
+  "descriptorPath": "examples/minimal-agent/standard-part-descriptor-target.json",
+  "schemaPath": "examples/minimal-agent/schemas/minimal-orchestrator-config.schema.json",
+  "defaultsPath": "examples/minimal-agent/artifacts/orchestrator-defaults.json",
+  "componentId": "component.orchestrator"
+}

@@ -1,0 +1,5 @@
+{
+  "systemPromptArtifactId": "artifact.system-prompt",
+  "maxTokens": 2048,
+  "stream": true
+}

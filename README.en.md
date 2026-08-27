@@ -2,19 +2,27 @@
 
 # WGP-ABF English guide
 
-[Bilingual home](README.md) · [Read the full English whitepaper](whitepaper/WGP-ABF_Whitepaper_v0.5.en.md) · [Download PDF](output/pdf/WGP-ABF-Whitepaper-v0.5.0-en.pdf)
+[Bilingual home](README.md) · [Read the full English whitepaper](whitepaper/WGP-ABF_Whitepaper_v0.6.en.md) · [Download PDF](output/pdf/WGP-ABF-Whitepaper-v0.6.0-en.pdf) · [v0.5 → v0.6 migration](MIGRATION-v0.5-to-v0.6.md)
 
-WGP-ABF is an agent-configuration engineering method originated by Wang Guangping. It is not another node orchestrator and does not standardize internal implementations. It standardizes the assembly surfaces of models, memory, tools, skills, workflows, and interfaces so they can be honestly extracted, freely assembled, visually edited, semantically diffed, natively compiled, evidenced at runtime, and validated under control.
+WGP-ABF is an agent-configuration engineering method originated by Wang Guangping. It is not another node orchestrator and does not standardize internal implementations. It first uses `ModuleDataContract` to align data structures and exchange protocols at critical boundaries among models, memory, tools, skills, and workflows. Standard Parts then implement and package those contracts so configurations can be honestly extracted, chained reliably, freely assembled, visually edited, semantically diffed, natively compiled, evidenced at runtime, and validated under control.
 
-## The system in one diagram
+## Release downloads
 
-![WGP-ABF system map](assets/diagrams/wgp-abf-system-map.png)
+[English PDF](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow/releases/download/v0.6.0/WGP-ABF-Whitepaper-v0.6.0-en.pdf) · [Chinese PDF](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow/releases/download/v0.6.0/WGP-ABF-Whitepaper-v0.6.0-zh-CN.pdf) · [Specification bundle](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow/releases/download/v0.6.0/WGP-ABF-Spec-Bundle-v0.6.0.zip) · [SHA-256 checksums](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow/releases/download/v0.6.0/WGP-ABF-v0.6.0-SHA256SUMS.txt)
 
-`WGP-ABIR + AssemblyRecipe` form the canonical structural record. The two-dimensional engineering blueprint is the authoritative human editing projection. Body and 3D experiences are optional, read-only explanation projections. Every view shares the same engineering identities and no view stores a second business model.
+## Core diagrams
 
-![WGP-ABF standard-part ecosystem](assets/diagrams/wgp-abf-standard-parts.png)
+![WGP-ABF data-contract chain](assets/diagrams/wgp-abf-data-contract-chain-v0.6.png)
 
-Diversity drives innovation; standard parts enable composition. `StandardPartDescriptor` standardizes identity, object kind, ports, capabilities, dependencies, permissions, state migration, and evidence entry points. I0-I4 is a directed, environment- and time-bounded interchangeability result derived by machine from cumulative evidence; it does not replace a declaration of concrete capabilities such as hot reload. An external append-only `EvidenceStatusRecord` withdraws an immutable report without rewriting it.
+The v0.6 trust chain runs from an independent immutable `SchemaBundle` and exact `ModuleDataContract` through resolved producer→consumer Bindings to executable evidence. Standard-Part discovery, interchangeability, and replacement build on that chain.
+
+![WGP-ABF system map](assets/diagrams/wgp-abf-system-map-v0.6.png)
+
+`ModuleDataContract` uniquely owns field meaning, protocol, streaming, ordering, errors, timeouts, retries, idempotency, and state at critical boundaries. The critical one-way dependency is immutable SchemaBundle/Contract/Port/Descriptor/Profile/Suite → directed contract-compatibility assessment → a Recipe that selects an `exact | compatible | adapter` resolution → Recipe-bound runtime events and chain reports → whole-part interchangeability and controlled-replacement conclusions. A compatibility assessment does not pin a target Recipe, while a Report MUST exact-reference the Recipe it actually exercised. The two-dimensional engineering blueprint is the authoritative human editing projection of those facts and stores no second business model.
+
+![WGP-ABF standard-part ecosystem](assets/diagrams/wgp-abf-standard-parts-v0.6.png)
+
+Diversity drives innovation; data contracts enable reliable chaining; standard parts enable reuse. Data-structure alignment is only a necessary condition for free composition; execution semantics and executable producer→consumer evidence safeguard reliable chaining. Format compatibility is not behavioral equivalence. I1–I3 are Contract-exposed, Data-aligned, and Chain-verified; I0–I4 is orthogonal to F3–F0, C0–C3, and concrete operation capabilities.
 
 ## What ordinary users should gain
 
@@ -27,15 +35,16 @@ Diversity drives innovation; standard parts enable composition. `StandardPartDes
 ## Where implementers start
 
 1. Read the whitepaper sections on version discipline, standard parts, the canonical record, source claims, diffs, and runtime events.
-2. Inspect the JSON Schemas in [`spec/`](spec/).
-3. Follow the recipe, ABIR, diff, events, and evaluation loop in [`examples/minimal-agent/`](examples/minimal-agent/).
+2. Inspect `ModuleDataContract` and the other JSON Schemas in [`spec/`](spec/).
+3. Follow the contract, Binding, recipe, ABIR, diff, events, and evaluation loop in [`examples/minimal-agent/`](examples/minimal-agent/).
 4. Implement a version-pinned importer/compiler adapter for one target platform.
 5. Deliver C1 read-only blueprints first, then progress to C2 operations and C3 evidence.
 
 ## Important limits
 
 - F3–F0 describes information provenance; it does not grant editing or write-back.
-- I0-I4 describes interchangeability maturity; provenance, marketing claims, or similar file formats cannot grant it automatically.
+- The same Schema or parseable JSON indicates only format compatibility; it does not establish aligned execution semantics, behavioral equivalence, or equal task quality.
+- I0-I4 describes interchangeability maturity; F/C levels, marketing claims, or similar file formats cannot grant it automatically.
 - A fixed model-response stream is a contract-regression tool, not causal proof.
 - A configuration inverse cannot undo external side effects such as sent messages or deleted records.
 - Security policy must be enforced outside the model; hidden structure is not a security boundary.
@@ -45,7 +54,7 @@ Diversity drives innovation; standard parts enable composition. `StandardPartDes
 
 Small corrections may use a pull request. Proposals that change specification meaning should start as an RFC and update schemas, valid and invalid examples, migration notes, and both language editions together. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [GOVERNANCE.md](GOVERNANCE.md).
 
-The canonical repository is [pingta-guangpingwang/wgp-agent-bodification-flow](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow), with public [Issues](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow/issues) for defects and proposals. Whitepaper series `0.5`, machine release `0.5.0`, format family `/0.5`, and immutable tag `v0.5.0` have distinct roles explained in the version-discipline section.
+The canonical repository is [pingta-guangpingwang/wgp-agent-bodification-flow](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow), with public [Issues](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow/issues) for defects and proposals. Whitepaper series `0.6`, machine release `0.6.0`, format family `/0.6`, and immutable tag `v0.6.0` have distinct roles explained in the version-discipline section.
 
 ## Licensing
 

@@ -1,5 +1,5 @@
 # SPDX-License-Identifier: Apache-2.0
-"""Resolve publication fonts without bundling third-party font files."""
+"""Resolve the open publication fonts used by the checked-in PDFs."""
 
 from __future__ import annotations
 
@@ -27,8 +27,8 @@ def publication_fonts() -> tuple[Path, Path, Path]:
     regular = _resolve(
         "WGP_FONT_REGULAR",
         (
-            "C:/Windows/Fonts/msyh.ttc",
-            "/System/Library/Fonts/PingFang.ttc",
+            "C:/Windows/Fonts/NotoSansSC-VF.ttf",
+            "/Library/Fonts/NotoSansSC-VF.ttf",
             "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
             "/usr/share/fonts/opentype/noto/NotoSansCJKsc-Regular.otf",
         ),
@@ -36,8 +36,8 @@ def publication_fonts() -> tuple[Path, Path, Path]:
     bold = _resolve(
         "WGP_FONT_BOLD",
         (
-            "C:/Windows/Fonts/msyhbd.ttc",
-            "/System/Library/Fonts/PingFang.ttc",
+            "C:/Windows/Fonts/NotoSansSC-VF.ttf",
+            "/Library/Fonts/NotoSansSC-VF.ttf",
             "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc",
             "/usr/share/fonts/opentype/noto/NotoSansCJKsc-Bold.otf",
         ),
@@ -45,9 +45,10 @@ def publication_fonts() -> tuple[Path, Path, Path]:
     monospace = _resolve(
         "WGP_FONT_MONO",
         (
-            "C:/Windows/Fonts/consola.ttf",
-            "/System/Library/Fonts/Menlo.ttc",
-            "/usr/share/fonts/truetype/dejavu/DejaVuSansMono.ttf",
+            "C:/Windows/Fonts/NotoSansSC-VF.ttf",
+            "/Library/Fonts/NotoSansSC-VF.ttf",
+            "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+            "/usr/share/fonts/opentype/noto/NotoSansCJKsc-Regular.otf",
         ),
     )
     return regular, bold, monospace

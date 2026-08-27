@@ -1,0 +1,6 @@
+{
+  "_type": "https://in-toto.io/Statement/v1",
+  "subject": [{ "name": "package.orchestrator@0.6.1" }],
+  "predicateType": "https://slsa.dev/provenance/v1",
+  "predicate": { "builder": { "id": "wgp-reference-builder/0.6.0" }, "buildType": "wgp-abf-example" }
+}

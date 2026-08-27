@@ -1,29 +1,55 @@
 {
-  "format": "wgp-standard-part-companions/0.5",
+  "format": "wgp-standard-part-companions/0.6",
   "descriptors": [
     {
       "partId": "component.orchestrator",
-      "version": "0.5.0",
-      "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      "version": "0.6.0",
+      "contentHash": "sha256:e12468fcdae13ef4c87e4058664fb383a4dd5e09c6172a8d8645f1f57226efbf"
     },
     {
-      "partId": "component.orchestrator",
-      "version": "0.5.1",
-      "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      "partId": "component.orchestrator-alternative",
+      "version": "0.6.1",
+      "contentHash": "sha256:5827e8a91e2af3fa2d41368ca087dbb7b2d77c1154505b96e81620f6a0ba1f6f"
+    },
+    {
+      "partId": "resource.model.deepseek",
+      "version": "0.6.0",
+      "contentHash": "sha256:935d8aab677ddca361a7bb7d20acb2ce7ffbb430eb277d89228c04d34f9cb6ec"
     }
   ],
   "permissionPolicies": [
     {
       "id": "policy.tool-approval",
-      "version": "0.5.0",
-      "contentHash": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+      "version": "0.6.0",
+      "contentHash": "sha256:5dd4c1d23e3f8017535f2ec0c032a875afd6d722db7c694a4db93c8149a55d2a",
+      "rules": [
+        {
+          "ruleId": "rule.allow-model-invoke",
+          "operation": "model.invoke",
+          "networkTarget": "api.deepseek.com",
+          "secretScope": "secret.deepseek-api-key",
+          "effect": "allow",
+          "promptRequired": true,
+          "secretValueExposed": false
+        }
+      ],
+      "requirementMappings": [
+        {
+          "mappingId": "mapping.deepseek-credential-to-model-invoke",
+          "permissionId": "permission.deepseek-credential",
+          "scope": "credential",
+          "action": "read",
+          "resource": "credential.deepseek-api-key",
+          "ruleId": "rule.allow-model-invoke"
+        }
+      ]
     }
   ],
   "environments": [
     {
       "environmentId": "environment.local-node",
-      "version": "0.5.0",
-      "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "version": "0.6.0",
+      "contentHash": "sha256:21b8e78e060f9217b1dca40d5f95cd22e4f7d0be9efc95911d3e469d6856d199",
       "runtime": {
         "engines": [
           {
@@ -47,24 +73,21 @@
       },
       "permissionPolicyRef": {
         "id": "policy.tool-approval",
-        "version": "0.5.0",
-        "contentHash": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+        "version": "0.6.0",
+        "contentHash": "sha256:5dd4c1d23e3f8017535f2ec0c032a875afd6d722db7c694a4db93c8149a55d2a"
       }
     }
   ],
   "packages": [
     {
       "packageId": "package.orchestrator",
-      "version": "0.5.0",
-      "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "version": "0.6.0",
+      "contentHash": "sha256:4314ce8df784b3697f64f8175620af8193efdbcde47fbfb6f98f214bf7c80e84",
       "artifactRef": {
         "artifactId": "artifact.orchestrator-package",
-        "version": "0.5.0",
-        "contentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        "version": "0.6.0",
+        "contentHash": "sha256:36566540f6c6d44074a9bce82538720ae2803b74d9488738a417d06e437aaf69"
       },
-      "locator": "https://example.org/packages/minimal-orchestrator-0.5.0.tgz",
-      "mediaType": "application/gzip",
-      "sizeBytes": 32768,
       "supplyChain": {
         "source": {
           "repository": "https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow",
@@ -73,37 +96,136 @@
         },
         "sbom": {
           "format": "SPDX-JSON",
-          "locator": "https://example.org/packages/minimal-orchestrator-0.5.0.spdx.json",
-          "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+          "artifactRef": {
+            "artifactId": "artifact.sbom.orchestrator",
+            "version": "0.6.0",
+            "contentHash": "sha256:8f3292bc34fab88c224dc7261ec949953a0d1ee393e2370ec29020bb9e539e35"
+          }
         },
         "provenance": {
-          "builder": "wgp-reference-builder/0.5.0",
+          "builder": "wgp-reference-builder/0.6.0",
           "buildType": "https://slsa.dev/provenance/v1",
           "sourceRevision": "0123456789abcdef0123456789abcdef01234567",
           "reproducible": true,
-          "attestationRef": "https://example.org/attestations/minimal-orchestrator.intoto.jsonl",
-          "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          "attestationArtifactRef": {
+            "artifactId": "artifact.provenance.orchestrator",
+            "version": "0.6.0",
+            "contentHash": "sha256:bd1f2839f01a02067d726f9adbc92ce24c498985766998495cb1914f23db943f"
+          }
         }
       },
       "license": {
         "expression": "Apache-2.0",
-        "noticeRef": "https://example.org/packages/minimal-orchestrator-NOTICE.txt"
+        "noticeArtifactRef": {
+          "artifactId": "artifact.notice.wgp",
+          "version": "0.6.0",
+          "contentHash": "sha256:8e26e7397e933ebfad6d84c8eff60cda3f55f039aff437a36f347e6f98e80df0"
+        }
       },
       "signature": {
-        "status": "verified",
-        "algorithm": "ed25519",
-        "signer": "publisher.wgp-abf",
-        "signatureLocator": "https://example.org/packages/minimal-orchestrator-0.5.0.sig",
-        "signedDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "verifiedAt": "2026-08-27T08:00:30Z"
+        "status": "unsigned"
+      }
+    },
+    {
+      "packageId": "package.orchestrator",
+      "version": "0.6.1",
+      "contentHash": "sha256:ad801064864c7fbd48c7213493194d52089c8d6f6e62a860fb959cc8c25374c3",
+      "artifactRef": {
+        "artifactId": "artifact.orchestrator-package",
+        "version": "0.6.1",
+        "contentHash": "sha256:02da170101d71f9823a484f435397d2d1f381b050746c88eb0e0f9c22f02eec0"
+      },
+      "supplyChain": {
+        "source": {
+          "repository": "https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow",
+          "revision": "0123456789abcdef0123456789abcdef01234567",
+          "subdirectory": "examples/minimal-agent"
+        },
+        "sbom": {
+          "format": "SPDX-JSON",
+          "artifactRef": {
+            "artifactId": "artifact.sbom.orchestrator",
+            "version": "0.6.1",
+            "contentHash": "sha256:c723a31185da2c4c9a2d90eb6e60e56b80f997f923cf87f41bcef16fda4d2db5"
+          }
+        },
+        "provenance": {
+          "builder": "wgp-reference-builder/0.6.0",
+          "buildType": "https://slsa.dev/provenance/v1",
+          "sourceRevision": "0123456789abcdef0123456789abcdef01234567",
+          "reproducible": true,
+          "attestationArtifactRef": {
+            "artifactId": "artifact.provenance.orchestrator",
+            "version": "0.6.1",
+            "contentHash": "sha256:58e4caa0ec72d70685efcbbb6ebfd3c1f1e198529a6641db48c364c8325bad46"
+          }
+        }
+      },
+      "license": {
+        "expression": "Apache-2.0",
+        "noticeArtifactRef": {
+          "artifactId": "artifact.notice.wgp",
+          "version": "0.6.0",
+          "contentHash": "sha256:8e26e7397e933ebfad6d84c8eff60cda3f55f039aff437a36f347e6f98e80df0"
+        }
+      },
+      "signature": {
+        "status": "unsigned"
+      }
+    },
+    {
+      "packageId": "package.model-provider",
+      "version": "0.6.0",
+      "contentHash": "sha256:a6021352591bf5efe795369dd0218b798f4bffdc141eb49ce840cba32c3fcb18",
+      "artifactRef": {
+        "artifactId": "artifact.model-provider-package",
+        "version": "0.6.0",
+        "contentHash": "sha256:24892e02321a35a78f451f2c13486a18556de42381e32c1fe47e612c46aa3496"
+      },
+      "supplyChain": {
+        "source": {
+          "repository": "https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow",
+          "revision": "0123456789abcdef0123456789abcdef01234567",
+          "subdirectory": "examples/minimal-agent"
+        },
+        "sbom": {
+          "format": "SPDX-JSON",
+          "artifactRef": {
+            "artifactId": "artifact.sbom.model-provider",
+            "version": "0.6.0",
+            "contentHash": "sha256:b610dad0bb1b7ece23524f0a08cb419963cb22e9a6146012220cf9914def43d1"
+          }
+        },
+        "provenance": {
+          "builder": "wgp-reference-builder/0.6.0",
+          "buildType": "https://slsa.dev/provenance/v1",
+          "sourceRevision": "0123456789abcdef0123456789abcdef01234567",
+          "reproducible": true,
+          "attestationArtifactRef": {
+            "artifactId": "artifact.provenance.model-provider",
+            "version": "0.6.0",
+            "contentHash": "sha256:04aebc6cded428c4ae367240753f73cefd1558169ea01c5850477d15a2238c99"
+          }
+        }
+      },
+      "license": {
+        "expression": "Apache-2.0",
+        "noticeArtifactRef": {
+          "artifactId": "artifact.notice.wgp",
+          "version": "0.6.0",
+          "contentHash": "sha256:8e26e7397e933ebfad6d84c8eff60cda3f55f039aff437a36f347e6f98e80df0"
+        }
+      },
+      "signature": {
+        "status": "unsigned"
       }
     }
   ],
   "compatibilityProfiles": [
     {
       "profileId": "profile.orchestrator-controlled",
-      "version": "0.5.0",
-      "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "version": "0.6.0",
+      "contentHash": "sha256:9a636516bac8084a5ca89433b8619c63956f39ce1dfb117cfaf1f5caba4b44b6",
       "targetPartKind": "component",
       "runtimeConstraints": {
         "engines": [
@@ -126,15 +248,11 @@
         },
         "network": "outbound"
       },
-      "requiredSurfaceIds": [
-        "surface.chat",
-        "surface.model-client"
-      ],
       "dependencyPolicy": "exactPinned",
       "permissionPolicyRef": {
         "id": "policy.tool-approval",
-        "version": "0.5.0",
-        "contentHash": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+        "version": "0.6.0",
+        "contentHash": "sha256:5dd4c1d23e3f8017535f2ec0c032a875afd6d722db7c694a4db93c8149a55d2a"
       },
       "statePolicy": "directRequired",
       "configurationPolicy": "directRequired",
@@ -148,115 +266,644 @@
       "requiredSuiteRefs": [
         {
           "id": "suite.orchestrator",
-          "version": "0.5.0",
-          "contentHash": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+          "version": "0.6.0",
+          "contentHash": "sha256:11a05004ba02e7e957802e7e7528e20d244dec8ed36c13549c6efd0879c066c7"
         }
-      ]
+      ],
+      "requiredContractChannels": [
+        {
+          "contractRef": {
+            "contractId": "contract.minimal-agent-boundaries",
+            "version": "1.0.0",
+            "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+          },
+          "bindings": [
+            {
+              "channelId": "channel.model-request",
+              "roleId": "role.orchestrator-model-output"
+            },
+            {
+              "channelId": "channel.model-response",
+              "roleId": "role.orchestrator-model-input"
+            }
+          ]
+        }
+      ],
+      "packageSignaturePolicy": "unsignedAllowed"
+    },
+    {
+      "profileId": "profile.model-provider-chain",
+      "version": "0.6.0",
+      "contentHash": "sha256:a24c71611bae2c555ac6fba2af8be403d239430a5909e840fbc0fee167694799",
+      "targetPartKind": "resource",
+      "runtimeConstraints": {
+        "engines": [
+          {
+            "name": "node",
+            "versionRange": ">=22.19"
+          }
+        ],
+        "platforms": [
+          {
+            "os": "linux",
+            "architecture": "x64"
+          }
+        ],
+        "minimumResources": {
+          "cpuCores": 1,
+          "memoryMiB": 256,
+          "storageMiB": 64,
+          "accelerator": "none"
+        },
+        "network": "outbound"
+      },
+      "requiredContractChannels": [
+        {
+          "contractRef": {
+            "contractId": "contract.minimal-agent-boundaries",
+            "version": "1.1.0",
+            "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+          },
+          "bindings": [
+            {
+              "channelId": "channel.model-request",
+              "roleId": "role.model-provider-input"
+            },
+            {
+              "channelId": "channel.model-response",
+              "roleId": "role.model-provider-output"
+            }
+          ]
+        }
+      ],
+      "dependencyPolicy": "exactPinned",
+      "permissionPolicyRef": {
+        "id": "policy.tool-approval",
+        "version": "0.6.0",
+        "contentHash": "sha256:5dd4c1d23e3f8017535f2ec0c032a875afd6d722db7c694a4db93c8149a55d2a"
+      },
+      "statePolicy": "directRequired",
+      "configurationPolicy": "directRequired",
+      "replacementPolicy": {
+        "allowedModes": [
+          "restart"
+        ],
+        "rollbackRequired": true,
+        "migrationEvidenceRequired": true
+      },
+      "requiredSuiteRefs": [
+        {
+          "id": "suite.orchestrator",
+          "version": "0.6.0",
+          "contentHash": "sha256:11a05004ba02e7e957802e7e7528e20d244dec8ed36c13549c6efd0879c066c7"
+        }
+      ],
+      "packageSignaturePolicy": "unsignedAllowed"
     }
   ],
   "conformanceSuites": [
     {
       "suiteId": "suite.orchestrator",
-      "version": "0.5.0",
-      "contentHash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
-      "specificationVersion": "0.5.0",
+      "version": "0.6.0",
+      "contentHash": "sha256:11a05004ba02e7e957802e7e7528e20d244dec8ed36c13549c6efd0879c066c7",
+      "specificationVersion": "0.6.0",
       "testVectors": [
         {
           "testVectorId": "test.surface-contract",
-          "kind": "surfaceContract",
           "purpose": {
             "zh-CN": "验证消息与模型端口协议。",
             "en": "Validate the message and model port protocols."
           },
-          "inputArtifactRef": "https://example.org/tests/surface-contract.input.json",
-          "expectedArtifactRef": "https://example.org/tests/surface-contract.expected.json",
-          "applicableSurfaceIds": [
-            "surface.chat",
-            "surface.model-client"
-          ],
-          "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "inputArtifactRef": {
+            "artifactId": "artifact.test-input.surface-contract",
+            "version": "0.6.0",
+            "contentHash": "sha256:d77212efd7aa585615cb61263df976db2475f17087956b94471910183bd78e68"
+          },
+          "expectedArtifactRef": {
+            "artifactId": "artifact.test-expected.surface-contract",
+            "version": "0.6.0",
+            "contentHash": "sha256:da8334cb2de68e089e264701f4d8138ecb6a5ec4f7782c9ad039aa48005b551c"
+          },
           "deterministic": true,
-          "required": true
+          "required": true,
+          "aspects": [
+            "schema",
+            "fieldSemantics",
+            "protocol"
+          ],
+          "applicableContractChannels": [
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.model-request",
+                  "roleId": "role.orchestrator-model-output"
+                },
+                {
+                  "channelId": "channel.model-response",
+                  "roleId": "role.orchestrator-model-input"
+                }
+              ]
+            },
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.1.0",
+                "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.model-request",
+                  "roleId": "role.model-provider-input"
+                },
+                {
+                  "channelId": "channel.model-response",
+                  "roleId": "role.model-provider-output"
+                }
+              ]
+            }
+          ],
+          "checkerArtifactRef": {
+            "artifactId": "artifact.test-checker.surface-contract",
+            "version": "0.6.0",
+            "contentHash": "sha256:ba7e0da6c9c570187d371296cf70de0c1ae0e6e7be48b0bb17e27f26d4f6a665"
+          },
+          "scenario": "boundary"
+        },
+        {
+          "testVectorId": "test.chain-execution",
+          "aspects": [
+            "chainExecution"
+          ],
+          "purpose": {
+            "zh-CN": "验证两个独立包之间的生产者到消费者真实运行链路。",
+            "en": "Verify a real producer-to-consumer runtime chain between two independent packages."
+          },
+          "inputArtifactRef": {
+            "artifactId": "artifact.test-input.chain-execution",
+            "version": "0.6.0",
+            "contentHash": "sha256:30057ce7098039b8e29cda35947423a5785c403611f65586ced2654b2c89baf8"
+          },
+          "expectedArtifactRef": {
+            "artifactId": "artifact.test-expected.chain-execution",
+            "version": "0.6.0",
+            "contentHash": "sha256:33f254b5e6042aa3003f2f684f5859c656c619a7f5019bdfd8e88551883724f4"
+          },
+          "applicableContractChannels": [
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.model-request",
+                  "roleId": "role.orchestrator-model-output"
+                },
+                {
+                  "channelId": "channel.model-response",
+                  "roleId": "role.orchestrator-model-input"
+                }
+              ]
+            },
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.1.0",
+                "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.model-request",
+                  "roleId": "role.model-provider-input"
+                },
+                {
+                  "channelId": "channel.model-response",
+                  "roleId": "role.model-provider-output"
+                }
+              ]
+            }
+          ],
+          "deterministic": true,
+          "required": true,
+          "checkerArtifactRef": {
+            "artifactId": "artifact.test-checker.chain-execution",
+            "version": "0.6.0",
+            "contentHash": "sha256:945a69e4089926b711b9410b8182740be76e130cfbe344969c06c2617ee1abbc"
+          },
+          "scenario": "positive"
         },
         {
           "testVectorId": "test.configuration",
-          "kind": "configuration",
           "purpose": {
             "zh-CN": "验证配置 Schema 与直接配置兼容性。",
             "en": "Validate the configuration schema and direct configuration compatibility."
           },
-          "inputArtifactRef": "https://example.org/tests/configuration.input.json",
-          "expectedArtifactRef": "https://example.org/tests/configuration.expected.json",
-          "applicableSurfaceIds": [
-            "surface.chat"
-          ],
-          "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "inputArtifactRef": {
+            "artifactId": "artifact.test-input.configuration",
+            "version": "0.6.0",
+            "contentHash": "sha256:703652b4269a8c57bce4f65dafa261a88eb1e68363b036ce8e7222a59858c4fc"
+          },
+          "expectedArtifactRef": {
+            "artifactId": "artifact.test-expected.configuration",
+            "version": "0.6.0",
+            "contentHash": "sha256:c55ede97f3c008689599ffe7751ac4bc769a114ecb9e19b2e1c12f4458e3b92d"
+          },
           "deterministic": true,
-          "required": true
+          "required": true,
+          "aspects": [
+            "configuration"
+          ],
+          "applicableContractChannels": [
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.chat-input",
+                  "roleId": "role.chat-client-output"
+                },
+                {
+                  "channelId": "channel.chat-input",
+                  "roleId": "role.orchestrator-chat-input"
+                },
+                {
+                  "channelId": "channel.chat-output",
+                  "roleId": "role.chat-client-input"
+                },
+                {
+                  "channelId": "channel.chat-output",
+                  "roleId": "role.orchestrator-chat-output"
+                }
+              ]
+            }
+          ],
+          "checkerArtifactRef": {
+            "artifactId": "artifact.test-checker.configuration",
+            "version": "0.6.0",
+            "contentHash": "sha256:a203b3c8f1760c2f3a883e05e8ad47ade5cfabff27c550012237f19273754d7d"
+          },
+          "scenario": "positive"
         },
         {
           "testVectorId": "test.permission",
-          "kind": "permission",
           "purpose": {
-            "zh-CN": "验证目标标准件在固定权限策略下运行。",
-            "en": "Validate the target standard part under the pinned permission policy."
+            "zh-CN": "验证目标链路双方 Descriptor 的必需权限元组均映射到固定策略规则并得到一致决策。",
+            "en": "Validate that every required Descriptor permission tuple for both target-chain parties maps to a pinned policy rule with a consistent decision."
           },
-          "inputArtifactRef": "https://example.org/tests/permission.input.json",
-          "expectedArtifactRef": "https://example.org/tests/permission.expected.json",
-          "applicableSurfaceIds": [
-            "surface.model-client"
-          ],
-          "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+          "inputArtifactRef": {
+            "artifactId": "artifact.test-input.permission",
+            "version": "0.6.0",
+            "contentHash": "sha256:4fd7656939b811092e460db5e8c2df1ad4c364ba334733f25e04c2c348672a75"
+          },
+          "expectedArtifactRef": {
+            "artifactId": "artifact.test-expected.permission",
+            "version": "0.6.0",
+            "contentHash": "sha256:0480c2963013022a478f34537131262b63e79b4cfc3af9611eb4c7a931bdf9df"
+          },
           "deterministic": true,
-          "required": true
+          "required": true,
+          "aspects": [
+            "permission"
+          ],
+          "applicableContractChannels": [
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.model-request",
+                  "roleId": "role.model-provider-input"
+                },
+                {
+                  "channelId": "channel.model-request",
+                  "roleId": "role.orchestrator-model-output"
+                },
+                {
+                  "channelId": "channel.model-response",
+                  "roleId": "role.model-provider-output"
+                },
+                {
+                  "channelId": "channel.model-response",
+                  "roleId": "role.orchestrator-model-input"
+                }
+              ]
+            }
+          ],
+          "checkerArtifactRef": {
+            "artifactId": "artifact.test-checker.permission",
+            "version": "0.6.0",
+            "contentHash": "sha256:c2d6d7196b6f37426f409b8cabb15517887f2612ade3a241d437d0df32e706b2"
+          },
+          "scenario": "positive"
         },
         {
           "testVectorId": "test.migration",
-          "kind": "stateMigration",
           "purpose": {
             "zh-CN": "验证无状态升级的迁移前置与回退路径。",
             "en": "Validate migration preconditions and fallback for the stateless upgrade."
           },
-          "inputArtifactRef": "https://example.org/tests/migration.input.json",
-          "expectedArtifactRef": "https://example.org/tests/migration.expected.json",
-          "applicableSurfaceIds": [
-            "surface.chat"
-          ],
-          "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "inputArtifactRef": {
+            "artifactId": "artifact.test-input.migration",
+            "version": "0.6.0",
+            "contentHash": "sha256:fe2c357d7e28521f8da5a7a2b992d1ac1165ba98c30c205c93da701908516f89"
+          },
+          "expectedArtifactRef": {
+            "artifactId": "artifact.test-expected.migration",
+            "version": "0.6.0",
+            "contentHash": "sha256:cf5919fc28ccce23629c047cb3012eefd5246cad17963a70972e22f0fbc4e198"
+          },
           "deterministic": true,
-          "required": true
+          "required": true,
+          "aspects": [
+            "migration",
+            "state"
+          ],
+          "applicableContractChannels": [
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.chat-input",
+                  "roleId": "role.chat-client-output"
+                },
+                {
+                  "channelId": "channel.chat-input",
+                  "roleId": "role.orchestrator-chat-input"
+                },
+                {
+                  "channelId": "channel.chat-output",
+                  "roleId": "role.chat-client-input"
+                },
+                {
+                  "channelId": "channel.chat-output",
+                  "roleId": "role.orchestrator-chat-output"
+                }
+              ]
+            }
+          ],
+          "checkerArtifactRef": {
+            "artifactId": "artifact.test-checker.migration",
+            "version": "0.6.0",
+            "contentHash": "sha256:37f4351a20072cc6517ebdfb3f000c0cb7d16cb47069e177139165d15075342b"
+          },
+          "scenario": "boundary"
         },
         {
           "testVectorId": "test.acceptance",
-          "kind": "behavioral",
           "purpose": {
             "zh-CN": "验证替换后的对话行为。",
             "en": "Validate chat behavior after replacement."
           },
-          "inputArtifactRef": "https://example.org/tests/greeting.input.json",
-          "expectedArtifactRef": "https://example.org/tests/greeting.expected.json",
-          "applicableSurfaceIds": [
-            "surface.chat"
+          "inputArtifactRef": {
+            "artifactId": "artifact.test-input.acceptance",
+            "version": "0.6.0",
+            "contentHash": "sha256:9557e5e4aa10eb0b66e477a6e07440dc1f6d926e795ece8240a7a223e88d6d30"
+          },
+          "expectedArtifactRef": {
+            "artifactId": "artifact.test-expected.acceptance",
+            "version": "0.6.0",
+            "contentHash": "sha256:91830526ed02c48392a5e50544a5fad1ea598a68a4a02c78e0652d86e4292d16"
+          },
+          "deterministic": true,
+          "required": true,
+          "aspects": [
+            "behavioral"
           ],
-          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "applicableContractChannels": [
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.chat-input",
+                  "roleId": "role.chat-client-output"
+                },
+                {
+                  "channelId": "channel.chat-input",
+                  "roleId": "role.orchestrator-chat-input"
+                },
+                {
+                  "channelId": "channel.chat-output",
+                  "roleId": "role.chat-client-input"
+                },
+                {
+                  "channelId": "channel.chat-output",
+                  "roleId": "role.orchestrator-chat-output"
+                }
+              ]
+            }
+          ],
+          "checkerArtifactRef": {
+            "artifactId": "artifact.test-checker.acceptance",
+            "version": "0.6.0",
+            "contentHash": "sha256:cfa40e6c0c2f1292bc3f54e1abd17ed2191218032b77673e48319feda3d5aaf1"
+          },
+          "scenario": "positive"
+        },
+        {
+          "testVectorId": "test.rollback",
+          "purpose": {
+            "zh-CN": "验证 RecipeDiff 正向应用与配方补偿能精确恢复源配方；不声称回滚后的运行验收。",
+            "en": "Verify exact RecipeDiff application and recipe compensation back to the source Recipe; this does not claim post-rollback runtime acceptance."
+          },
+          "inputArtifactRef": {
+            "artifactId": "artifact.test-input.rollback",
+            "version": "0.6.0",
+            "contentHash": "sha256:5c77fdf9d466f9ef7e21c61f9ec55a22d1441b7624ae724be8c25ff3c88f5025"
+          },
+          "expectedArtifactRef": {
+            "artifactId": "artifact.test-expected.rollback",
+            "version": "0.6.0",
+            "contentHash": "sha256:8d3fdc8d8a6afedb11a07fe42b10a25526f87e0ba84869d26191aae58b14264b"
+          },
+          "deterministic": true,
+          "required": true,
+          "aspects": [
+            "migration"
+          ],
+          "applicableContractChannels": [
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.chat-input",
+                  "roleId": "role.chat-client-output"
+                },
+                {
+                  "channelId": "channel.chat-input",
+                  "roleId": "role.orchestrator-chat-input"
+                },
+                {
+                  "channelId": "channel.chat-output",
+                  "roleId": "role.chat-client-input"
+                },
+                {
+                  "channelId": "channel.chat-output",
+                  "roleId": "role.orchestrator-chat-output"
+                }
+              ]
+            }
+          ],
+          "checkerArtifactRef": {
+            "artifactId": "artifact.test-checker.rollback",
+            "version": "0.6.0",
+            "contentHash": "sha256:67342a79955b89693dff85406897d342195ede3d5f03c675f4369842aecf537c"
+          },
+          "scenario": "boundary"
+        },
+        {
+          "testVectorId": "test.reliability-recovery",
+          "scenario": "recovery",
+          "aspects": [
+            "delivery",
+            "timeout",
+            "retry",
+            "idempotency",
+            "cancellation"
+          ],
+          "purpose": {
+            "zh-CN": "执行超时、重试、去重与取消确认恢复序列。",
+            "en": "Execute a timeout, retry, deduplication, and cancellation-acknowledgement recovery sequence."
+          },
+          "applicableContractChannels": [
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.model-request",
+                  "roleId": "role.orchestrator-model-output"
+                }
+              ]
+            },
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.1.0",
+                "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.model-request",
+                  "roleId": "role.model-provider-input"
+                }
+              ]
+            }
+          ],
+          "inputArtifactRef": {
+            "artifactId": "artifact.test-input.reliability-recovery",
+            "version": "0.6.0",
+            "contentHash": "sha256:788b90b613b0df6d604bed35a71074dffcf3502f8e3626a0a35a5c60b424bdcd"
+          },
+          "expectedArtifactRef": {
+            "artifactId": "artifact.test-expected.reliability-recovery",
+            "version": "0.6.0",
+            "contentHash": "sha256:428d059ad67c2c2b055fc988828d0bbf2219308675bf4a4dc43921c43263a300"
+          },
+          "checkerArtifactRef": {
+            "artifactId": "artifact.test-checker.reliability-recovery",
+            "version": "0.6.0",
+            "contentHash": "sha256:85fb8da59b1bde20da9aa7036d6134efabd5550d9057733c3832dfdad6683582"
+          },
           "deterministic": true,
           "required": true
         },
         {
-          "testVectorId": "test.rollback",
-          "kind": "lifecycle",
-          "purpose": {
-            "zh-CN": "验证受控替换后的回滚路径。",
-            "en": "Validate the rollback path after controlled replacement."
-          },
-          "inputArtifactRef": "https://example.org/tests/rollback.input.json",
-          "expectedArtifactRef": "https://example.org/tests/rollback.expected.json",
-          "applicableSurfaceIds": [
-            "surface.chat"
+          "testVectorId": "test.order-error-rejection",
+          "scenario": "invalid",
+          "aspects": [
+            "ordering",
+            "error",
+            "retry",
+            "idempotency"
           ],
-          "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "purpose": {
+            "zh-CN": "执行并拒绝越界重试、非法排序元数据、非法幂等键与未知错误标志。",
+            "en": "Execute and reject an excessive retry, forbidden ordering metadata, a forbidden idempotency key, and invalid unknown-error flags."
+          },
+          "applicableContractChannels": [
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.1.0",
+                "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.model-response",
+                  "roleId": "role.model-provider-output"
+                }
+              ]
+            },
+            {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "bindings": [
+                {
+                  "channelId": "channel.model-response",
+                  "roleId": "role.orchestrator-model-input"
+                }
+              ]
+            }
+          ],
+          "inputArtifactRef": {
+            "artifactId": "artifact.test-input.order-error-rejection",
+            "version": "0.6.0",
+            "contentHash": "sha256:1cc7d6d05e644bf35c5db7679f11a3d025f3af55d353c7e1e1dd5cb1117d8c3c"
+          },
+          "expectedArtifactRef": {
+            "artifactId": "artifact.test-expected.order-error-rejection",
+            "version": "0.6.0",
+            "contentHash": "sha256:06529781766b9ff362163b3475443977c46b365d75ddafd2dd871608416b7860"
+          },
+          "checkerArtifactRef": {
+            "artifactId": "artifact.test-checker.order-error-rejection",
+            "version": "0.6.0",
+            "contentHash": "sha256:64ff27189279d736328b5bf03741fa8ca87e3d4b4a9c07c56aa5bd824f6e9894"
+          },
           "deterministic": true,
           "required": true
+        }
+      ],
+      "contractRefs": [
+        {
+          "contractId": "contract.minimal-agent-boundaries",
+          "version": "1.0.0",
+          "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+        },
+        {
+          "contractId": "contract.minimal-agent-boundaries",
+          "version": "1.1.0",
+          "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
         }
       ]
     }
@@ -264,93 +911,273 @@
   "conformanceReports": [
     {
       "reportId": "report.orchestrator-conformance",
-      "version": "0.5.0",
-      "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "version": "0.6.0",
+      "contentHash": "sha256:55ee8a61ad09e77da5c4f6ff0cb405b35e34ac2d97472515baf134d02a1f6a43",
       "suiteRef": {
         "id": "suite.orchestrator",
-        "version": "0.5.0",
-        "contentHash": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+        "version": "0.6.0",
+        "contentHash": "sha256:11a05004ba02e7e957802e7e7528e20d244dec8ed36c13549c6efd0879c066c7"
       },
-      "partRef": {
-        "partId": "component.orchestrator",
-        "version": "0.5.1",
-        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
-      },
-      "executedAt": "2026-08-27T08:10:00Z",
-      "executor": "wgp-conformance-runner/0.5.0",
+      "executedAt": "2026-08-26T09:20:01Z",
       "results": [
         {
           "testVectorId": "test.surface-contract",
           "status": "passed",
-          "startedAt": "2026-08-27T08:05:00Z",
-          "finishedAt": "2026-08-27T08:05:01Z",
-          "evidenceArtifactRef": "https://example.org/reports/surface-contract.json",
-          "evidenceDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+          "startedAt": "2026-08-26T09:19:10Z",
+          "finishedAt": "2026-08-26T09:19:11Z",
+          "evidenceArtifactRef": {
+            "artifactId": "artifact.test-result.surface-contract",
+            "version": "0.6.0",
+            "contentHash": "sha256:5b5616e4812bb0ee0b0870b9f8c387864cf911c78ac173f27c321b9fde701f01"
+          }
+        },
+        {
+          "testVectorId": "test.chain-execution",
+          "status": "passed",
+          "startedAt": "2026-08-26T09:20:00Z",
+          "finishedAt": "2026-08-26T09:20:01Z",
+          "evidenceArtifactRef": {
+            "artifactId": "artifact.test-result.chain-execution",
+            "version": "0.6.0",
+            "contentHash": "sha256:80548104e5ca8342ad4708bcd625276d7920f8d30cbff7971ff8ce8bdaa31afb"
+          },
+          "runtimeEventRefs": [
+            {
+              "eventId": "66666666-6666-4666-8666-666666666666",
+              "eventDigest": "sha256:020c30410139784a26fbac7d8f1b99c06f937ca6c4f5d3350d77673aba6375ff"
+            },
+            {
+              "eventId": "77777777-7777-4777-8777-777777777777",
+              "eventDigest": "sha256:f151a7e3e8632e2e087c91fb9f0b77f79964b8b1c0bf5a825044648f8981065f"
+            }
+          ]
         },
         {
           "testVectorId": "test.configuration",
           "status": "passed",
-          "startedAt": "2026-08-27T08:05:10Z",
-          "finishedAt": "2026-08-27T08:05:11Z",
-          "evidenceArtifactRef": "https://example.org/reports/configuration.json",
-          "evidenceDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+          "startedAt": "2026-08-26T09:19:14Z",
+          "finishedAt": "2026-08-26T09:19:15Z",
+          "evidenceArtifactRef": {
+            "artifactId": "artifact.test-result.configuration",
+            "version": "0.6.0",
+            "contentHash": "sha256:8542e717aace18075895b437760b276c8cf7938a86712c5a80fef185f2c2a644"
+          }
         },
         {
           "testVectorId": "test.permission",
           "status": "passed",
-          "startedAt": "2026-08-27T08:05:15Z",
-          "finishedAt": "2026-08-27T08:05:16Z",
-          "evidenceArtifactRef": "https://example.org/reports/permission.json",
-          "evidenceDigest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+          "startedAt": "2026-08-26T09:19:16Z",
+          "finishedAt": "2026-08-26T09:19:17Z",
+          "evidenceArtifactRef": {
+            "artifactId": "artifact.test-result.permission",
+            "version": "0.6.0",
+            "contentHash": "sha256:ce4d6dbedea2547e62f6150327dc51d813290564a1e25e457b223938c6560bed"
+          }
         },
         {
           "testVectorId": "test.migration",
           "status": "passed",
-          "startedAt": "2026-08-27T08:05:20Z",
-          "finishedAt": "2026-08-27T08:05:21Z",
-          "evidenceArtifactRef": "https://example.org/reports/migration.json",
-          "evidenceDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+          "startedAt": "2026-08-26T09:19:18Z",
+          "finishedAt": "2026-08-26T09:19:19Z",
+          "evidenceArtifactRef": {
+            "artifactId": "artifact.test-result.migration",
+            "version": "0.6.0",
+            "contentHash": "sha256:5f497b66275868aca2a78b12fa83ecd53979684fdf2651d68ace6550243ebe13"
+          }
         },
         {
           "testVectorId": "test.acceptance",
           "status": "passed",
-          "startedAt": "2026-08-27T08:06:00Z",
-          "finishedAt": "2026-08-27T08:06:02Z",
-          "evidenceArtifactRef": "https://example.org/reports/acceptance.json",
-          "evidenceDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+          "startedAt": "2026-08-26T09:19:20Z",
+          "finishedAt": "2026-08-26T09:19:21Z",
+          "evidenceArtifactRef": {
+            "artifactId": "artifact.test-result.acceptance",
+            "version": "0.6.0",
+            "contentHash": "sha256:8a773bd5b5e9466d3dcc8d64f2f6120efb0bd97f85ac3ebe0f948273c7824fd2"
+          }
         },
         {
           "testVectorId": "test.rollback",
           "status": "passed",
-          "startedAt": "2026-08-27T08:07:00Z",
-          "finishedAt": "2026-08-27T08:07:03Z",
-          "evidenceArtifactRef": "https://example.org/reports/rollback.json",
-          "evidenceDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+          "startedAt": "2026-08-26T09:19:22Z",
+          "finishedAt": "2026-08-26T09:19:23Z",
+          "evidenceArtifactRef": {
+            "artifactId": "artifact.test-result.rollback",
+            "version": "0.6.0",
+            "contentHash": "sha256:647bb5c724e9b9ef8feaab0c6f7b114adb011760b87874ef78fb07ee3c89a8fc"
+          }
+        },
+        {
+          "testVectorId": "test.reliability-recovery",
+          "status": "passed",
+          "startedAt": "2026-08-26T09:19:24Z",
+          "finishedAt": "2026-08-26T09:19:25Z",
+          "evidenceArtifactRef": {
+            "artifactId": "artifact.test-result.reliability-recovery",
+            "version": "0.6.0",
+            "contentHash": "sha256:428d059ad67c2c2b055fc988828d0bbf2219308675bf4a4dc43921c43263a300"
+          }
+        },
+        {
+          "testVectorId": "test.order-error-rejection",
+          "status": "passed",
+          "startedAt": "2026-08-26T09:19:26Z",
+          "finishedAt": "2026-08-26T09:19:27Z",
+          "evidenceArtifactRef": {
+            "artifactId": "artifact.test-result.order-error-rejection",
+            "version": "0.6.0",
+            "contentHash": "sha256:06529781766b9ff362163b3475443977c46b365d75ddafd2dd871608416b7860"
+          }
         }
       ],
       "summary": {
-        "total": 6,
-        "passed": 6,
+        "total": 9,
+        "passed": 9,
         "failed": 0,
         "skipped": 0,
         "outcome": "passed"
       },
       "profileRef": {
         "id": "profile.orchestrator-controlled",
-        "version": "0.5.0",
-        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        "version": "0.6.0",
+        "contentHash": "sha256:9a636516bac8084a5ca89433b8619c63956f39ce1dfb117cfaf1f5caba4b44b6"
       },
       "environmentRef": {
         "id": "environment.local-node",
-        "version": "0.5.0",
-        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+        "version": "0.6.0",
+        "contentHash": "sha256:21b8e78e060f9217b1dca40d5f95cd22e4f7d0be9efc95911d3e469d6856d199"
       },
-      "expiresAt": "2027-08-27T08:10:00Z",
+      "expiresAt": "2027-08-26T09:20:01Z",
       "environmentSnapshot": {
         "os": "linux",
         "architecture": "x64",
         "node": "24.6.0"
-      }
+      },
+      "executorArtifactRef": {
+        "artifactId": "artifact.conformance-runner",
+        "version": "0.6.0",
+        "contentHash": "sha256:aa5e82bcf4cd777422f00a94129e75d29768fd2c15ed64fc7a342ddfd1600549"
+      },
+      "chainBindings": [
+        {
+          "contractBindingId": "contract-binding.model-request",
+          "recipeRef": {
+            "id": "recipe.minimal-chat",
+            "version": "0.6.1",
+            "contentHash": "sha256:644c3f1fada27316ba8777591bc4c64548047b5b70eecd17cfa35054eae12092"
+          },
+          "producer": {
+            "partRef": {
+              "partId": "component.orchestrator-alternative",
+              "version": "0.6.1",
+              "contentHash": "sha256:5827e8a91e2af3fa2d41368ca087dbb7b2d77c1154505b96e81620f6a0ba1f6f"
+            },
+            "packageRef": {
+              "id": "package.orchestrator",
+              "version": "0.6.1",
+              "contentHash": "sha256:ad801064864c7fbd48c7213493194d52089c8d6f6e62a860fb959cc8c25374c3"
+            },
+            "contractRef": {
+              "contractId": "contract.minimal-agent-boundaries",
+              "version": "1.0.0",
+              "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+            },
+            "channelId": "channel.model-request",
+            "roleId": "role.orchestrator-model-output"
+          },
+          "consumer": {
+            "partRef": {
+              "partId": "resource.model.deepseek",
+              "version": "0.6.0",
+              "contentHash": "sha256:935d8aab677ddca361a7bb7d20acb2ce7ffbb430eb277d89228c04d34f9cb6ec"
+            },
+            "packageRef": {
+              "id": "package.model-provider",
+              "version": "0.6.0",
+              "contentHash": "sha256:a6021352591bf5efe795369dd0218b798f4bffdc141eb49ce840cba32c3fcb18"
+            },
+            "contractRef": {
+              "contractId": "contract.minimal-agent-boundaries",
+              "version": "1.1.0",
+              "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+            },
+            "channelId": "channel.model-request",
+            "roleId": "role.model-provider-input"
+          },
+          "resolution": {
+            "mode": "compatible",
+            "compatibilityAssessmentRef": {
+              "id": "contract-assessment.orchestrator-to-model-provider",
+              "version": "0.6.0",
+              "contentHash": "sha256:9621ee82c772c84ca8941c3f264e887ae4f3cc5cfe30b741e40843280af8d13d"
+            }
+          }
+        },
+        {
+          "contractBindingId": "contract-binding.model-response",
+          "recipeRef": {
+            "id": "recipe.minimal-chat",
+            "version": "0.6.1",
+            "contentHash": "sha256:644c3f1fada27316ba8777591bc4c64548047b5b70eecd17cfa35054eae12092"
+          },
+          "producer": {
+            "partRef": {
+              "partId": "resource.model.deepseek",
+              "version": "0.6.0",
+              "contentHash": "sha256:935d8aab677ddca361a7bb7d20acb2ce7ffbb430eb277d89228c04d34f9cb6ec"
+            },
+            "packageRef": {
+              "id": "package.model-provider",
+              "version": "0.6.0",
+              "contentHash": "sha256:a6021352591bf5efe795369dd0218b798f4bffdc141eb49ce840cba32c3fcb18"
+            },
+            "contractRef": {
+              "contractId": "contract.minimal-agent-boundaries",
+              "version": "1.1.0",
+              "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+            },
+            "channelId": "channel.model-response",
+            "roleId": "role.model-provider-output"
+          },
+          "consumer": {
+            "partRef": {
+              "partId": "component.orchestrator-alternative",
+              "version": "0.6.1",
+              "contentHash": "sha256:5827e8a91e2af3fa2d41368ca087dbb7b2d77c1154505b96e81620f6a0ba1f6f"
+            },
+            "packageRef": {
+              "id": "package.orchestrator",
+              "version": "0.6.1",
+              "contentHash": "sha256:ad801064864c7fbd48c7213493194d52089c8d6f6e62a860fb959cc8c25374c3"
+            },
+            "contractRef": {
+              "contractId": "contract.minimal-agent-boundaries",
+              "version": "1.0.0",
+              "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+            },
+            "channelId": "channel.model-response",
+            "roleId": "role.orchestrator-model-input"
+          },
+          "resolution": {
+            "mode": "adapter",
+            "compatibilityAssessmentRef": {
+              "id": "contract-assessment.model-provider-to-orchestrator",
+              "version": "0.6.0",
+              "contentHash": "sha256:b3a9556e1e8015d72a70fc7296f83edc8c08d0c7d48ba8bbc8f2636e69c7f467"
+            },
+            "adapterArtifactRef": {
+              "artifactId": "artifact.contract-adapter",
+              "version": "0.6.0",
+              "contentHash": "sha256:ab489091d0fe73e94deede47899aa789d873586a72ec1ab9da757451340c626a"
+            },
+            "migrationPlanRef": {
+              "id": "contract-migration.model-provider-to-orchestrator",
+              "version": "0.6.0",
+              "contentHash": "sha256:e2b93238d6e6b4b3ccba2059b98844b53abe6ca34a8c04c907a8a19a896380ce"
+            }
+          }
+        }
+      ]
     }
   ],
   "evidenceStatusRecords": [
@@ -358,41 +1185,41 @@
       "statusRecordId": "status.report-orchestrator.1",
       "reportRef": {
         "id": "report.orchestrator-conformance",
-        "version": "0.5.0",
-        "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        "version": "0.6.0",
+        "contentHash": "sha256:55ee8a61ad09e77da5c4f6ff0cb405b35e34ac2d97472515baf134d02a1f6a43"
       },
       "revision": 1,
-      "recordHash": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "recordHash": "sha256:ad2ad439510632450a839e3ad414a36403eaf5fce41599ec58b1c16514916b69",
       "action": "active",
       "recordedAt": "2026-08-27T08:10:30Z"
     }
   ],
   "interchangeabilityAssessments": [
     {
-      "assessmentId": "assessment.orchestrator-i0",
-      "version": "0.5.0",
-      "contentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "assessmentId": "assessment.orchestrator-i2",
+      "version": "0.6.0",
+      "contentHash": "sha256:dd515d8d6ecec379bddb9feb473b4bda44b9634aca89f9df176b7dd9eb8d7af3",
       "sourcePart": {
         "partId": "component.orchestrator",
-        "version": "0.5.0",
-        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        "version": "0.6.0",
+        "contentHash": "sha256:e12468fcdae13ef4c87e4058664fb383a4dd5e09c6172a8d8645f1f57226efbf"
       },
       "targetPart": {
-        "partId": "component.orchestrator",
-        "version": "0.5.1",
-        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        "partId": "component.orchestrator-alternative",
+        "version": "0.6.1",
+        "contentHash": "sha256:5827e8a91e2af3fa2d41368ca087dbb7b2d77c1154505b96e81620f6a0ba1f6f"
       },
       "profileRef": {
         "id": "profile.orchestrator-controlled",
-        "version": "0.5.0",
-        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        "version": "0.6.0",
+        "contentHash": "sha256:9a636516bac8084a5ca89433b8619c63956f39ce1dfb117cfaf1f5caba4b44b6"
       },
       "environmentRef": {
         "id": "environment.local-node",
-        "version": "0.5.0",
-        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+        "version": "0.6.0",
+        "contentHash": "sha256:21b8e78e060f9217b1dca40d5f95cd22e4f7d0be9efc95911d3e469d6856d199"
       },
-      "assessedLevel": "I0",
+      "assessedLevel": "I2",
       "levelEvidence": {
         "I0": [],
         "I1": [],
@@ -401,234 +1228,41 @@
         "I4": []
       },
       "assessedAt": "2026-08-27T08:11:00Z",
-      "expiresAt": "2027-08-27T08:10:00Z"
-    },
-    {
-      "assessmentId": "assessment.orchestrator-i1",
-      "version": "0.5.0",
-      "contentHash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-      "sourcePart": {
-        "partId": "component.orchestrator",
-        "version": "0.5.0",
-        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
-      },
-      "targetPart": {
-        "partId": "component.orchestrator",
-        "version": "0.5.1",
-        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
-      },
-      "profileRef": {
-        "id": "profile.orchestrator-controlled",
-        "version": "0.5.0",
-        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
-      },
-      "environmentRef": {
-        "id": "environment.local-node",
-        "version": "0.5.0",
-        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
-      },
-      "assessedLevel": "I1",
-      "levelEvidence": {
-        "I0": [],
-        "I1": [
-          {
-            "id": "report.orchestrator-conformance",
-            "version": "0.5.0",
-            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          }
-        ],
-        "I2": [],
-        "I3": [],
-        "I4": []
-      },
-      "assessedAt": "2026-08-27T08:11:00Z",
-      "expiresAt": "2027-08-27T08:10:00Z"
-    },
-    {
-      "assessmentId": "assessment.orchestrator-i2",
-      "version": "0.5.0",
-      "contentHash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
-      "sourcePart": {
-        "partId": "component.orchestrator",
-        "version": "0.5.0",
-        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
-      },
-      "targetPart": {
-        "partId": "component.orchestrator",
-        "version": "0.5.1",
-        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
-      },
-      "profileRef": {
-        "id": "profile.orchestrator-controlled",
-        "version": "0.5.0",
-        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
-      },
-      "environmentRef": {
-        "id": "environment.local-node",
-        "version": "0.5.0",
-        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
-      },
-      "assessedLevel": "I2",
-      "levelEvidence": {
-        "I0": [],
-        "I1": [
-          {
-            "id": "report.orchestrator-conformance",
-            "version": "0.5.0",
-            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          }
-        ],
-        "I2": [
-          {
-            "id": "report.orchestrator-conformance",
-            "version": "0.5.0",
-            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          }
-        ],
-        "I3": [],
-        "I4": []
-      },
-      "assessedAt": "2026-08-27T08:11:00Z",
-      "expiresAt": "2027-08-27T08:10:00Z"
-    },
-    {
-      "assessmentId": "assessment.orchestrator-i3",
-      "version": "0.5.0",
-      "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-      "sourcePart": {
-        "partId": "component.orchestrator",
-        "version": "0.5.0",
-        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
-      },
-      "targetPart": {
-        "partId": "component.orchestrator",
-        "version": "0.5.1",
-        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
-      },
-      "profileRef": {
-        "id": "profile.orchestrator-controlled",
-        "version": "0.5.0",
-        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
-      },
-      "environmentRef": {
-        "id": "environment.local-node",
-        "version": "0.5.0",
-        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
-      },
-      "assessedLevel": "I3",
-      "levelEvidence": {
-        "I0": [],
-        "I1": [
-          {
-            "id": "report.orchestrator-conformance",
-            "version": "0.5.0",
-            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          }
-        ],
-        "I2": [
-          {
-            "id": "report.orchestrator-conformance",
-            "version": "0.5.0",
-            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          }
-        ],
-        "I3": [
-          {
-            "id": "report.orchestrator-conformance",
-            "version": "0.5.0",
-            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          }
-        ],
-        "I4": []
-      },
-      "assessedAt": "2026-08-27T08:11:00Z",
-      "expiresAt": "2027-08-27T08:10:00Z"
-    },
-    {
-      "assessmentId": "assessment.orchestrator-i4",
-      "version": "0.5.0",
-      "contentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      "sourcePart": {
-        "partId": "component.orchestrator",
-        "version": "0.5.0",
-        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
-      },
-      "targetPart": {
-        "partId": "component.orchestrator",
-        "version": "0.5.1",
-        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
-      },
-      "profileRef": {
-        "id": "profile.orchestrator-controlled",
-        "version": "0.5.0",
-        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
-      },
-      "environmentRef": {
-        "id": "environment.local-node",
-        "version": "0.5.0",
-        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
-      },
-      "assessedLevel": "I4",
-      "levelEvidence": {
-        "I0": [],
-        "I1": [
-          {
-            "id": "report.orchestrator-conformance",
-            "version": "0.5.0",
-            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          }
-        ],
-        "I2": [
-          {
-            "id": "report.orchestrator-conformance",
-            "version": "0.5.0",
-            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          }
-        ],
-        "I3": [
-          {
-            "id": "report.orchestrator-conformance",
-            "version": "0.5.0",
-            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          }
-        ],
-        "I4": [
-          {
-            "id": "report.orchestrator-conformance",
-            "version": "0.5.0",
-            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
-          }
-        ]
-      },
-      "assessedAt": "2026-08-27T08:11:00Z",
-      "expiresAt": "2027-08-27T08:10:00Z",
-      "replacementPlanRef": {
-        "id": "plan.orchestrator-restart",
-        "version": "0.5.0",
-        "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
-      }
+      "expiresAt": "2027-08-26T09:20:01Z",
+      "contractCompatibilityAssessmentRefs": [
+        {
+          "id": "contract-assessment.orchestrator-to-model-provider",
+          "version": "0.6.0",
+          "contentHash": "sha256:9621ee82c772c84ca8941c3f264e887ae4f3cc5cfe30b741e40843280af8d13d"
+        },
+        {
+          "id": "contract-assessment.model-provider-to-orchestrator",
+          "version": "0.6.0",
+          "contentHash": "sha256:b3a9556e1e8015d72a70fc7296f83edc8c08d0c7d48ba8bbc8f2636e69c7f467"
+        }
+      ]
     }
   ],
   "replacementPlans": [
     {
       "planId": "plan.orchestrator-restart",
-      "version": "0.5.0",
-      "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "version": "0.6.0",
+      "contentHash": "sha256:4f90d7d7f66a90b83bf0fcba97d04ff3f2a7d980342f74e70eef0a4e0dd7c093",
       "fromPart": {
         "partId": "component.orchestrator",
-        "version": "0.5.0",
-        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        "version": "0.6.0",
+        "contentHash": "sha256:e12468fcdae13ef4c87e4058664fb383a4dd5e09c6172a8d8645f1f57226efbf"
       },
       "toPart": {
-        "partId": "component.orchestrator",
-        "version": "0.5.1",
-        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        "partId": "component.orchestrator-alternative",
+        "version": "0.6.1",
+        "contentHash": "sha256:5827e8a91e2af3fa2d41368ca087dbb7b2d77c1154505b96e81620f6a0ba1f6f"
       },
       "replacementMode": "restart",
       "recipePrecondition": {
         "id": "recipe.minimal-chat",
-        "version": "0.5.0",
-        "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+        "version": "0.6.0",
+        "contentHash": "sha256:eaf9de1637c178a54204a5357b0da2463e8cc652aa252601b9d0471aae859777"
       },
       "riskAssessmentIds": [
         "risk.restart-availability"
@@ -688,44 +1322,1458 @@
       ],
       "profileRef": {
         "id": "profile.orchestrator-controlled",
-        "version": "0.5.0",
-        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+        "version": "0.6.0",
+        "contentHash": "sha256:9a636516bac8084a5ca89433b8619c63956f39ce1dfb117cfaf1f5caba4b44b6"
       },
       "migrationReportRefs": [
         {
           "id": "report.orchestrator-conformance",
-          "version": "0.5.0",
-          "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          "version": "0.6.0",
+          "contentHash": "sha256:55ee8a61ad09e77da5c4f6ff0cb405b35e34ac2d97472515baf134d02a1f6a43"
         }
       ],
       "acceptanceReportRefs": [
         {
           "id": "report.orchestrator-conformance",
-          "version": "0.5.0",
-          "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          "version": "0.6.0",
+          "contentHash": "sha256:55ee8a61ad09e77da5c4f6ff0cb405b35e34ac2d97472515baf134d02a1f6a43"
         }
       ],
       "rollbackReportRefs": [
         {
           "id": "report.orchestrator-conformance",
-          "version": "0.5.0",
-          "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          "version": "0.6.0",
+          "contentHash": "sha256:55ee8a61ad09e77da5c4f6ff0cb405b35e34ac2d97472515baf134d02a1f6a43"
         }
-      ]
+      ],
+      "fromPackageRef": {
+        "id": "package.orchestrator",
+        "version": "0.6.0",
+        "contentHash": "sha256:4314ce8df784b3697f64f8175620af8193efdbcde47fbfb6f98f214bf7c80e84"
+      },
+      "toPackageRef": {
+        "id": "package.orchestrator",
+        "version": "0.6.1",
+        "contentHash": "sha256:ad801064864c7fbd48c7213493194d52089c8d6f6e62a860fb959cc8c25374c3"
+      }
     }
   ],
   "registryRecords": [
     {
       "registryId": "registry.wgp-standard-parts",
       "revision": 1,
-      "recordHash": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "recordHash": "sha256:7a97c6a42d6814f473d2a7eaeb68239d107a327e7766a6e322024a974ac9c066",
       "action": "publish",
       "status": "active",
       "recordedAt": "2026-08-27T08:01:00Z",
       "partRef": {
         "partId": "component.orchestrator",
-        "version": "0.5.0",
-        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        "version": "0.6.0",
+        "contentHash": "sha256:e12468fcdae13ef4c87e4058664fb383a4dd5e09c6172a8d8645f1f57226efbf"
+      }
+    }
+  ],
+  "schemaBundles": [
+    {
+      "bundleId": "schema-bundle.minimal-agent",
+      "version": "1.0.0",
+      "contentHash": "sha256:be7557afd8df4026d3192ce11a49c512a0a6cb6f48c540b30470d64ed7fbb45e",
+      "dialect": "https://json-schema.org/draft/2020-12/schema",
+      "entries": [
+        {
+          "schemaId": "schema.wgp-chat-message-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-chat-message-v1.schema.json",
+          "schemaContentHash": "sha256:aaa79c421d96ab62d0d56576ba1ea0ab4af5f05c8e3c21b2331c36a900ce47bb"
+        },
+        {
+          "schemaId": "schema.wgp-assistant-chunk-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-assistant-chunk-v1.schema.json",
+          "schemaContentHash": "sha256:6a1fe262038822b74842f4052a3092d98fca36aeacbc13b25251d340fc9e4a95"
+        },
+        {
+          "schemaId": "schema.wgp-stream-end-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-stream-end-v1.schema.json",
+          "schemaContentHash": "sha256:8072ac27b073bd5dc1095888d7ebd584b73094c5985773db9655bbb43f705771"
+        },
+        {
+          "schemaId": "schema.wgp-exchange-error-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-exchange-error-v1.schema.json",
+          "schemaContentHash": "sha256:f968f9e54efe62a338e227013b11def47f4713d15e01c7ecdc205d391f0bbc6b"
+        },
+        {
+          "schemaId": "schema.wgp-model-request-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-request-v1.schema.json",
+          "schemaContentHash": "sha256:9caed9390266fc0ed6f4f8a1d688f49f6556de47c94c4a9f2e9fb2a6dc788eeb"
+        },
+        {
+          "schemaId": "schema.wgp-model-response-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-response-v1.schema.json",
+          "schemaContentHash": "sha256:f6c7955c33df623c363343ec45194c4b43dea34ad85cd57a8b032d67e7803a1b"
+        },
+        {
+          "schemaId": "schema.wgp-lifecycle-event-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-lifecycle-event-v1.schema.json",
+          "schemaContentHash": "sha256:a91594adb36eca7874487925df4952c095440d28aa4351ec09dce6c7869fdad1"
+        },
+        {
+          "schemaId": "schema.wgp-state-snapshot-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-state-snapshot-v1.schema.json",
+          "schemaContentHash": "sha256:826dc9538c6a57ef9ebc3ddd811b88c7ded8a278787795ece2a6bdff5b8a5857"
+        },
+        {
+          "schemaId": "schema.wgp-state-delta-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-state-delta-v1.schema.json",
+          "schemaContentHash": "sha256:0e789a2291432b185959537c6d02e9e59a9658daa05b9ef56eb8ef03df1b8d97"
+        },
+        {
+          "schemaId": "schema.minimal-orchestrator-config",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/minimal-orchestrator-config.schema.json",
+          "schemaContentHash": "sha256:01a9b11d031747afeb4cf45ac8d06e120b9f3bf0bc7c13efa78d56c453631848"
+        }
+      ],
+      "externalRefClosure": [
+        {
+          "sourceSchemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-request-v1.schema.json",
+          "jsonPointer": "/properties/messages/items/$ref",
+          "targetSchemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-chat-message-v1.schema.json",
+          "targetSchemaContentHash": "sha256:aaa79c421d96ab62d0d56576ba1ea0ab4af5f05c8e3c21b2331c36a900ce47bb"
+        }
+      ]
+    },
+    {
+      "bundleId": "schema-bundle.minimal-agent",
+      "version": "1.1.0",
+      "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0",
+      "dialect": "https://json-schema.org/draft/2020-12/schema",
+      "entries": [
+        {
+          "schemaId": "schema.wgp-chat-message-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-chat-message-v1.schema.json",
+          "schemaContentHash": "sha256:aaa79c421d96ab62d0d56576ba1ea0ab4af5f05c8e3c21b2331c36a900ce47bb"
+        },
+        {
+          "schemaId": "schema.wgp-assistant-chunk-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-assistant-chunk-v1.schema.json",
+          "schemaContentHash": "sha256:6a1fe262038822b74842f4052a3092d98fca36aeacbc13b25251d340fc9e4a95"
+        },
+        {
+          "schemaId": "schema.wgp-stream-end-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-stream-end-v1.schema.json",
+          "schemaContentHash": "sha256:8072ac27b073bd5dc1095888d7ebd584b73094c5985773db9655bbb43f705771"
+        },
+        {
+          "schemaId": "schema.wgp-exchange-error-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-exchange-error-v1.schema.json",
+          "schemaContentHash": "sha256:f968f9e54efe62a338e227013b11def47f4713d15e01c7ecdc205d391f0bbc6b"
+        },
+        {
+          "schemaId": "schema.wgp-model-request-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-request-v1.schema.json",
+          "schemaContentHash": "sha256:9caed9390266fc0ed6f4f8a1d688f49f6556de47c94c4a9f2e9fb2a6dc788eeb"
+        },
+        {
+          "schemaId": "schema.wgp-model-response-v1.1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-response-v1.1.schema.json",
+          "schemaContentHash": "sha256:850ab8983da1f160265707f0370ad044459bbb08a7508b724f810e48e333e678"
+        },
+        {
+          "schemaId": "schema.wgp-lifecycle-event-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-lifecycle-event-v1.schema.json",
+          "schemaContentHash": "sha256:a91594adb36eca7874487925df4952c095440d28aa4351ec09dce6c7869fdad1"
+        },
+        {
+          "schemaId": "schema.wgp-state-snapshot-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-state-snapshot-v1.schema.json",
+          "schemaContentHash": "sha256:826dc9538c6a57ef9ebc3ddd811b88c7ded8a278787795ece2a6bdff5b8a5857"
+        },
+        {
+          "schemaId": "schema.wgp-state-delta-v1",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-state-delta-v1.schema.json",
+          "schemaContentHash": "sha256:0e789a2291432b185959537c6d02e9e59a9658daa05b9ef56eb8ef03df1b8d97"
+        },
+        {
+          "schemaId": "schema.minimal-model-provider-config",
+          "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/minimal-model-provider-config.schema.json",
+          "schemaContentHash": "sha256:dbaa682d11a1d074e211ae35f263878152baa6c8397a217a61a9cb4b84e0d5f1"
+        }
+      ],
+      "externalRefClosure": [
+        {
+          "sourceSchemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-request-v1.schema.json",
+          "jsonPointer": "/properties/messages/items/$ref",
+          "targetSchemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-chat-message-v1.schema.json",
+          "targetSchemaContentHash": "sha256:aaa79c421d96ab62d0d56576ba1ea0ab4af5f05c8e3c21b2331c36a900ce47bb"
+        }
+      ]
+    }
+  ],
+  "contractCompatibilityAssessments": [
+    {
+      "assessmentId": "contract-assessment.orchestrator-to-model-provider",
+      "version": "0.6.0",
+      "contentHash": "sha256:9621ee82c772c84ca8941c3f264e887ae4f3cc5cfe30b741e40843280af8d13d",
+      "sourceContract": {
+        "contractId": "contract.minimal-agent-boundaries",
+        "version": "1.0.0",
+        "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+      },
+      "targetContract": {
+        "contractId": "contract.minimal-agent-boundaries",
+        "version": "1.1.0",
+        "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+      },
+      "direction": "sourceToTarget",
+      "method": "boundedChecker",
+      "profileRef": {
+        "id": "profile.orchestrator-controlled",
+        "version": "0.6.0",
+        "contentHash": "sha256:9a636516bac8084a5ca89433b8619c63956f39ce1dfb117cfaf1f5caba4b44b6"
+      },
+      "environmentRef": {
+        "id": "environment.local-node",
+        "version": "0.6.0",
+        "contentHash": "sha256:21b8e78e060f9217b1dca40d5f95cd22e4f7d0be9efc95911d3e469d6856d199"
+      },
+      "checkerArtifactRef": {
+        "artifactId": "artifact.contract-checker",
+        "version": "0.6.0",
+        "contentHash": "sha256:44ea889bcfec65defd7cbadc875d929b5ad70cbd2283bd7582666df94b8c6469"
+      },
+      "evidenceArtifactRefs": [
+        {
+          "artifactId": "artifact.contract-check-result.request",
+          "version": "0.6.0",
+          "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+        }
+      ],
+      "outcome": "compatible",
+      "channelMappings": [
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input"
+        }
+      ],
+      "aspectResults": [
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input",
+          "aspect": "schema",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.request",
+              "version": "0.6.0",
+              "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input",
+          "aspect": "fieldSemantics",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.request",
+              "version": "0.6.0",
+              "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input",
+          "aspect": "protocol",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.request",
+              "version": "0.6.0",
+              "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input",
+          "aspect": "ordering",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.request",
+              "version": "0.6.0",
+              "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input",
+          "aspect": "delivery",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.request",
+              "version": "0.6.0",
+              "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input",
+          "aspect": "timeout",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.request",
+              "version": "0.6.0",
+              "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input",
+          "aspect": "error",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.request",
+              "version": "0.6.0",
+              "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input",
+          "aspect": "retry",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.request",
+              "version": "0.6.0",
+              "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input",
+          "aspect": "idempotency",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.request",
+              "version": "0.6.0",
+              "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-request",
+          "sourceRoleId": "role.orchestrator-model-output",
+          "targetChannelId": "channel.model-request",
+          "targetRoleId": "role.model-provider-input",
+          "aspect": "cancellation",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.request",
+              "version": "0.6.0",
+              "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9"
+            }
+          ]
+        }
+      ],
+      "assessedAt": "2026-08-27T08:01:00Z",
+      "expiresAt": "2027-08-27T08:01:00Z"
+    },
+    {
+      "assessmentId": "contract-assessment.model-provider-to-orchestrator",
+      "version": "0.6.0",
+      "contentHash": "sha256:b3a9556e1e8015d72a70fc7296f83edc8c08d0c7d48ba8bbc8f2636e69c7f467",
+      "sourceContract": {
+        "contractId": "contract.minimal-agent-boundaries",
+        "version": "1.1.0",
+        "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+      },
+      "targetContract": {
+        "contractId": "contract.minimal-agent-boundaries",
+        "version": "1.0.0",
+        "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+      },
+      "direction": "sourceToTarget",
+      "method": "adapterEvidence",
+      "profileRef": {
+        "id": "profile.orchestrator-controlled",
+        "version": "0.6.0",
+        "contentHash": "sha256:9a636516bac8084a5ca89433b8619c63956f39ce1dfb117cfaf1f5caba4b44b6"
+      },
+      "environmentRef": {
+        "id": "environment.local-node",
+        "version": "0.6.0",
+        "contentHash": "sha256:21b8e78e060f9217b1dca40d5f95cd22e4f7d0be9efc95911d3e469d6856d199"
+      },
+      "checkerArtifactRef": {
+        "artifactId": "artifact.contract-checker",
+        "version": "0.6.0",
+        "contentHash": "sha256:44ea889bcfec65defd7cbadc875d929b5ad70cbd2283bd7582666df94b8c6469"
+      },
+      "adapterArtifactRef": {
+        "artifactId": "artifact.contract-adapter",
+        "version": "0.6.0",
+        "contentHash": "sha256:ab489091d0fe73e94deede47899aa789d873586a72ec1ab9da757451340c626a"
+      },
+      "evidenceArtifactRefs": [
+        {
+          "artifactId": "artifact.contract-check-result.response",
+          "version": "0.6.0",
+          "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+        }
+      ],
+      "outcome": "migrationRequired",
+      "channelMappings": [
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input"
+        }
+      ],
+      "aspectResults": [
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input",
+          "aspect": "schema",
+          "status": "migrationRequired",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.response",
+              "version": "0.6.0",
+              "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input",
+          "aspect": "fieldSemantics",
+          "status": "migrationRequired",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.response",
+              "version": "0.6.0",
+              "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input",
+          "aspect": "protocol",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.response",
+              "version": "0.6.0",
+              "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input",
+          "aspect": "ordering",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.response",
+              "version": "0.6.0",
+              "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input",
+          "aspect": "delivery",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.response",
+              "version": "0.6.0",
+              "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input",
+          "aspect": "timeout",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.response",
+              "version": "0.6.0",
+              "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input",
+          "aspect": "error",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.response",
+              "version": "0.6.0",
+              "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input",
+          "aspect": "retry",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.response",
+              "version": "0.6.0",
+              "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input",
+          "aspect": "idempotency",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.response",
+              "version": "0.6.0",
+              "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+            }
+          ]
+        },
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input",
+          "aspect": "cancellation",
+          "status": "compatible",
+          "evidenceArtifactRefs": [
+            {
+              "artifactId": "artifact.contract-check-result.response",
+              "version": "0.6.0",
+              "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128"
+            }
+          ]
+        }
+      ],
+      "migrationPlanRef": {
+        "id": "contract-migration.model-provider-to-orchestrator",
+        "version": "0.6.0",
+        "contentHash": "sha256:e2b93238d6e6b4b3ccba2059b98844b53abe6ca34a8c04c907a8a19a896380ce"
+      },
+      "assessedAt": "2026-08-27T08:01:00Z",
+      "expiresAt": "2027-08-27T08:01:00Z"
+    }
+  ],
+  "contractMigrationPlans": [
+    {
+      "planId": "contract-migration.model-provider-to-orchestrator",
+      "version": "0.6.0",
+      "contentHash": "sha256:e2b93238d6e6b4b3ccba2059b98844b53abe6ca34a8c04c907a8a19a896380ce",
+      "fromContract": {
+        "contractId": "contract.minimal-agent-boundaries",
+        "version": "1.1.0",
+        "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+      },
+      "toContract": {
+        "contractId": "contract.minimal-agent-boundaries",
+        "version": "1.0.0",
+        "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+      },
+      "direction": "fromTo",
+      "lossPolicy": "explicitDrop",
+      "atomicity": "checkpointed",
+      "idempotent": true,
+      "resumable": true,
+      "checkpointPolicy": {
+        "mode": "perStep",
+        "checkpointArtifactRef": {
+          "artifactId": "artifact.contract-migration-checkpoint",
+          "version": "0.6.0",
+          "contentHash": "sha256:9b246c9413fa7880fcaaf02ffb4900b69ca5e8fe6cfcf613768249b1b218fa80"
+        }
+      },
+      "channelMappings": [
+        {
+          "sourceChannelId": "channel.model-response",
+          "sourceRoleId": "role.model-provider-output",
+          "targetChannelId": "channel.model-response",
+          "targetRoleId": "role.orchestrator-model-input"
+        }
+      ],
+      "fieldMigrations": [
+        {
+          "sourceStructureId": "structure.model-response",
+          "sourcePointer": "/providerMetadata",
+          "dataLossPolicy": "explicitDrop",
+          "dropApprovalRef": {
+            "id": "approval.drop-provider-metadata",
+            "version": "0.6.0",
+            "contentHash": "sha256:35a27f620f0370774f3b0619ab0edc393760f868c41a35fe577a24878bb1ee88"
+          }
+        }
+      ],
+      "stateStructureMappings": [
+        {
+          "sourceStructureId": "structure.state-snapshot",
+          "targetStructureId": "structure.state-snapshot",
+          "sourceVersionField": "/stateVersion",
+          "targetVersionField": "/stateVersion"
+        }
+      ],
+      "migrationArtifactRef": {
+        "artifactId": "artifact.contract-adapter",
+        "version": "0.6.0",
+        "contentHash": "sha256:ab489091d0fe73e94deede47899aa789d873586a72ec1ab9da757451340c626a"
+      },
+      "rollbackArtifactRef": {
+        "artifactId": "artifact.contract-adapter-rollback",
+        "version": "0.6.0",
+        "contentHash": "sha256:befa5e8874e8cab13835d6ba5eedd1c4eb5aabf45115712529cd38ed6e99baff"
+      },
+      "conformanceSuiteRefs": [
+        {
+          "id": "suite.orchestrator",
+          "version": "0.6.0",
+          "contentHash": "sha256:11a05004ba02e7e957802e7e7528e20d244dec8ed36c13549c6efd0879c066c7"
+        }
+      ],
+      "steps": [
+        "step.validate-source",
+        "step.transform",
+        "step.validate-target",
+        "step.checkpoint"
+      ]
+    }
+  ],
+  "artifactRecords": [
+    {
+      "artifactId": "artifact.algorithm.occurred-at-delta",
+      "version": "0.6.0",
+      "contentHash": "sha256:5c08baf7e3b901669e69fb6ee625727924ebb8975d3087a948bfe3f717496dee",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/occurred-at-delta.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/occurred-at-delta.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.conformance-events",
+      "version": "0.6.0",
+      "contentHash": "sha256:c8db3b92d629bfbbf2ee7ac79745aa85782218ec0fcc41e8035f62f3b649b7a9",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/events.jsonl",
+      "mediaType": "application/x-ndjson",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/events.jsonl"
+      }
+    },
+    {
+      "artifactId": "artifact.conformance-runner",
+      "version": "0.6.0",
+      "contentHash": "sha256:aa5e82bcf4cd777422f00a94129e75d29768fd2c15ed64fc7a342ddfd1600549",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/conformance-runner.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/conformance-runner.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.contract-adapter-rollback",
+      "version": "0.6.0",
+      "contentHash": "sha256:befa5e8874e8cab13835d6ba5eedd1c4eb5aabf45115712529cd38ed6e99baff",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/contract-adapter-rollback.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/contract-adapter-rollback.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.contract-adapter",
+      "version": "0.6.0",
+      "contentHash": "sha256:ab489091d0fe73e94deede47899aa789d873586a72ec1ab9da757451340c626a",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/contract-adapter.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/contract-adapter.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.contract-check-result.request",
+      "version": "0.6.0",
+      "contentHash": "sha256:9d4721f3e0ad9162bf26d6fb8a1fbb134258d01de408370616dff6b51ada20a9",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/contract-request.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/contract-request.result.json"
+      }
+    },
+    {
+      "artifactId": "artifact.contract-check-result.response",
+      "version": "0.6.0",
+      "contentHash": "sha256:83b28294e9095443cf2d2b30e0f755f71f6a326c462f0aed3f61da861d2b3128",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/contract-response.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/contract-response.result.json"
+      }
+    },
+    {
+      "artifactId": "artifact.contract-checker",
+      "version": "0.6.0",
+      "contentHash": "sha256:44ea889bcfec65defd7cbadc875d929b5ad70cbd2283bd7582666df94b8c6469",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/contract-checker.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/contract-checker.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.contract-migration-checkpoint",
+      "version": "0.6.0",
+      "contentHash": "sha256:9b246c9413fa7880fcaaf02ffb4900b69ca5e8fe6cfcf613768249b1b218fa80",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/migration-checkpoint.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/migration-checkpoint.json"
+      }
+    },
+    {
+      "artifactId": "artifact.environment-control.os",
+      "version": "0.6.0",
+      "contentHash": "sha256:0fe03acaf283c3e009dec12c436bcf93407929557d762c0db1449b0f971e85a0",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/environment-control-os.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/environment-control-os.json"
+      }
+    },
+    {
+      "artifactId": "artifact.environment-control.runtime-load",
+      "version": "0.6.0",
+      "contentHash": "sha256:f4bf4cbe392030b7074c76446ac077d56edefe7e26b6a36fd1f8ce27e5259dcb",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/environment-control-runtime-load.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/environment-control-runtime-load.json"
+      }
+    },
+    {
+      "artifactId": "artifact.model-provider-package",
+      "version": "0.6.0",
+      "contentHash": "sha256:24892e02321a35a78f451f2c13486a18556de42381e32c1fe47e612c46aa3496",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/package-model-provider-0.6.0.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/package-model-provider-0.6.0.json"
+      }
+    },
+    {
+      "artifactId": "artifact.notice.wgp",
+      "version": "0.6.0",
+      "contentHash": "sha256:8e26e7397e933ebfad6d84c8eff60cda3f55f039aff437a36f347e6f98e80df0",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/supply-chain/NOTICE.txt",
+      "mediaType": "text/plain",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/supply-chain/NOTICE.txt"
+      }
+    },
+    {
+      "artifactId": "artifact.orchestrator-defaults",
+      "version": "0.6.0",
+      "contentHash": "sha256:9f97167e33dfbf06b49dae2f3108547d7d68baa8b45f0a074d0f4515151982ef",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/orchestrator-defaults.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/orchestrator-defaults.json"
+      }
+    },
+    {
+      "artifactId": "artifact.orchestrator-package",
+      "version": "0.6.0",
+      "contentHash": "sha256:36566540f6c6d44074a9bce82538720ae2803b74d9488738a417d06e437aaf69",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/package-orchestrator-0.6.0.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/package-orchestrator-0.6.0.json"
+      }
+    },
+    {
+      "artifactId": "artifact.orchestrator-package",
+      "version": "0.6.1",
+      "contentHash": "sha256:02da170101d71f9823a484f435397d2d1f381b050746c88eb0e0f9c22f02eec0",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/package-orchestrator-0.6.1.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/package-orchestrator-0.6.1.json"
+      }
+    },
+    {
+      "artifactId": "artifact.payload.model-request",
+      "version": "0.6.0",
+      "contentHash": "sha256:ed764493b62c5a312fb74ea4ab8e3be7c1be8b4d0b6875419c907d8378223bbc",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/model-request.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/model-request.json"
+      }
+    },
+    {
+      "artifactId": "artifact.payload.model-response-orchestrator",
+      "version": "0.6.0",
+      "contentHash": "sha256:a81b0db84c86ea758f8508f076ac8c16bc4ca39130ddef7cfae48a5ba389a05e",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/model-response-orchestrator.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/model-response-orchestrator.json"
+      }
+    },
+    {
+      "artifactId": "artifact.payload.model-response-provider",
+      "version": "0.6.0",
+      "contentHash": "sha256:99a7121171733de91a43a627d6bef7012db072af47c122c423bc002469721598",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/model-response-provider.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/model-response-provider.json"
+      }
+    },
+    {
+      "artifactId": "artifact.provenance.model-provider",
+      "version": "0.6.0",
+      "contentHash": "sha256:04aebc6cded428c4ae367240753f73cefd1558169ea01c5850477d15a2238c99",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/supply-chain/model-provider-0.6.0.provenance.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/supply-chain/model-provider-0.6.0.provenance.json"
+      }
+    },
+    {
+      "artifactId": "artifact.provenance.orchestrator",
+      "version": "0.6.0",
+      "contentHash": "sha256:bd1f2839f01a02067d726f9adbc92ce24c498985766998495cb1914f23db943f",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/supply-chain/orchestrator-0.6.0.provenance.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/supply-chain/orchestrator-0.6.0.provenance.json"
+      }
+    },
+    {
+      "artifactId": "artifact.provenance.orchestrator",
+      "version": "0.6.1",
+      "contentHash": "sha256:58e4caa0ec72d70685efcbbb6ebfd3c1f1e198529a6641db48c364c8325bad46",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/supply-chain/orchestrator-0.6.1.provenance.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/supply-chain/orchestrator-0.6.1.provenance.json"
+      }
+    },
+    {
+      "artifactId": "artifact.sbom.model-provider",
+      "version": "0.6.0",
+      "contentHash": "sha256:b610dad0bb1b7ece23524f0a08cb419963cb22e9a6146012220cf9914def43d1",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/supply-chain/model-provider-0.6.0.sbom.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/supply-chain/model-provider-0.6.0.sbom.json"
+      }
+    },
+    {
+      "artifactId": "artifact.sbom.orchestrator",
+      "version": "0.6.0",
+      "contentHash": "sha256:8f3292bc34fab88c224dc7261ec949953a0d1ee393e2370ec29020bb9e539e35",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/supply-chain/orchestrator-0.6.0.sbom.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/supply-chain/orchestrator-0.6.0.sbom.json"
+      }
+    },
+    {
+      "artifactId": "artifact.sbom.orchestrator",
+      "version": "0.6.1",
+      "contentHash": "sha256:c723a31185da2c4c9a2d90eb6e60e56b80f997f923cf87f41bcef16fda4d2db5",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/supply-chain/orchestrator-0.6.1.sbom.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/supply-chain/orchestrator-0.6.1.sbom.json"
+      }
+    },
+    {
+      "artifactId": "artifact.system-prompt",
+      "version": "1.0.0",
+      "contentHash": "sha256:593208fdc2d2a692a1916eb5e2775251a9cab358f70d768b77b36c076842bc8a",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/system-prompt.md",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/system-prompt.md"
+      }
+    },
+    {
+      "artifactId": "artifact.test-checker.acceptance",
+      "version": "0.6.0",
+      "contentHash": "sha256:cfa40e6c0c2f1292bc3f54e1abd17ed2191218032b77673e48319feda3d5aaf1",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/acceptance.checker.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/acceptance.checker.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.test-checker.chain-execution",
+      "version": "0.6.0",
+      "contentHash": "sha256:945a69e4089926b711b9410b8182740be76e130cfbe344969c06c2617ee1abbc",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/chain-execution.checker.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/chain-execution.checker.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.test-checker.configuration",
+      "version": "0.6.0",
+      "contentHash": "sha256:a203b3c8f1760c2f3a883e05e8ad47ade5cfabff27c550012237f19273754d7d",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/configuration.checker.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/configuration.checker.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.test-checker.migration",
+      "version": "0.6.0",
+      "contentHash": "sha256:37f4351a20072cc6517ebdfb3f000c0cb7d16cb47069e177139165d15075342b",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/migration.checker.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/migration.checker.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.test-checker.order-error-rejection",
+      "version": "0.6.0",
+      "contentHash": "sha256:64ff27189279d736328b5bf03741fa8ca87e3d4b4a9c07c56aa5bd824f6e9894",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/order-error-rejection.checker.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/order-error-rejection.checker.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.test-checker.permission",
+      "version": "0.6.0",
+      "contentHash": "sha256:c2d6d7196b6f37426f409b8cabb15517887f2612ade3a241d437d0df32e706b2",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/permission.checker.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/permission.checker.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.test-checker.reliability-recovery",
+      "version": "0.6.0",
+      "contentHash": "sha256:85fb8da59b1bde20da9aa7036d6134efabd5550d9057733c3832dfdad6683582",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/reliability-recovery.checker.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/reliability-recovery.checker.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.test-checker.rollback",
+      "version": "0.6.0",
+      "contentHash": "sha256:67342a79955b89693dff85406897d342195ede3d5f03c675f4369842aecf537c",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/rollback.checker.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/rollback.checker.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.test-checker.surface-contract",
+      "version": "0.6.0",
+      "contentHash": "sha256:ba7e0da6c9c570187d371296cf70de0c1ae0e6e7be48b0bb17e27f26d4f6a665",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/surface-contract.checker.mjs",
+      "mediaType": "text/javascript",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/surface-contract.checker.mjs"
+      }
+    },
+    {
+      "artifactId": "artifact.test-expected.acceptance",
+      "version": "0.6.0",
+      "contentHash": "sha256:91830526ed02c48392a5e50544a5fad1ea598a68a4a02c78e0652d86e4292d16",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/acceptance.expected.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/acceptance.expected.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-expected.chain-execution",
+      "version": "0.6.0",
+      "contentHash": "sha256:33f254b5e6042aa3003f2f684f5859c656c619a7f5019bdfd8e88551883724f4",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/chain-execution.expected.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/chain-execution.expected.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-expected.configuration",
+      "version": "0.6.0",
+      "contentHash": "sha256:c55ede97f3c008689599ffe7751ac4bc769a114ecb9e19b2e1c12f4458e3b92d",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/configuration.expected.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/configuration.expected.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-expected.migration",
+      "version": "0.6.0",
+      "contentHash": "sha256:cf5919fc28ccce23629c047cb3012eefd5246cad17963a70972e22f0fbc4e198",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/migration.expected.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/migration.expected.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-expected.order-error-rejection",
+      "version": "0.6.0",
+      "contentHash": "sha256:06529781766b9ff362163b3475443977c46b365d75ddafd2dd871608416b7860",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/order-error-rejection.expected.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/order-error-rejection.expected.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-expected.permission",
+      "version": "0.6.0",
+      "contentHash": "sha256:0480c2963013022a478f34537131262b63e79b4cfc3af9611eb4c7a931bdf9df",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/permission.expected.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/permission.expected.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-expected.reliability-recovery",
+      "version": "0.6.0",
+      "contentHash": "sha256:428d059ad67c2c2b055fc988828d0bbf2219308675bf4a4dc43921c43263a300",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/reliability-recovery.expected.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/reliability-recovery.expected.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-expected.rollback",
+      "version": "0.6.0",
+      "contentHash": "sha256:8d3fdc8d8a6afedb11a07fe42b10a25526f87e0ba84869d26191aae58b14264b",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/rollback.expected.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/rollback.expected.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-expected.surface-contract",
+      "version": "0.6.0",
+      "contentHash": "sha256:da8334cb2de68e089e264701f4d8138ecb6a5ec4f7782c9ad039aa48005b551c",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/surface-contract.expected.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/surface-contract.expected.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-input.acceptance",
+      "version": "0.6.0",
+      "contentHash": "sha256:9557e5e4aa10eb0b66e477a6e07440dc1f6d926e795ece8240a7a223e88d6d30",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/acceptance.input.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/acceptance.input.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-input.chain-execution",
+      "version": "0.6.0",
+      "contentHash": "sha256:30057ce7098039b8e29cda35947423a5785c403611f65586ced2654b2c89baf8",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/chain-execution.input.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/chain-execution.input.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-input.configuration",
+      "version": "0.6.0",
+      "contentHash": "sha256:703652b4269a8c57bce4f65dafa261a88eb1e68363b036ce8e7222a59858c4fc",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/configuration.input.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/configuration.input.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-input.migration",
+      "version": "0.6.0",
+      "contentHash": "sha256:fe2c357d7e28521f8da5a7a2b992d1ac1165ba98c30c205c93da701908516f89",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/migration.input.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/migration.input.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-input.order-error-rejection",
+      "version": "0.6.0",
+      "contentHash": "sha256:1cc7d6d05e644bf35c5db7679f11a3d025f3af55d353c7e1e1dd5cb1117d8c3c",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/order-error-rejection.input.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/order-error-rejection.input.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-input.permission",
+      "version": "0.6.0",
+      "contentHash": "sha256:4fd7656939b811092e460db5e8c2df1ad4c364ba334733f25e04c2c348672a75",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/permission.input.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/permission.input.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-input.reliability-recovery",
+      "version": "0.6.0",
+      "contentHash": "sha256:788b90b613b0df6d604bed35a71074dffcf3502f8e3626a0a35a5c60b424bdcd",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/reliability-recovery.input.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/reliability-recovery.input.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-input.rollback",
+      "version": "0.6.0",
+      "contentHash": "sha256:5c77fdf9d466f9ef7e21c61f9ec55a22d1441b7624ae724be8c25ff3c88f5025",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/rollback.input.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/rollback.input.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-input.surface-contract",
+      "version": "0.6.0",
+      "contentHash": "sha256:d77212efd7aa585615cb61263df976db2475f17087956b94471910183bd78e68",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/surface-contract.input.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/surface-contract.input.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-result.acceptance",
+      "version": "0.6.0",
+      "contentHash": "sha256:8a773bd5b5e9466d3dcc8d64f2f6120efb0bd97f85ac3ebe0f948273c7824fd2",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/acceptance.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/acceptance.result.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-result.chain-execution",
+      "version": "0.6.0",
+      "contentHash": "sha256:80548104e5ca8342ad4708bcd625276d7920f8d30cbff7971ff8ce8bdaa31afb",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/chain-execution.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/chain-execution.result.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-result.configuration",
+      "version": "0.6.0",
+      "contentHash": "sha256:8542e717aace18075895b437760b276c8cf7938a86712c5a80fef185f2c2a644",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/configuration.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/configuration.result.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-result.migration",
+      "version": "0.6.0",
+      "contentHash": "sha256:5f497b66275868aca2a78b12fa83ecd53979684fdf2651d68ace6550243ebe13",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/migration.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/migration.result.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-result.order-error-rejection",
+      "version": "0.6.0",
+      "contentHash": "sha256:06529781766b9ff362163b3475443977c46b365d75ddafd2dd871608416b7860",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/order-error-rejection.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/order-error-rejection.result.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-result.permission",
+      "version": "0.6.0",
+      "contentHash": "sha256:ce4d6dbedea2547e62f6150327dc51d813290564a1e25e457b223938c6560bed",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/permission.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/permission.result.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-result.reliability-recovery",
+      "version": "0.6.0",
+      "contentHash": "sha256:428d059ad67c2c2b055fc988828d0bbf2219308675bf4a4dc43921c43263a300",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/reliability-recovery.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/reliability-recovery.result.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-result.rollback",
+      "version": "0.6.0",
+      "contentHash": "sha256:647bb5c724e9b9ef8feaab0c6f7b114adb011760b87874ef78fb07ee3c89a8fc",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/rollback.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/rollback.result.json"
+      }
+    },
+    {
+      "artifactId": "artifact.test-result.surface-contract",
+      "version": "0.6.0",
+      "contentHash": "sha256:5b5616e4812bb0ee0b0870b9f8c387864cf911c78ac173f27c321b9fde701f01",
+      "locator": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/artifacts/tests/surface-contract.result.json",
+      "mediaType": "application/json",
+      "verification": {
+        "mode": "localFile",
+        "localPath": "examples/minimal-agent/artifacts/tests/surface-contract.result.json"
+      }
+    }
+  ],
+  "schemaResolutionRecords": [
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/minimal-model-provider-config.schema.json",
+      "schemaContentHash": "sha256:dbaa682d11a1d074e211ae35f263878152baa6c8397a217a61a9cb4b84e0d5f1",
+      "locator": "examples/minimal-agent/schemas/minimal-model-provider-config.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/minimal-orchestrator-config.schema.json",
+      "schemaContentHash": "sha256:01a9b11d031747afeb4cf45ac8d06e120b9f3bf0bc7c13efa78d56c453631848",
+      "locator": "examples/minimal-agent/schemas/minimal-orchestrator-config.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-assistant-chunk-v1.schema.json",
+      "schemaContentHash": "sha256:6a1fe262038822b74842f4052a3092d98fca36aeacbc13b25251d340fc9e4a95",
+      "locator": "examples/minimal-agent/schemas/wgp-assistant-chunk-v1.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-chat-message-v1.schema.json",
+      "schemaContentHash": "sha256:aaa79c421d96ab62d0d56576ba1ea0ab4af5f05c8e3c21b2331c36a900ce47bb",
+      "locator": "examples/minimal-agent/schemas/wgp-chat-message-v1.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-exchange-error-v1.schema.json",
+      "schemaContentHash": "sha256:f968f9e54efe62a338e227013b11def47f4713d15e01c7ecdc205d391f0bbc6b",
+      "locator": "examples/minimal-agent/schemas/wgp-exchange-error-v1.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-lifecycle-event-v1.schema.json",
+      "schemaContentHash": "sha256:a91594adb36eca7874487925df4952c095440d28aa4351ec09dce6c7869fdad1",
+      "locator": "examples/minimal-agent/schemas/wgp-lifecycle-event-v1.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-request-v1.schema.json",
+      "schemaContentHash": "sha256:9caed9390266fc0ed6f4f8a1d688f49f6556de47c94c4a9f2e9fb2a6dc788eeb",
+      "locator": "examples/minimal-agent/schemas/wgp-model-request-v1.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-response-v1.1.schema.json",
+      "schemaContentHash": "sha256:850ab8983da1f160265707f0370ad044459bbb08a7508b724f810e48e333e678",
+      "locator": "examples/minimal-agent/schemas/wgp-model-response-v1.1.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-response-v1.schema.json",
+      "schemaContentHash": "sha256:f6c7955c33df623c363343ec45194c4b43dea34ad85cd57a8b032d67e7803a1b",
+      "locator": "examples/minimal-agent/schemas/wgp-model-response-v1.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-state-delta-v1.schema.json",
+      "schemaContentHash": "sha256:0e789a2291432b185959537c6d02e9e59a9658daa05b9ef56eb8ef03df1b8d97",
+      "locator": "examples/minimal-agent/schemas/wgp-state-delta-v1.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-state-snapshot-v1.schema.json",
+      "schemaContentHash": "sha256:826dc9538c6a57ef9ebc3ddd811b88c7ded8a278787795ece2a6bdff5b8a5857",
+      "locator": "examples/minimal-agent/schemas/wgp-state-snapshot-v1.schema.json"
+    },
+    {
+      "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-stream-end-v1.schema.json",
+      "schemaContentHash": "sha256:8072ac27b073bd5dc1095888d7ebd584b73094c5985773db9655bbb43f705771",
+      "locator": "examples/minimal-agent/schemas/wgp-stream-end-v1.schema.json"
+    }
+  ],
+  "dataLossApprovals": [
+    {
+      "approvalId": "approval.drop-provider-metadata",
+      "version": "0.6.0",
+      "contentHash": "sha256:35a27f620f0370774f3b0619ab0edc393760f868c41a35fe577a24878bb1ee88",
+      "sourceContract": {
+        "contractId": "contract.minimal-agent-boundaries",
+        "version": "1.1.0",
+        "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+      },
+      "targetContract": {
+        "contractId": "contract.minimal-agent-boundaries",
+        "version": "1.0.0",
+        "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+      },
+      "sourceStructureId": "structure.model-response",
+      "sourcePointer": "/providerMetadata",
+      "decision": "approved",
+      "decidedBy": "reviewer.data-governance",
+      "decidedAt": "2026-08-26T08:00:00Z",
+      "expiresAt": "2027-08-28T08:00:00Z",
+      "rationale": {
+        "zh-CN": "目标契约不接受提供方元数据；仅批准丢弃该精确字段并要求检查点回退。",
+        "en": "The target Contract rejects provider metadata; only this exact field may be dropped, with checkpoint-backed rollback."
       }
     }
   ]

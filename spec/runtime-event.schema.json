@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.5.0/spec/runtime-event.schema.json",
-  "title": "WGP-ABF Runtime Event v0.5",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/spec/runtime-event.schema.json",
+  "title": "WGP-ABF Runtime Event v0.6",
   "description": "One runtime event envelope. Storage, origin, and replay role are independent axes: a derived event may be durable, and a durable event is not necessarily a replay input.",
   "type": "object",
   "required": [
@@ -20,7 +20,7 @@
     "redaction"
   ],
   "properties": {
-    "format": { "const": "wgp-runtime-event/0.5" },
+    "format": { "const": "wgp-runtime-event/0.6" },
     "eventId": { "$ref": "#/$defs/uuid" },
     "runId": { "$ref": "#/$defs/id" },
     "sessionId": { "$ref": "#/$defs/id" },
@@ -53,24 +53,23 @@
     },
     "producer": {
       "type": "object",
-      "required": ["name", "version", "instanceId"],
+      "required": ["name", "version", "instanceId", "artifactRef"],
       "properties": {
         "name": { "type": "string", "minLength": 1 },
         "version": { "type": "string", "minLength": 1 },
         "instanceId": { "$ref": "#/$defs/id" },
-        "artifactDigest": { "$ref": "#/$defs/contentHash" }
+        "artifactRef": { "$ref": "#/$defs/exactArtifactRef" }
       },
       "additionalProperties": false
     },
     "subject": {
       "type": "object",
-      "required": ["abirId"],
+      "required": ["abirRef", "recipeRef"],
       "properties": {
-        "abirId": { "$ref": "#/$defs/id" },
+        "abirRef": { "$ref": "#/$defs/exactDocumentRef" },
         "objectId": { "$ref": "#/$defs/id" },
         "portId": { "$ref": "#/$defs/id" },
-        "recipeId": { "$ref": "#/$defs/id" },
-        "recipeContentHash": { "$ref": "#/$defs/contentHash" },
+        "recipeRef": { "$ref": "#/$defs/exactDocumentRef" },
         "standardPartBindingId": { "$ref": "#/$defs/id" },
         "partRef": { "$ref": "#/$defs/exactPartRef" },
         "packageRef": { "$ref": "#/$defs/exactDocumentRef" }
@@ -92,10 +91,13 @@
       },
       "additionalProperties": false
     },
-    "payloadSchemaRef": { "type": "string", "format": "uri-reference" },
     "payload": {
-      "description": "Event-type-owned JSON object; validate it with payloadSchemaRef when present.",
+      "description": "Event-type-owned JSON object. Contract exchange payload identities are pinned independently for the producer and consumer endpoints.",
       "type": "object"
+    },
+    "contractExchange": {
+      "description": "End-to-end producer-to-consumer evidence for one exact contract message. Producer and consumer observation times are evidence from their own clocks; ordering is established only inside orderingDomain by orderingSequence, never by comparing unrelated occurredAt values.",
+      "$ref": "#/$defs/contractExchange"
     },
     "derivation": { "$ref": "#/$defs/derivation" },
     "redaction": {
@@ -179,9 +181,187 @@
       },
       "additionalProperties": false
     },
+    "exactContractRef": {
+      "type": "object",
+      "required": ["contractId", "version", "contentHash"],
+      "properties": {
+        "contractId": { "$ref": "#/$defs/id" },
+        "version": { "$ref": "#/$defs/semver" },
+        "contentHash": { "$ref": "#/$defs/contentHash" }
+      },
+      "additionalProperties": false
+    },
+    "exactArtifactRef": {
+      "type": "object",
+      "required": ["artifactId", "version", "contentHash"],
+      "properties": {
+        "artifactId": { "$ref": "#/$defs/id" },
+        "version": { "$ref": "#/$defs/semver" },
+        "contentHash": { "$ref": "#/$defs/contentHash" }
+      },
+      "additionalProperties": false
+    },
+    "payloadSchemaIdentity": {
+      "type": "object",
+      "required": ["schemaRef", "schemaContentHash", "schemaBundleRef"],
+      "properties": {
+        "schemaRef": { "type": "string", "format": "uri-reference" },
+        "schemaContentHash": {
+          "description": "SHA-256 of the RFC 8785 canonical UTF-8 JSON serialization of the complete Schema document; this must equal the Contract structure identity.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "schemaBundleRef": { "$ref": "#/$defs/exactDocumentRef" }
+      },
+      "additionalProperties": false
+    },
+    "exchangeParty": {
+      "type": "object",
+      "required": [
+        "partRef",
+        "packageRef",
+        "roleId",
+        "observedAt",
+        "contractRef",
+        "channelId",
+        "structureId",
+        "payloadSchema",
+        "payloadArtifactRef",
+        "payloadDigest"
+      ],
+      "properties": {
+        "partRef": { "$ref": "#/$defs/exactPartRef" },
+        "packageRef": { "$ref": "#/$defs/exactDocumentRef" },
+        "roleId": { "$ref": "#/$defs/id" },
+        "observedAt": { "type": "string", "format": "date-time" },
+        "contractRef": { "$ref": "#/$defs/exactContractRef" },
+        "channelId": { "$ref": "#/$defs/id" },
+        "structureId": { "$ref": "#/$defs/id" },
+        "payloadSchema": { "$ref": "#/$defs/payloadSchemaIdentity" },
+        "payloadArtifactRef": { "$ref": "#/$defs/exactArtifactRef" },
+        "payloadDigest": {
+          "description": "SHA-256 of the serialized payload bytes at this endpoint, after applying payloadEncoding and before transport framing.",
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "exchangeResolution": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "mode": { "enum": ["exact", "compatible", "adapter"] },
+        "compatibilityAssessmentRef": { "$ref": "#/$defs/exactDocumentRef" },
+        "adapterArtifactRef": { "$ref": "#/$defs/exactArtifactRef" },
+        "migrationPlanRef": { "$ref": "#/$defs/exactDocumentRef" }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "mode": { "const": "exact" } },
+            "required": ["mode"]
+          },
+          "then": {
+            "properties": {
+              "compatibilityAssessmentRef": false,
+              "adapterArtifactRef": false,
+              "migrationPlanRef": false
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": { "mode": { "const": "compatible" } },
+            "required": ["mode"]
+          },
+          "then": {
+            "properties": {
+              "compatibilityAssessmentRef": { "$ref": "#/$defs/exactDocumentRef" },
+              "adapterArtifactRef": false,
+              "migrationPlanRef": false
+            },
+            "required": ["compatibilityAssessmentRef"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "mode": { "const": "adapter" } },
+            "required": ["mode"]
+          },
+          "then": {
+            "properties": {
+              "compatibilityAssessmentRef": { "$ref": "#/$defs/exactDocumentRef" },
+              "adapterArtifactRef": { "$ref": "#/$defs/exactArtifactRef" },
+              "migrationPlanRef": { "$ref": "#/$defs/exactDocumentRef" }
+            },
+            "required": ["compatibilityAssessmentRef", "adapterArtifactRef", "migrationPlanRef"]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "streamPosition": {
+      "type": "object",
+      "required": ["streamId", "phase"],
+      "properties": {
+        "streamId": { "$ref": "#/$defs/id" },
+        "phase": { "enum": ["open", "item", "complete", "error", "cancel"] },
+        "itemSequence": { "type": "integer", "minimum": 0 }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": { "phase": { "const": "item" } },
+            "required": ["phase"]
+          },
+          "then": {
+            "properties": {
+              "itemSequence": { "type": "integer", "minimum": 0 }
+            },
+            "required": ["itemSequence"]
+          }
+        },
+        {
+          "if": {
+            "properties": { "phase": { "enum": ["open", "complete", "error", "cancel"] } },
+            "required": ["phase"]
+          },
+          "then": { "not": { "required": ["itemSequence"] } }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "contractExchange": {
+      "type": "object",
+      "required": [
+        "contractBindingId",
+        "messageId",
+        "correlationId",
+        "attempt",
+        "producer",
+        "consumer",
+        "resolution",
+        "outcome"
+      ],
+      "properties": {
+        "contractBindingId": { "$ref": "#/$defs/id" },
+        "messageId": { "$ref": "#/$defs/id" },
+        "correlationId": { "$ref": "#/$defs/id" },
+        "causationMessageId": { "$ref": "#/$defs/id" },
+        "attempt": { "type": "integer", "minimum": 1 },
+        "idempotencyKey": { "type": "string", "minLength": 1 },
+        "orderingDomain": { "$ref": "#/$defs/id" },
+        "orderingSequence": { "type": "integer", "minimum": 0 },
+        "producer": { "$ref": "#/$defs/exchangeParty" },
+        "consumer": { "$ref": "#/$defs/exchangeParty" },
+        "resolution": { "$ref": "#/$defs/exchangeResolution" },
+        "outcome": { "enum": ["accepted", "rejected", "cancelled", "failed"] },
+        "stream": { "$ref": "#/$defs/streamPosition" }
+      },
+      "additionalProperties": false
+    },
     "derivation": {
       "type": "object",
-      "required": ["sourceEventIds", "algorithm", "version", "deterministic"],
+      "required": ["sourceEventIds", "algorithm", "version", "deterministic", "algorithmArtifactRef"],
       "properties": {
         "sourceEventIds": {
           "type": "array",
@@ -192,7 +372,7 @@
         "algorithm": { "type": "string", "minLength": 1 },
         "version": { "type": "string", "minLength": 1 },
         "deterministic": { "type": "boolean" },
-        "algorithmDigest": { "$ref": "#/$defs/contentHash" }
+        "algorithmArtifactRef": { "$ref": "#/$defs/exactArtifactRef" }
       },
       "additionalProperties": false
     }

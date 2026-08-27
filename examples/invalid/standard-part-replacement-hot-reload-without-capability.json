@@ -1,26 +1,21 @@
 {
   "planId": "plan.orchestrator-restart",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
   "fromPart": {
     "partId": "component.orchestrator",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
   },
   "toPart": {
     "partId": "component.orchestrator",
-    "version": "0.5.1",
+    "version": "0.6.1",
     "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
   },
   "replacementMode": "hotReload",
-  "recipeDiffRef": {
-    "id": "diff.raise-max-tokens",
-    "version": "0.5.1",
-    "contentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
-  },
   "recipePrecondition": {
     "id": "recipe.minimal-chat",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
   },
   "riskAssessmentIds": [
@@ -33,11 +28,7 @@
         "/objects/components/0"
       ],
       "operationCapabilities": [
-        "view",
-        "edit",
-        "compile",
-        "roundTrip",
-        "replace"
+        "view"
       ]
     }
   ],
@@ -81,28 +72,38 @@
   ],
   "profileRef": {
     "id": "profile.orchestrator-controlled",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
   },
   "migrationReportRefs": [
     {
       "id": "report.orchestrator-conformance",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
   ],
   "acceptanceReportRefs": [
     {
       "id": "report.orchestrator-conformance",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
   ],
   "rollbackReportRefs": [
     {
       "id": "report.orchestrator-conformance",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
-  ]
+  ],
+  "fromPackageRef": {
+    "id": "package.orchestrator",
+    "version": "0.6.0",
+    "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "toPackageRef": {
+    "id": "package.orchestrator",
+    "version": "0.6.1",
+    "contentHash": "sha256:4141414141414141414141414141414141414141414141414141414141414141"
+  }
 }

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/minimal-model-provider-config.schema.json",
+  "title": "Minimal model provider configuration",
+  "type": "object",
+  "required": ["model"],
+  "properties": {
+    "model": { "type": "string", "minLength": 1 },
+    "baseUrl": { "type": "string", "format": "uri" }
+  },
+  "additionalProperties": false
+}

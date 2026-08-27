@@ -1,0 +1,207 @@
+{
+  "format": "wgp-standard-part-descriptor/0.6",
+  "descriptorVersion": "0.6.0",
+  "contentHash": "sha256:935d8aab677ddca361a7bb7d20acb2ce7ffbb430eb277d89228c04d34f9cb6ec",
+  "createdAt": "2026-08-27T08:00:10Z",
+  "identity": {
+    "partId": "resource.model.deepseek",
+    "name": {
+      "zh-CN": "标准模型提供方",
+      "en": "Standard Model Provider"
+    },
+    "description": {
+      "zh-CN": "通过精确模块数据契约连接编排器的独立模型提供模块。",
+      "en": "An independent model-provider module connected to the orchestrator through an exact module data contract."
+    },
+    "version": "0.6.0",
+    "partKind": "resource",
+    "roles": [
+      "modelProvider"
+    ],
+    "publisher": {
+      "publisherId": "publisher.wgp-abf",
+      "name": {
+        "zh-CN": "WGP-ABF 参考实现",
+        "en": "WGP-ABF Reference Implementation"
+      },
+      "url": "https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow"
+    },
+    "releaseChannel": "stable"
+  },
+  "assembly": {
+    "surfaces": [
+      {
+        "surfaceId": "surface.model-provider",
+        "category": "control",
+        "contractRef": {
+          "contractId": "contract.minimal-agent-boundaries",
+          "version": "1.1.0",
+          "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+        },
+        "bindings": [
+          {
+            "bindingId": "model.consume-request",
+            "channelId": "channel.model-request",
+            "contractRoleId": "role.model-provider-input",
+            "required": true
+          },
+          {
+            "bindingId": "model.produce-response",
+            "channelId": "channel.model-response",
+            "contractRoleId": "role.model-provider-output",
+            "required": true
+          }
+        ]
+      }
+    ]
+  },
+  "configuration": {
+    "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/minimal-model-provider-config.schema.json",
+    "schemaDigest": "sha256:dbaa682d11a1d074e211ae35f263878152baa6c8397a217a61a9cb4b84e0d5f1",
+    "secretFields": [
+      "/apiKey"
+    ],
+    "unknownFieldPolicy": "reject",
+    "schemaBundleRef": {
+      "id": "schema-bundle.minimal-agent",
+      "version": "1.1.0",
+      "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0"
+    }
+  },
+  "capabilities": [
+    {
+      "capabilityId": "capability.model-inference",
+      "version": "1.0.0",
+      "operations": [
+        "acceptRequest",
+        "produceResponse"
+      ],
+      "surfaceIds": [
+        "surface.model-provider"
+      ]
+    }
+  ],
+  "requirements": {
+    "runtime": {
+      "engines": [
+        {
+          "name": "node",
+          "versionRange": ">=22.19"
+        }
+      ],
+      "platforms": [
+        {
+          "os": "any",
+          "architecture": "any"
+        }
+      ],
+      "minimumResources": {
+        "cpuCores": 1,
+        "memoryMiB": 128,
+        "storageMiB": 32,
+        "accelerator": "none"
+      },
+      "network": "outbound"
+    },
+    "dependencies": [],
+    "permissions": [
+      {
+        "permissionId": "permission.deepseek-credential",
+        "scope": "credential",
+        "actions": [
+          "read"
+        ],
+        "resources": [
+          "credential.deepseek-api-key"
+        ],
+        "required": true,
+        "justification": {
+          "zh-CN": "调用模型服务。",
+          "en": "Invoke the model service."
+        }
+      }
+    ]
+  },
+  "state": {
+    "mode": "stateless",
+    "persistence": "none",
+    "migrations": []
+  },
+  "packageRef": {
+    "id": "package.model-provider",
+    "version": "0.6.0",
+    "contentHash": "sha256:a6021352591bf5efe795369dd0218b798f4bffdc141eb49ce840cba32c3fcb18"
+  },
+  "compatibilityProfileRefs": [
+    {
+      "id": "profile.model-provider-chain",
+      "version": "0.6.0",
+      "contentHash": "sha256:a24c71611bae2c555ac6fba2af8be403d239430a5909e840fbc0fee167694799"
+    }
+  ],
+  "conformanceSuiteRefs": [
+    {
+      "id": "suite.orchestrator",
+      "version": "0.6.0",
+      "contentHash": "sha256:11a05004ba02e7e957802e7e7528e20d244dec8ed36c13549c6efd0879c066c7"
+    }
+  ],
+  "lifecycle": {
+    "install": {
+      "strategies": [
+        "offline"
+      ],
+      "entrypoint": "file:./lifecycle/install-model-provider.mjs",
+      "preconditions": [
+        "Exact package artifact bytes must match the published ArtifactRecord.",
+        "The selected CompatibilityProfile must permit the package signature status."
+      ],
+      "verificationTestVectorIds": [
+        "test.surface-contract",
+        "test.chain-execution"
+      ],
+      "requiresApproval": false
+    },
+    "replace": {
+      "strategies": [
+        "restart"
+      ],
+      "entrypoint": "file:./lifecycle/replace-model-provider.mjs",
+      "preconditions": [
+        "Contract and recipe preconditions pass."
+      ],
+      "verificationTestVectorIds": [
+        "test.chain-execution"
+      ],
+      "requiresApproval": false
+    },
+    "rollback": {
+      "strategies": [
+        "restart"
+      ],
+      "entrypoint": "file:./lifecycle/rollback-model-provider.mjs",
+      "preconditions": [
+        "The prior package remains available."
+      ],
+      "verificationTestVectorIds": [
+        "test.rollback"
+      ],
+      "requiresApproval": false,
+      "retainedVersions": 2
+    },
+    "uninstall": {
+      "strategies": [
+        "offline"
+      ],
+      "entrypoint": "file:./lifecycle/uninstall-model-provider.mjs",
+      "preconditions": [
+        "No active contract binding references the provider."
+      ],
+      "verificationTestVectorIds": [
+        "test.surface-contract"
+      ],
+      "requiresApproval": true,
+      "residualState": "none"
+    }
+  }
+}

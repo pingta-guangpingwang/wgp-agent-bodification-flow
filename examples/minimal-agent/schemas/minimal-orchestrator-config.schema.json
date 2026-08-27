@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/minimal-orchestrator-config.schema.json",
+  "title": "Minimal orchestrator configuration",
+  "type": "object",
+  "required": ["systemPromptArtifactId", "maxTokens", "stream"],
+  "properties": {
+    "systemPromptArtifactId": { "type": "string", "pattern": "^[A-Za-z][A-Za-z0-9._:-]{0,127}$", "default": "artifact.system-prompt" },
+    "maxTokens": { "type": "integer", "minimum": 1, "default": 2048, "x-wgp-unit": { "system": "custom", "code": "token" } },
+    "stream": { "type": "boolean", "default": true }
+  },
+  "additionalProperties": false
+}

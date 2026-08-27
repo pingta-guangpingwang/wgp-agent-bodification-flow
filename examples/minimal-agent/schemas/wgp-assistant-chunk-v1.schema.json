@@ -1,0 +1,12 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-assistant-chunk-v1.schema.json",
+  "title": "Minimal assistant chunk v1",
+  "type": "object",
+  "required": ["sequence", "text"],
+  "properties": {
+    "sequence": { "type": "integer", "minimum": 0, "x-wgp-unit": { "system": "custom", "code": "chunk" } },
+    "text": { "type": "string", "contentEncoding": "utf-8" }
+  },
+  "additionalProperties": false
+}

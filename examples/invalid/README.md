@@ -8,7 +8,7 @@ These documents are intentionally invalid. `scripts/validate_examples.mjs` requi
 
 | Fixture / 样例 | Required rejection / 必须拒绝的原因 |
 |---|---|
-| `abir-legacy-source-claim.json` | Legacy provenance and single-choice adapter capability / 旧来源值与单选适配器能力 |
+| `abir-legacy-source-claim.json` | Legacy single-choice `adapterCapability` instead of the operation-capability set / 使用旧单选 `adapterCapability` 而非操作能力集合 |
 | `assembly-recipe-undeclared-secret.json` | Undeclared recipe-envelope property / 未声明的配方信封字段 |
 | `standard-part-descriptor-category-confusion.json` | Uppercase ABIR category disguised as `partKind` / 用大写 ABIR 类别冒充 `partKind` |
 | `standard-part-replacement-hot-reload-without-capability.json` | `hotReload` mode without field-level capability / 缺少字段级能力却声明 `hotReload` 模式 |

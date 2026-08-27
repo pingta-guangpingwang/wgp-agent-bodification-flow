@@ -1,5 +1,5 @@
 {
-  "format": "wgp-evaluation/0.5",
+  "format": "wgp-evaluation/0.6",
   "evaluationId": "evaluation.max-tokens-01",
   "title": {
     "zh-CN": "响应预算变更的配对评测",
@@ -9,19 +9,21 @@
   "subject": {
     "abirId": "agent.minimal-chat",
     "scope": "component",
-    "objectIds": ["component.orchestrator"]
+    "objectIds": [
+      "component.orchestrator"
+    ]
   },
   "baseline": {
     "label": "baseline",
     "recipeId": "recipe.minimal-chat",
-    "recipeVersion": "0.5.0",
-    "recipeContentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    "recipeVersion": "0.6.0",
+    "recipeContentHash": "sha256:eaf9de1637c178a54204a5357b0da2463e8cc652aa252601b9d0471aae859777"
   },
   "candidate": {
     "label": "candidate",
     "recipeId": "recipe.minimal-chat",
-    "recipeVersion": "0.5.1",
-    "recipeContentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "recipeVersion": "0.6.1",
+    "recipeContentHash": "sha256:644c3f1fada27316ba8777591bc4c64548047b5b70eecd17cfa35054eae12092",
     "recipeDiffId": "diff.raise-max-tokens"
   },
   "protocol": {
@@ -29,12 +31,14 @@
     "claimCeiling": "controlledExperiment",
     "fixture": {
       "id": "fixture.greeting",
-      "contentHash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
-      "caseIds": ["fixture.greeting"]
+      "contentHash": "sha256:3d4ac9233f458e7c04a85ff2b68c20a3a78037545a4e20703114a120c8b0b1b7",
+      "caseIds": [
+        "fixture.greeting"
+      ]
     },
     "modelStreamControl": {
       "mode": "pinnedReplay",
-      "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "contentHash": "sha256:2b81e1d60bddc92df274215e93892d00e4013ab53a6d11410f520f501a51852a",
       "notes": {
         "zh-CN": "固定模型输出仅控制模型流差异，不代表总方差为零，也不单独证明因果关系。",
         "en": "Pinned model output controls model-stream differences only; it neither makes total variance zero nor establishes causality by itself."
@@ -43,21 +47,41 @@
     "environmentControls": [
       {
         "name": "operating-system",
-        "valueDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
-        "status": "pinned"
+        "valueDigest": "sha256:0fe03acaf283c3e009dec12c436bcf93407929557d762c0db1449b0f971e85a0",
+        "status": "pinned",
+        "artifactRef": {
+          "artifactId": "artifact.environment-control.os",
+          "version": "0.6.0",
+          "contentHash": "sha256:0fe03acaf283c3e009dec12c436bcf93407929557d762c0db1449b0f971e85a0"
+        }
       },
       {
         "name": "runtime-load",
-        "valueDigest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
-        "status": "measured"
+        "valueDigest": "sha256:f4bf4cbe392030b7074c76446ac077d56edefe7e26b6a36fd1f8ce27e5259dcb",
+        "status": "measured",
+        "artifactRef": {
+          "artifactId": "artifact.environment-control.runtime-load",
+          "version": "0.6.0",
+          "contentHash": "sha256:f4bf4cbe392030b7074c76446ac077d56edefe7e26b6a36fd1f8ce27e5259dcb"
+        }
       }
     ],
     "repetitionsPerVariant": 1,
-    "randomSeeds": [42],
+    "randomSeeds": [
+      42
+    ],
     "preregistered": false,
     "successCriteria": [
-      { "metricId": "metric.success-rate", "operator": "gte", "threshold": 1 },
-      { "metricId": "metric.latency-ms", "operator": "lte", "threshold": 1000 }
+      {
+        "metricId": "metric.success-rate",
+        "operator": "gte",
+        "threshold": 1
+      },
+      {
+        "metricId": "metric.latency-ms",
+        "operator": "lte",
+        "threshold": 1000
+      }
     ]
   },
   "trials": [
@@ -67,9 +91,9 @@
       "runId": "run.example-paired-01",
       "fixtureCaseId": "fixture.greeting",
       "seed": 42,
-      "recipeContentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
-      "environmentDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
-      "modelStreamDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "recipeContentHash": "sha256:eaf9de1637c178a54204a5357b0da2463e8cc652aa252601b9d0471aae859777",
+      "environmentDigest": "sha256:e2f81f7d8c80f6943e05e4efdd8d7b79fe0f1af7948dac89c9d939f66c5e6c91",
+      "modelStreamDigest": "sha256:2b81e1d60bddc92df274215e93892d00e4013ab53a6d11410f520f501a51852a",
       "status": "passed",
       "metricValues": {
         "metric.latency-ms": 800,
@@ -88,9 +112,9 @@
       "runId": "run.example-paired-02",
       "fixtureCaseId": "fixture.greeting",
       "seed": 42,
-      "recipeContentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
-      "environmentDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
-      "modelStreamDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "recipeContentHash": "sha256:644c3f1fada27316ba8777591bc4c64548047b5b70eecd17cfa35054eae12092",
+      "environmentDigest": "sha256:e2f81f7d8c80f6943e05e4efdd8d7b79fe0f1af7948dac89c9d939f66c5e6c91",
+      "modelStreamDigest": "sha256:2b81e1d60bddc92df274215e93892d00e4013ab53a6d11410f520f501a51852a",
       "status": "passed",
       "metricValues": {
         "metric.latency-ms": 780,
@@ -107,14 +131,20 @@
   "metrics": [
     {
       "id": "metric.latency-ms",
-      "name": { "zh-CN": "端到端延迟", "en": "End-to-end latency" },
+      "name": {
+        "zh-CN": "端到端延迟",
+        "en": "End-to-end latency"
+      },
       "unit": "ms",
       "direction": "lowerIsBetter",
       "aggregation": "mean"
     },
     {
       "id": "metric.success-rate",
-      "name": { "zh-CN": "成功率", "en": "Success rate" },
+      "name": {
+        "zh-CN": "成功率",
+        "en": "Success rate"
+      },
       "unit": "ratio",
       "direction": "higherIsBetter",
       "aggregation": "rate"
@@ -123,19 +153,41 @@
   "results": [
     {
       "metricId": "metric.latency-ms",
-      "baseline": { "n": 1, "value": 800, "standardDeviation": 0 },
-      "candidate": { "n": 1, "value": 780, "standardDeviation": 0 },
+      "baseline": {
+        "n": 1,
+        "value": 800,
+        "standardDeviation": 0
+      },
+      "candidate": {
+        "n": 1,
+        "value": 780,
+        "standardDeviation": 0
+      },
       "absoluteDelta": -20,
       "relativeDelta": -0.025,
-      "uncertainty": { "method": "none", "available": false }
+      "uncertainty": {
+        "method": "none",
+        "available": false
+      }
     },
     {
       "metricId": "metric.success-rate",
-      "baseline": { "n": 1, "value": 1, "standardDeviation": 0 },
-      "candidate": { "n": 1, "value": 1, "standardDeviation": 0 },
+      "baseline": {
+        "n": 1,
+        "value": 1,
+        "standardDeviation": 0
+      },
+      "candidate": {
+        "n": 1,
+        "value": 1,
+        "standardDeviation": 0
+      },
       "absoluteDelta": 0,
       "relativeDelta": 0,
-      "uncertainty": { "method": "none", "available": false }
+      "uncertainty": {
+        "method": "none",
+        "available": false
+      }
     }
   ],
   "claims": [

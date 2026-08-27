@@ -1,0 +1,11 @@
+{
+  "packageId": "package.orchestrator",
+  "version": "0.6.0",
+  "entrypoint": "component.orchestrator",
+  "files": [
+    {
+      "path": "orchestrator-runtime.mjs",
+      "content": "export const version = '0.6.0';"
+    }
+  ]
+}

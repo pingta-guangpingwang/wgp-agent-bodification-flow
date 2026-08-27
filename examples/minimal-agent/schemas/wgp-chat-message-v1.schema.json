@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-chat-message-v1.schema.json",
+  "title": "Minimal chat message v1",
+  "type": "object",
+  "required": ["messageId", "role", "content"],
+  "properties": {
+    "messageId": { "type": "string", "format": "uuid" },
+    "role": { "enum": ["system", "user", "assistant", "tool"] },
+    "content": { "type": "string", "contentEncoding": "utf-8" }
+  },
+  "additionalProperties": false
+}
