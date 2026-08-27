@@ -8,7 +8,7 @@ body:
     attributes:
       label: Version / 版本
       description: Name the whitepaper series, schema ID, validator version, or immutable tag.
-      placeholder: v0.4.0 / wgp-abir/0.4
+      placeholder: v0.5.0 / wgp-abir/0.5
     validations:
       required: true
   - type: input

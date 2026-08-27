@@ -1,0 +1,732 @@
+{
+  "format": "wgp-standard-part-companions/0.5",
+  "descriptors": [
+    {
+      "partId": "component.orchestrator",
+      "version": "0.5.0",
+      "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+    },
+    {
+      "partId": "component.orchestrator",
+      "version": "0.5.1",
+      "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+    }
+  ],
+  "permissionPolicies": [
+    {
+      "id": "policy.tool-approval",
+      "version": "0.5.0",
+      "contentHash": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+    }
+  ],
+  "environments": [
+    {
+      "environmentId": "environment.local-node",
+      "version": "0.5.0",
+      "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
+      "runtime": {
+        "engines": [
+          {
+            "name": "node",
+            "versionRange": ">=22.19"
+          }
+        ],
+        "platforms": [
+          {
+            "os": "linux",
+            "architecture": "x64"
+          }
+        ],
+        "minimumResources": {
+          "cpuCores": 1,
+          "memoryMiB": 256,
+          "storageMiB": 64,
+          "accelerator": "none"
+        },
+        "network": "outbound"
+      },
+      "permissionPolicyRef": {
+        "id": "policy.tool-approval",
+        "version": "0.5.0",
+        "contentHash": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+      }
+    }
+  ],
+  "packages": [
+    {
+      "packageId": "package.orchestrator",
+      "version": "0.5.0",
+      "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000",
+      "artifactRef": {
+        "artifactId": "artifact.orchestrator-package",
+        "version": "0.5.0",
+        "contentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+      },
+      "locator": "https://example.org/packages/minimal-orchestrator-0.5.0.tgz",
+      "mediaType": "application/gzip",
+      "sizeBytes": 32768,
+      "supplyChain": {
+        "source": {
+          "repository": "https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow",
+          "revision": "0123456789abcdef0123456789abcdef01234567",
+          "subdirectory": "examples/minimal-agent"
+        },
+        "sbom": {
+          "format": "SPDX-JSON",
+          "locator": "https://example.org/packages/minimal-orchestrator-0.5.0.spdx.json",
+          "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+        },
+        "provenance": {
+          "builder": "wgp-reference-builder/0.5.0",
+          "buildType": "https://slsa.dev/provenance/v1",
+          "sourceRevision": "0123456789abcdef0123456789abcdef01234567",
+          "reproducible": true,
+          "attestationRef": "https://example.org/attestations/minimal-orchestrator.intoto.jsonl",
+          "digest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        }
+      },
+      "license": {
+        "expression": "Apache-2.0",
+        "noticeRef": "https://example.org/packages/minimal-orchestrator-NOTICE.txt"
+      },
+      "signature": {
+        "status": "verified",
+        "algorithm": "ed25519",
+        "signer": "publisher.wgp-abf",
+        "signatureLocator": "https://example.org/packages/minimal-orchestrator-0.5.0.sig",
+        "signedDigest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+        "verifiedAt": "2026-08-27T08:00:30Z"
+      }
+    }
+  ],
+  "compatibilityProfiles": [
+    {
+      "profileId": "profile.orchestrator-controlled",
+      "version": "0.5.0",
+      "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "targetPartKind": "component",
+      "runtimeConstraints": {
+        "engines": [
+          {
+            "name": "node",
+            "versionRange": ">=22.19"
+          }
+        ],
+        "platforms": [
+          {
+            "os": "linux",
+            "architecture": "x64"
+          }
+        ],
+        "minimumResources": {
+          "cpuCores": 1,
+          "memoryMiB": 256,
+          "storageMiB": 64,
+          "accelerator": "none"
+        },
+        "network": "outbound"
+      },
+      "requiredSurfaceIds": [
+        "surface.chat",
+        "surface.model-client"
+      ],
+      "dependencyPolicy": "exactPinned",
+      "permissionPolicyRef": {
+        "id": "policy.tool-approval",
+        "version": "0.5.0",
+        "contentHash": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+      },
+      "statePolicy": "directRequired",
+      "configurationPolicy": "directRequired",
+      "replacementPolicy": {
+        "allowedModes": [
+          "restart"
+        ],
+        "rollbackRequired": true,
+        "migrationEvidenceRequired": true
+      },
+      "requiredSuiteRefs": [
+        {
+          "id": "suite.orchestrator",
+          "version": "0.5.0",
+          "contentHash": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+        }
+      ]
+    }
+  ],
+  "conformanceSuites": [
+    {
+      "suiteId": "suite.orchestrator",
+      "version": "0.5.0",
+      "contentHash": "sha256:7777777777777777777777777777777777777777777777777777777777777777",
+      "specificationVersion": "0.5.0",
+      "testVectors": [
+        {
+          "testVectorId": "test.surface-contract",
+          "kind": "surfaceContract",
+          "purpose": {
+            "zh-CN": "验证消息与模型端口协议。",
+            "en": "Validate the message and model port protocols."
+          },
+          "inputArtifactRef": "https://example.org/tests/surface-contract.input.json",
+          "expectedArtifactRef": "https://example.org/tests/surface-contract.expected.json",
+          "applicableSurfaceIds": [
+            "surface.chat",
+            "surface.model-client"
+          ],
+          "digest": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+          "deterministic": true,
+          "required": true
+        },
+        {
+          "testVectorId": "test.configuration",
+          "kind": "configuration",
+          "purpose": {
+            "zh-CN": "验证配置 Schema 与直接配置兼容性。",
+            "en": "Validate the configuration schema and direct configuration compatibility."
+          },
+          "inputArtifactRef": "https://example.org/tests/configuration.input.json",
+          "expectedArtifactRef": "https://example.org/tests/configuration.expected.json",
+          "applicableSurfaceIds": [
+            "surface.chat"
+          ],
+          "digest": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+          "deterministic": true,
+          "required": true
+        },
+        {
+          "testVectorId": "test.permission",
+          "kind": "permission",
+          "purpose": {
+            "zh-CN": "验证目标标准件在固定权限策略下运行。",
+            "en": "Validate the target standard part under the pinned permission policy."
+          },
+          "inputArtifactRef": "https://example.org/tests/permission.input.json",
+          "expectedArtifactRef": "https://example.org/tests/permission.expected.json",
+          "applicableSurfaceIds": [
+            "surface.model-client"
+          ],
+          "digest": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
+          "deterministic": true,
+          "required": true
+        },
+        {
+          "testVectorId": "test.migration",
+          "kind": "stateMigration",
+          "purpose": {
+            "zh-CN": "验证无状态升级的迁移前置与回退路径。",
+            "en": "Validate migration preconditions and fallback for the stateless upgrade."
+          },
+          "inputArtifactRef": "https://example.org/tests/migration.input.json",
+          "expectedArtifactRef": "https://example.org/tests/migration.expected.json",
+          "applicableSurfaceIds": [
+            "surface.chat"
+          ],
+          "digest": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+          "deterministic": true,
+          "required": true
+        },
+        {
+          "testVectorId": "test.acceptance",
+          "kind": "behavioral",
+          "purpose": {
+            "zh-CN": "验证替换后的对话行为。",
+            "en": "Validate chat behavior after replacement."
+          },
+          "inputArtifactRef": "https://example.org/tests/greeting.input.json",
+          "expectedArtifactRef": "https://example.org/tests/greeting.expected.json",
+          "applicableSurfaceIds": [
+            "surface.chat"
+          ],
+          "digest": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+          "deterministic": true,
+          "required": true
+        },
+        {
+          "testVectorId": "test.rollback",
+          "kind": "lifecycle",
+          "purpose": {
+            "zh-CN": "验证受控替换后的回滚路径。",
+            "en": "Validate the rollback path after controlled replacement."
+          },
+          "inputArtifactRef": "https://example.org/tests/rollback.input.json",
+          "expectedArtifactRef": "https://example.org/tests/rollback.expected.json",
+          "applicableSurfaceIds": [
+            "surface.chat"
+          ],
+          "digest": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+          "deterministic": true,
+          "required": true
+        }
+      ]
+    }
+  ],
+  "conformanceReports": [
+    {
+      "reportId": "report.orchestrator-conformance",
+      "version": "0.5.0",
+      "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "suiteRef": {
+        "id": "suite.orchestrator",
+        "version": "0.5.0",
+        "contentHash": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+      },
+      "partRef": {
+        "partId": "component.orchestrator",
+        "version": "0.5.1",
+        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "executedAt": "2026-08-27T08:10:00Z",
+      "executor": "wgp-conformance-runner/0.5.0",
+      "results": [
+        {
+          "testVectorId": "test.surface-contract",
+          "status": "passed",
+          "startedAt": "2026-08-27T08:05:00Z",
+          "finishedAt": "2026-08-27T08:05:01Z",
+          "evidenceArtifactRef": "https://example.org/reports/surface-contract.json",
+          "evidenceDigest": "sha256:4444444444444444444444444444444444444444444444444444444444444444"
+        },
+        {
+          "testVectorId": "test.configuration",
+          "status": "passed",
+          "startedAt": "2026-08-27T08:05:10Z",
+          "finishedAt": "2026-08-27T08:05:11Z",
+          "evidenceArtifactRef": "https://example.org/reports/configuration.json",
+          "evidenceDigest": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
+        },
+        {
+          "testVectorId": "test.permission",
+          "status": "passed",
+          "startedAt": "2026-08-27T08:05:15Z",
+          "finishedAt": "2026-08-27T08:05:16Z",
+          "evidenceArtifactRef": "https://example.org/reports/permission.json",
+          "evidenceDigest": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        },
+        {
+          "testVectorId": "test.migration",
+          "status": "passed",
+          "startedAt": "2026-08-27T08:05:20Z",
+          "finishedAt": "2026-08-27T08:05:21Z",
+          "evidenceArtifactRef": "https://example.org/reports/migration.json",
+          "evidenceDigest": "sha256:8888888888888888888888888888888888888888888888888888888888888888"
+        },
+        {
+          "testVectorId": "test.acceptance",
+          "status": "passed",
+          "startedAt": "2026-08-27T08:06:00Z",
+          "finishedAt": "2026-08-27T08:06:02Z",
+          "evidenceArtifactRef": "https://example.org/reports/acceptance.json",
+          "evidenceDigest": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+        },
+        {
+          "testVectorId": "test.rollback",
+          "status": "passed",
+          "startedAt": "2026-08-27T08:07:00Z",
+          "finishedAt": "2026-08-27T08:07:03Z",
+          "evidenceArtifactRef": "https://example.org/reports/rollback.json",
+          "evidenceDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+        }
+      ],
+      "summary": {
+        "total": 6,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0,
+        "outcome": "passed"
+      },
+      "profileRef": {
+        "id": "profile.orchestrator-controlled",
+        "version": "0.5.0",
+        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "environmentRef": {
+        "id": "environment.local-node",
+        "version": "0.5.0",
+        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+      },
+      "expiresAt": "2027-08-27T08:10:00Z",
+      "environmentSnapshot": {
+        "os": "linux",
+        "architecture": "x64",
+        "node": "24.6.0"
+      }
+    }
+  ],
+  "evidenceStatusRecords": [
+    {
+      "statusRecordId": "status.report-orchestrator.1",
+      "reportRef": {
+        "id": "report.orchestrator-conformance",
+        "version": "0.5.0",
+        "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      },
+      "revision": 1,
+      "recordHash": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "action": "active",
+      "recordedAt": "2026-08-27T08:10:30Z"
+    }
+  ],
+  "interchangeabilityAssessments": [
+    {
+      "assessmentId": "assessment.orchestrator-i0",
+      "version": "0.5.0",
+      "contentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+      "sourcePart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.0",
+        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "targetPart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.1",
+        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "profileRef": {
+        "id": "profile.orchestrator-controlled",
+        "version": "0.5.0",
+        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "environmentRef": {
+        "id": "environment.local-node",
+        "version": "0.5.0",
+        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+      },
+      "assessedLevel": "I0",
+      "levelEvidence": {
+        "I0": [],
+        "I1": [],
+        "I2": [],
+        "I3": [],
+        "I4": []
+      },
+      "assessedAt": "2026-08-27T08:11:00Z",
+      "expiresAt": "2027-08-27T08:10:00Z"
+    },
+    {
+      "assessmentId": "assessment.orchestrator-i1",
+      "version": "0.5.0",
+      "contentHash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "sourcePart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.0",
+        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "targetPart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.1",
+        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "profileRef": {
+        "id": "profile.orchestrator-controlled",
+        "version": "0.5.0",
+        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "environmentRef": {
+        "id": "environment.local-node",
+        "version": "0.5.0",
+        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+      },
+      "assessedLevel": "I1",
+      "levelEvidence": {
+        "I0": [],
+        "I1": [
+          {
+            "id": "report.orchestrator-conformance",
+            "version": "0.5.0",
+            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "I2": [],
+        "I3": [],
+        "I4": []
+      },
+      "assessedAt": "2026-08-27T08:11:00Z",
+      "expiresAt": "2027-08-27T08:10:00Z"
+    },
+    {
+      "assessmentId": "assessment.orchestrator-i2",
+      "version": "0.5.0",
+      "contentHash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "sourcePart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.0",
+        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "targetPart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.1",
+        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "profileRef": {
+        "id": "profile.orchestrator-controlled",
+        "version": "0.5.0",
+        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "environmentRef": {
+        "id": "environment.local-node",
+        "version": "0.5.0",
+        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+      },
+      "assessedLevel": "I2",
+      "levelEvidence": {
+        "I0": [],
+        "I1": [
+          {
+            "id": "report.orchestrator-conformance",
+            "version": "0.5.0",
+            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "I2": [
+          {
+            "id": "report.orchestrator-conformance",
+            "version": "0.5.0",
+            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "I3": [],
+        "I4": []
+      },
+      "assessedAt": "2026-08-27T08:11:00Z",
+      "expiresAt": "2027-08-27T08:10:00Z"
+    },
+    {
+      "assessmentId": "assessment.orchestrator-i3",
+      "version": "0.5.0",
+      "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+      "sourcePart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.0",
+        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "targetPart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.1",
+        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "profileRef": {
+        "id": "profile.orchestrator-controlled",
+        "version": "0.5.0",
+        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "environmentRef": {
+        "id": "environment.local-node",
+        "version": "0.5.0",
+        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+      },
+      "assessedLevel": "I3",
+      "levelEvidence": {
+        "I0": [],
+        "I1": [
+          {
+            "id": "report.orchestrator-conformance",
+            "version": "0.5.0",
+            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "I2": [
+          {
+            "id": "report.orchestrator-conformance",
+            "version": "0.5.0",
+            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "I3": [
+          {
+            "id": "report.orchestrator-conformance",
+            "version": "0.5.0",
+            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "I4": []
+      },
+      "assessedAt": "2026-08-27T08:11:00Z",
+      "expiresAt": "2027-08-27T08:10:00Z"
+    },
+    {
+      "assessmentId": "assessment.orchestrator-i4",
+      "version": "0.5.0",
+      "contentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+      "sourcePart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.0",
+        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "targetPart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.1",
+        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "profileRef": {
+        "id": "profile.orchestrator-controlled",
+        "version": "0.5.0",
+        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "environmentRef": {
+        "id": "environment.local-node",
+        "version": "0.5.0",
+        "contentHash": "sha256:6666666666666666666666666666666666666666666666666666666666666666"
+      },
+      "assessedLevel": "I4",
+      "levelEvidence": {
+        "I0": [],
+        "I1": [
+          {
+            "id": "report.orchestrator-conformance",
+            "version": "0.5.0",
+            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "I2": [
+          {
+            "id": "report.orchestrator-conformance",
+            "version": "0.5.0",
+            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "I3": [
+          {
+            "id": "report.orchestrator-conformance",
+            "version": "0.5.0",
+            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "I4": [
+          {
+            "id": "report.orchestrator-conformance",
+            "version": "0.5.0",
+            "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ]
+      },
+      "assessedAt": "2026-08-27T08:11:00Z",
+      "expiresAt": "2027-08-27T08:10:00Z",
+      "replacementPlanRef": {
+        "id": "plan.orchestrator-restart",
+        "version": "0.5.0",
+        "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+      }
+    }
+  ],
+  "replacementPlans": [
+    {
+      "planId": "plan.orchestrator-restart",
+      "version": "0.5.0",
+      "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+      "fromPart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.0",
+        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "toPart": {
+        "partId": "component.orchestrator",
+        "version": "0.5.1",
+        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+      },
+      "replacementMode": "restart",
+      "recipePrecondition": {
+        "id": "recipe.minimal-chat",
+        "version": "0.5.0",
+        "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+      },
+      "riskAssessmentIds": [
+        "risk.restart-availability"
+      ],
+      "requiredAdapterCapabilities": [
+        {
+          "sourceClaimId": "claim.orchestrator-native",
+          "fieldScope": [
+            "/objects/components/0"
+          ],
+          "operationCapabilities": [
+            "view",
+            "edit",
+            "compile",
+            "roundTrip",
+            "replace"
+          ]
+        }
+      ],
+      "failurePolicy": {
+        "onPreconditionFailure": "abort",
+        "onStepFailure": "rollback",
+        "onAcceptanceFailure": "rollback",
+        "onRollbackFailure": "escalate",
+        "recipeDiffCompensationRequired": true,
+        "compensateExternalSideEffects": false
+      },
+      "steps": [
+        {
+          "stepId": "step.preflight",
+          "phase": "preflight",
+          "action": "Validate exact recipe hash, descriptor pins, permissions, and risk approvals.",
+          "restartRequired": false,
+          "verificationTestVectorIds": [
+            "test.surface-contract"
+          ]
+        },
+        {
+          "stepId": "step.switch",
+          "phase": "switch",
+          "action": "Apply the guarded RecipeDiff and restart the local process.",
+          "restartRequired": true,
+          "verificationTestVectorIds": [
+            "test.acceptance"
+          ]
+        },
+        {
+          "stepId": "step.verify-rollback",
+          "phase": "verify",
+          "action": "Run acceptance and rollback verification before committing the replacement.",
+          "restartRequired": false,
+          "verificationTestVectorIds": [
+            "test.acceptance",
+            "test.rollback"
+          ]
+        }
+      ],
+      "profileRef": {
+        "id": "profile.orchestrator-controlled",
+        "version": "0.5.0",
+        "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+      },
+      "migrationReportRefs": [
+        {
+          "id": "report.orchestrator-conformance",
+          "version": "0.5.0",
+          "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "acceptanceReportRefs": [
+        {
+          "id": "report.orchestrator-conformance",
+          "version": "0.5.0",
+          "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ],
+      "rollbackReportRefs": [
+        {
+          "id": "report.orchestrator-conformance",
+          "version": "0.5.0",
+          "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        }
+      ]
+    }
+  ],
+  "registryRecords": [
+    {
+      "registryId": "registry.wgp-standard-parts",
+      "revision": 1,
+      "recordHash": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+      "action": "publish",
+      "status": "active",
+      "recordedAt": "2026-08-27T08:01:00Z",
+      "partRef": {
+        "partId": "component.orchestrator",
+        "version": "0.5.0",
+        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      }
+    }
+  ]
+}

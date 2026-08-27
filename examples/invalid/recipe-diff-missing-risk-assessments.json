@@ -1,45 +1,111 @@
 {
-  "format": "wgp-recipe-diff/0.4",
-  "id": "diff.invalid-missing-risk",
-  "createdAt": "2026-08-26T10:00:00Z",
-  "recipeId": "recipe.example",
-  "baseVersion": "0.4.0",
-  "baseContentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  "targetVersion": "0.4.1",
-  "targetContentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "format": "wgp-recipe-diff/0.5",
+  "id": "diff.raise-max-tokens",
+  "createdAt": "2026-08-26T09:10:00Z",
+  "createdBy": "example.operator",
+  "recipeId": "recipe.minimal-chat",
+  "baseVersion": "0.5.0",
+  "baseContentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "targetVersion": "0.5.1",
+  "targetContentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "atomic": true,
   "dryRun": false,
-  "restartRequired": false,
+  "restartRequired": true,
   "preconditions": [
     {
       "kind": "contentHash",
       "required": true,
-      "expectedHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "expectedHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    {
+      "kind": "recipeVersion",
+      "required": true,
+      "expectedVersion": "0.5.0"
+    },
+    {
+      "kind": "pathValue",
+      "required": true,
+      "path": "/componentBindings/0/config/maxTokens",
+      "expectedValue": 2048
     }
   ],
   "operations": [
     {
-      "id": "operation.example",
+      "id": "operation.replace-standard-part",
       "op": "replace",
-      "path": "/componentBindings/0/enabled",
-      "value": true,
-      "precondition": {
-        "path": "/componentBindings/0/enabled",
-        "exists": true,
-        "contentHash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      "path": "/standardPartBindings/0/partRef",
+      "value": {
+        "partId": "component.orchestrator",
+        "version": "0.5.1",
+        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
       },
-      "restartRequired": false,
+      "precondition": {
+        "path": "/standardPartBindings/0/partRef",
+        "exists": true,
+        "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "restartRequired": true,
+      "reason": "Move the recipe from the exact source standard part to the assessed target standard part.",
       "compensation": {
         "op": "replace",
-        "path": "/componentBindings/0/enabled",
-        "value": false
+        "path": "/standardPartBindings/0/partRef",
+        "value": {
+          "partId": "component.orchestrator",
+          "version": "0.5.0",
+          "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        },
+        "precondition": {
+          "path": "/standardPartBindings/0/partRef",
+          "exists": true,
+          "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      }
+    },
+    {
+      "id": "operation.replace-max-tokens",
+      "op": "replace",
+      "path": "/componentBindings/0/config/maxTokens",
+      "value": 4096,
+      "precondition": {
+        "path": "/componentBindings/0/config/maxTokens",
+        "exists": true,
+        "contentHash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "restartRequired": true,
+      "reason": "Increase the response budget for the controlled candidate evaluation.",
+      "compensation": {
+        "op": "replace",
+        "path": "/componentBindings/0/config/maxTokens",
+        "value": 2048,
+        "precondition": {
+          "path": "/componentBindings/0/config/maxTokens",
+          "exists": true,
+          "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        }
       }
     }
   ],
   "compensation": {
     "strategy": "automatic",
-    "trigger": "anyFailure",
+    "trigger": "verificationFailure",
     "verifyAfterCompensation": true,
+    "timeoutMs": 30000,
     "externalSideEffects": []
+  },
+  "replacementPlanRef": {
+    "standardPart": {
+      "partId": "component.orchestrator",
+      "version": "0.5.0",
+      "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+    },
+    "plan": {
+      "id": "plan.orchestrator-restart",
+      "version": "0.5.0",
+      "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+    }
+  },
+  "approval": {
+    "required": false,
+    "state": "notRequired"
   }
 }

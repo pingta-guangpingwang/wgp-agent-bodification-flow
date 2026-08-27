@@ -1,23 +1,27 @@
 {
-  "format": "wgp-evaluation/0.4",
+  "format": "wgp-evaluation/0.5",
   "evaluationId": "evaluation.invalid-causal-overclaim",
-  "title": { "en": "Invalid causal overclaim" },
+  "title": {
+    "en": "Invalid causal overclaim"
+  },
   "createdAt": "2026-08-26T10:00:00Z",
   "subject": {
     "abirId": "agent.example",
     "scope": "component",
-    "objectIds": ["component.example"]
+    "objectIds": [
+      "component.example"
+    ]
   },
   "baseline": {
     "label": "baseline",
     "recipeId": "recipe.example",
-    "recipeVersion": "0.4.0",
+    "recipeVersion": "0.5.0",
     "recipeContentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
   },
   "candidate": {
     "label": "candidate",
     "recipeId": "recipe.example",
-    "recipeVersion": "0.4.1",
+    "recipeVersion": "0.5.1",
     "recipeContentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
   },
   "protocol": {
@@ -26,7 +30,9 @@
     "fixture": {
       "id": "fixture.example",
       "contentHash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-      "caseIds": ["fixture.case"]
+      "caseIds": [
+        "fixture.case"
+      ]
     },
     "modelStreamControl": {
       "mode": "pinnedReplay",
@@ -40,10 +46,16 @@
       }
     ],
     "repetitionsPerVariant": 1,
-    "randomSeeds": [1],
+    "randomSeeds": [
+      1
+    ],
     "preregistered": true,
     "successCriteria": [
-      { "metricId": "metric.success", "operator": "gte", "threshold": 1 }
+      {
+        "metricId": "metric.success",
+        "operator": "gte",
+        "threshold": 1
+      }
     ]
   },
   "trials": [
@@ -57,8 +69,12 @@
       "environmentDigest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       "modelStreamDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
       "status": "passed",
-      "metricValues": { "metric.success": 1 },
-      "eventIds": ["11111111-1111-4111-8111-111111111111"]
+      "metricValues": {
+        "metric.success": 1
+      },
+      "eventIds": [
+        "11111111-1111-4111-8111-111111111111"
+      ]
     },
     {
       "trialId": "trial.candidate",
@@ -70,14 +86,20 @@
       "environmentDigest": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
       "modelStreamDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
       "status": "passed",
-      "metricValues": { "metric.success": 1 },
-      "eventIds": ["22222222-2222-4222-8222-222222222222"]
+      "metricValues": {
+        "metric.success": 1
+      },
+      "eventIds": [
+        "22222222-2222-4222-8222-222222222222"
+      ]
     }
   ],
   "metrics": [
     {
       "id": "metric.success",
-      "name": { "en": "Success" },
+      "name": {
+        "en": "Success"
+      },
       "unit": "ratio",
       "direction": "higherIsBetter",
       "aggregation": "rate"
@@ -86,11 +108,20 @@
   "results": [
     {
       "metricId": "metric.success",
-      "baseline": { "n": 1, "value": 1 },
-      "candidate": { "n": 1, "value": 1 },
+      "baseline": {
+        "n": 1,
+        "value": 1
+      },
+      "candidate": {
+        "n": 1,
+        "value": 1
+      },
       "absoluteDelta": 0,
       "relativeDelta": 0,
-      "uncertainty": { "method": "none", "available": false }
+      "uncertainty": {
+        "method": "none",
+        "available": false
+      }
     }
   ],
   "claims": [
@@ -98,17 +129,33 @@
       "id": "claim.invalid-causal",
       "maturity": "causalClaim",
       "attribution": "conditionalAssociation",
-      "statement": { "en": "The candidate caused the outcome." },
-      "scope": { "en": "This example." },
-      "evidenceEventIds": ["22222222-2222-4222-8222-222222222222"],
+      "statement": {
+        "en": "The candidate caused the outcome."
+      },
+      "scope": {
+        "en": "This example."
+      },
+      "evidenceEventIds": [
+        "22222222-2222-4222-8222-222222222222"
+      ],
       "assumptions": [],
-      "limitations": [{ "en": "The attribution field contradicts the causal maturity." }]
+      "limitations": [
+        {
+          "en": "The attribution field contradicts the causal maturity."
+        }
+      ]
     }
   ],
-  "limitations": [{ "en": "This document is intentionally invalid." }],
+  "limitations": [
+    {
+      "en": "This document is intentionally invalid."
+    }
+  ],
   "decision": {
     "outcome": "inconclusive",
-    "rationale": { "en": "Invalid fixture." },
+    "rationale": {
+      "en": "Invalid fixture."
+    },
     "decidedAt": "2026-08-26T10:00:00Z"
   }
 }

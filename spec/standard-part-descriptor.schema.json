@@ -1,0 +1,2321 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.5.0/spec/standard-part-descriptor.schema.json",
+  "title": "WGP-ABF Standard Part Descriptor v0.5",
+  "description": "A machine-readable descriptor for a standard ABIR part. partKind preserves the six ABIR object categories. I0-I4 records controlled interchangeability and is independent from F3-F0 structural provenance.",
+  "type": "object",
+  "required": [
+    "format",
+    "descriptorVersion",
+    "contentHash",
+    "createdAt",
+    "identity",
+    "assembly",
+    "configuration",
+    "capabilities",
+    "requirements",
+    "state",
+    "packageRef",
+    "compatibilityProfileRefs",
+    "conformanceSuiteRefs",
+    "lifecycle"
+  ],
+  "properties": {
+    "format": {
+      "const": "wgp-standard-part-descriptor/0.5"
+    },
+    "descriptorVersion": {
+      "const": "0.5.0"
+    },
+    "contentHash": {
+      "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+      "$ref": "#/$defs/contentHash"
+    },
+    "createdAt": {
+      "$ref": "#/$defs/timestamp"
+    },
+    "identity": {
+      "$ref": "#/$defs/identity"
+    },
+    "assembly": {
+      "$ref": "#/$defs/assembly"
+    },
+    "configuration": {
+      "$ref": "#/$defs/configuration"
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/capability"
+      }
+    },
+    "requirements": {
+      "$ref": "#/$defs/requirements"
+    },
+    "state": {
+      "$ref": "#/$defs/state"
+    },
+    "packageRef": {
+      "$ref": "#/$defs/exactDocumentRef"
+    },
+    "compatibilityProfileRefs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/exactDocumentRef"
+      }
+    },
+    "conformanceSuiteRefs": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/exactDocumentRef"
+      }
+    },
+    "lifecycle": {
+      "$ref": "#/$defs/lifecycle"
+    },
+    "extensions": {
+      "$ref": "#/$defs/extensions"
+    }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "id": {
+      "type": "string",
+      "pattern": "^[A-Za-z][A-Za-z0-9._:-]{0,127}$"
+    },
+    "semver": {
+      "type": "string",
+      "pattern": "^(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)\\.(0|[1-9][0-9]*)(?:-[0-9A-Za-z.-]+)?(?:\\+[0-9A-Za-z.-]+)?$"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "contentHash": {
+      "type": "string",
+      "pattern": "^sha256:[a-f0-9]{64}$"
+    },
+    "localizedText": {
+      "type": "object",
+      "minProperties": 1,
+      "properties": {
+        "zh-CN": {
+          "type": "string",
+          "minLength": 1
+        },
+        "en": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "extensions": {
+      "type": "object",
+      "propertyNames": {
+        "pattern": "^[a-z][a-z0-9.-]+/[A-Za-z0-9._-]+$"
+      }
+    },
+    "partKind": {
+      "description": "Direct lowercase mapping to the six ABIR object categories.",
+      "enum": [
+        "component",
+        "resource",
+        "policy",
+        "artifact",
+        "interface",
+        "container"
+      ]
+    },
+    "exactPartRef": {
+      "type": "object",
+      "required": [
+        "partId",
+        "version",
+        "contentHash"
+      ],
+      "properties": {
+        "partId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "exactDocumentRef": {
+      "type": "object",
+      "required": [
+        "id",
+        "version",
+        "contentHash"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "exactArtifactRef": {
+      "type": "object",
+      "required": [
+        "artifactId",
+        "version",
+        "contentHash"
+      ],
+      "properties": {
+        "artifactId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "publisher": {
+      "type": "object",
+      "required": [
+        "publisherId",
+        "name"
+      ],
+      "properties": {
+        "publisherId": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        }
+      },
+      "additionalProperties": false
+    },
+    "identity": {
+      "type": "object",
+      "required": [
+        "partId",
+        "name",
+        "version",
+        "partKind",
+        "publisher",
+        "releaseChannel"
+      ],
+      "properties": {
+        "partId": {
+          "$ref": "#/$defs/id"
+        },
+        "name": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "description": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "partKind": {
+          "$ref": "#/$defs/partKind"
+        },
+        "roles": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][A-Za-z0-9._:-]{0,63}$"
+          }
+        },
+        "publisher": {
+          "$ref": "#/$defs/publisher"
+        },
+        "releaseChannel": {
+          "enum": [
+            "stable",
+            "beta",
+            "experimental",
+            "deprecated"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "registryRecord": {
+      "description": "One immutable record in an append-only registry log. Revocation and tombstone are new records; they never rewrite an earlier publication.",
+      "type": "object",
+      "required": [
+        "registryId",
+        "revision",
+        "recordHash",
+        "action",
+        "status",
+        "recordedAt",
+        "partRef"
+      ],
+      "properties": {
+        "registryId": {
+          "$ref": "#/$defs/id"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "recordHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root recordHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "previousRecordHash": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "action": {
+          "enum": [
+            "publish",
+            "revoke",
+            "tombstone"
+          ]
+        },
+        "status": {
+          "enum": [
+            "active",
+            "revoked",
+            "tombstoned"
+          ]
+        },
+        "recordedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "partRef": {
+          "$ref": "#/$defs/exactPartRef"
+        },
+        "reason": {
+          "$ref": "#/$defs/localizedText"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "revision": {
+                "type": "integer",
+                "minimum": 2
+              }
+            },
+            "required": [
+              "revision"
+            ]
+          },
+          "then": {
+            "properties": {
+              "previousRecordHash": {
+                "$ref": "#/$defs/contentHash"
+              }
+            },
+            "required": [
+              "previousRecordHash"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "publish"
+              }
+            },
+            "required": [
+              "action"
+            ]
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "const": "active"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "revoke"
+              }
+            },
+            "required": [
+              "action"
+            ]
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "const": "revoked"
+              },
+              "reason": {
+                "$ref": "#/$defs/localizedText"
+              }
+            },
+            "required": [
+              "reason"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "const": "tombstone"
+              }
+            },
+            "required": [
+              "action"
+            ]
+          },
+          "then": {
+            "properties": {
+              "status": {
+                "const": "tombstoned"
+              },
+              "reason": {
+                "$ref": "#/$defs/localizedText"
+              }
+            },
+            "required": [
+              "reason"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "standardReference": {
+      "type": "object",
+      "required": [
+        "standardId",
+        "version",
+        "contentHash",
+        "specRef"
+      ],
+      "properties": {
+        "standardId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "specRef": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      },
+      "additionalProperties": false
+    },
+    "assemblyPort": {
+      "type": "object",
+      "required": [
+        "portId",
+        "abirPortId",
+        "direction",
+        "protocolId",
+        "protocolVersion",
+        "schemaRef",
+        "schemaContentHash",
+        "mediaType",
+        "cardinality",
+        "required"
+      ],
+      "properties": {
+        "portId": {
+          "$ref": "#/$defs/id"
+        },
+        "abirPortId": {
+          "$ref": "#/$defs/id"
+        },
+        "direction": {
+          "enum": [
+            "in",
+            "out",
+            "bidirectional"
+          ]
+        },
+        "protocolId": {
+          "$ref": "#/$defs/id"
+        },
+        "protocolVersion": {
+          "type": "string",
+          "pattern": "^v?[0-9]+(?:\\.[0-9]+){0,2}$"
+        },
+        "schemaRef": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "schemaContentHash": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "mediaType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "cardinality": {
+          "enum": [
+            "one",
+            "optional",
+            "many"
+          ]
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "compatibilityKey": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "assemblySurface": {
+      "type": "object",
+      "required": [
+        "surfaceId",
+        "category",
+        "standard",
+        "ports"
+      ],
+      "properties": {
+        "surfaceId": {
+          "$ref": "#/$defs/id"
+        },
+        "category": {
+          "enum": [
+            "configuration",
+            "data",
+            "control",
+            "event",
+            "tool",
+            "state",
+            "lifecycle"
+          ]
+        },
+        "standard": {
+          "$ref": "#/$defs/standardReference"
+        },
+        "ports": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/assemblyPort"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "assembly": {
+      "type": "object",
+      "required": [
+        "surfaces"
+      ],
+      "properties": {
+        "surfaces": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/assemblySurface"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "configuration": {
+      "type": "object",
+      "required": [
+        "schemaRef",
+        "schemaDigest",
+        "secretFields",
+        "unknownFieldPolicy"
+      ],
+      "properties": {
+        "schemaRef": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "schemaDigest": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "defaultsRef": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "secretFields": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "json-pointer"
+          }
+        },
+        "unknownFieldPolicy": {
+          "enum": [
+            "reject",
+            "preserve"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "capability": {
+      "type": "object",
+      "required": [
+        "capabilityId",
+        "version",
+        "operations",
+        "surfaceIds"
+      ],
+      "properties": {
+        "capabilityId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "operations": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "pattern": "^[a-z][A-Za-z0-9._:-]{0,63}$"
+          }
+        },
+        "surfaceIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "runtimeEngine": {
+      "type": "object",
+      "required": [
+        "name",
+        "versionRange"
+      ],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "versionRange": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "additionalProperties": false
+    },
+    "platform": {
+      "type": "object",
+      "required": [
+        "os",
+        "architecture"
+      ],
+      "properties": {
+        "os": {
+          "enum": [
+            "windows",
+            "macos",
+            "linux",
+            "any"
+          ]
+        },
+        "architecture": {
+          "enum": [
+            "x64",
+            "arm64",
+            "any"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "minimumResources": {
+      "type": "object",
+      "required": [
+        "cpuCores",
+        "memoryMiB",
+        "storageMiB"
+      ],
+      "properties": {
+        "cpuCores": {
+          "type": "number",
+          "exclusiveMinimum": 0
+        },
+        "memoryMiB": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "storageMiB": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accelerator": {
+          "enum": [
+            "none",
+            "gpu",
+            "npu",
+            "any"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "runtimeRequirements": {
+      "type": "object",
+      "required": [
+        "engines",
+        "platforms",
+        "minimumResources",
+        "network"
+      ],
+      "properties": {
+        "engines": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/runtimeEngine"
+          }
+        },
+        "platforms": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/platform"
+          }
+        },
+        "minimumResources": {
+          "$ref": "#/$defs/minimumResources"
+        },
+        "network": {
+          "enum": [
+            "none",
+            "outbound",
+            "inbound",
+            "bidirectional"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "dependencyRequirement": {
+      "type": "object",
+      "required": [
+        "dependencyId",
+        "partRef",
+        "optional",
+        "requiredSurfaceIds"
+      ],
+      "properties": {
+        "dependencyId": {
+          "$ref": "#/$defs/id"
+        },
+        "partRef": {
+          "$ref": "#/$defs/exactPartRef"
+        },
+        "optional": {
+          "type": "boolean"
+        },
+        "requiredSurfaceIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "permissionRequirement": {
+      "type": "object",
+      "required": [
+        "permissionId",
+        "scope",
+        "actions",
+        "resources",
+        "required",
+        "justification"
+      ],
+      "properties": {
+        "permissionId": {
+          "$ref": "#/$defs/id"
+        },
+        "scope": {
+          "enum": [
+            "filesystem",
+            "network",
+            "subprocess",
+            "credential",
+            "model",
+            "tool",
+            "userData",
+            "custom"
+          ]
+        },
+        "actions": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "resources": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": {
+          "type": "boolean"
+        },
+        "justification": {
+          "$ref": "#/$defs/localizedText"
+        }
+      },
+      "additionalProperties": false
+    },
+    "requirements": {
+      "type": "object",
+      "required": [
+        "runtime",
+        "dependencies",
+        "permissions"
+      ],
+      "properties": {
+        "runtime": {
+          "$ref": "#/$defs/runtimeRequirements"
+        },
+        "dependencies": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/dependencyRequirement"
+          }
+        },
+        "permissions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/permissionRequirement"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "migration": {
+      "type": "object",
+      "required": [
+        "migrationId",
+        "fromSchemaVersion",
+        "toSchemaVersion",
+        "entrypointArtifactRef",
+        "rollbackArtifactRef",
+        "requiredSuiteRefs",
+        "dataLossRisk"
+      ],
+      "properties": {
+        "migrationId": {
+          "$ref": "#/$defs/id"
+        },
+        "fromSchemaVersion": {
+          "$ref": "#/$defs/semver"
+        },
+        "toSchemaVersion": {
+          "$ref": "#/$defs/semver"
+        },
+        "entrypointArtifactRef": {
+          "$ref": "#/$defs/exactArtifactRef"
+        },
+        "rollbackArtifactRef": {
+          "$ref": "#/$defs/exactArtifactRef"
+        },
+        "requiredSuiteRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        },
+        "dataLossRisk": {
+          "enum": [
+            "none",
+            "low",
+            "medium",
+            "high"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "state": {
+      "type": "object",
+      "required": [
+        "mode",
+        "persistence",
+        "migrations"
+      ],
+      "properties": {
+        "mode": {
+          "enum": [
+            "stateless",
+            "stateful"
+          ]
+        },
+        "schemaRef": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "schemaVersion": {
+          "$ref": "#/$defs/semver"
+        },
+        "persistence": {
+          "enum": [
+            "none",
+            "session",
+            "durable",
+            "external"
+          ]
+        },
+        "migrations": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/migration"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "stateless"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "persistence": {
+                "const": "none"
+              },
+              "migrations": {
+                "type": "array",
+                "maxItems": 0
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "mode": {
+                "const": "stateful"
+              }
+            },
+            "required": [
+              "mode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "schemaRef": {
+                "type": "string",
+                "format": "uri-reference"
+              },
+              "schemaVersion": {
+                "$ref": "#/$defs/semver"
+              }
+            },
+            "required": [
+              "schemaRef",
+              "schemaVersion"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "interchangeabilityLevel": {
+      "description": "Controlled interchangeability only. I4 requires executed migration, acceptance, and rollback evidence and never implies hot reload. F3-F0 values belong only to structuralProvenance.",
+      "enum": [
+        "I0",
+        "I1",
+        "I2",
+        "I3",
+        "I4"
+      ],
+      "oneOf": [
+        {
+          "const": "I0",
+          "title": "Closed"
+        },
+        {
+          "const": "I1",
+          "title": "Adapter-wrapped"
+        },
+        {
+          "const": "I2",
+          "title": "Interface-conformant"
+        },
+        {
+          "const": "I3",
+          "title": "Behavior-verified"
+        },
+        {
+          "const": "I4",
+          "title": "Evidence-backed controlled interchangeability"
+        }
+      ]
+    },
+    "compatibilityEnvironment": {
+      "description": "An immutable target environment identity used by directed compatibility assessments.",
+      "type": "object",
+      "required": [
+        "environmentId",
+        "version",
+        "contentHash",
+        "runtime",
+        "permissionPolicyRef"
+      ],
+      "properties": {
+        "environmentId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "runtime": {
+          "$ref": "#/$defs/runtimeRequirements"
+        },
+        "permissionPolicyRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        }
+      },
+      "additionalProperties": false
+    },
+    "compatibilityProfile": {
+      "description": "A stable, reusable compatibility context and policy. It does not assert an I-level for any part pair.",
+      "type": "object",
+      "required": [
+        "profileId",
+        "version",
+        "contentHash",
+        "targetPartKind",
+        "runtimeConstraints",
+        "requiredSurfaceIds",
+        "dependencyPolicy",
+        "permissionPolicyRef",
+        "statePolicy",
+        "configurationPolicy",
+        "replacementPolicy",
+        "requiredSuiteRefs"
+      ],
+      "properties": {
+        "profileId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "targetPartKind": {
+          "$ref": "#/$defs/partKind"
+        },
+        "runtimeConstraints": {
+          "$ref": "#/$defs/runtimeRequirements"
+        },
+        "requiredSurfaceIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "dependencyPolicy": {
+          "enum": [
+            "exactPinned",
+            "compatibleRange",
+            "providerSelected"
+          ]
+        },
+        "permissionPolicyRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "statePolicy": {
+          "enum": [
+            "notApplicable",
+            "resetAllowed",
+            "migrationRequired",
+            "directRequired"
+          ]
+        },
+        "configurationPolicy": {
+          "enum": [
+            "manualAllowed",
+            "transformRequired",
+            "directRequired"
+          ]
+        },
+        "replacementPolicy": {
+          "type": "object",
+          "required": [
+            "allowedModes",
+            "rollbackRequired",
+            "migrationEvidenceRequired"
+          ],
+          "properties": {
+            "allowedModes": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "restart",
+                  "rolling",
+                  "hotReload",
+                  "offline",
+                  "manual"
+                ]
+              }
+            },
+            "rollbackRequired": {
+              "type": "boolean"
+            },
+            "migrationEvidenceRequired": {
+              "type": "boolean"
+            }
+          },
+          "additionalProperties": false
+        },
+        "requiredSuiteRefs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "testVector": {
+      "description": "A test definition. It is not evidence that the test has run or passed.",
+      "type": "object",
+      "required": [
+        "testVectorId",
+        "kind",
+        "purpose",
+        "inputArtifactRef",
+        "expectedArtifactRef",
+        "applicableSurfaceIds",
+        "digest",
+        "deterministic",
+        "required"
+      ],
+      "properties": {
+        "testVectorId": {
+          "$ref": "#/$defs/id"
+        },
+        "kind": {
+          "enum": [
+            "schemaValidation",
+            "surfaceContract",
+            "configuration",
+            "stateMigration",
+            "permission",
+            "lifecycle",
+            "supplyChain",
+            "behavioral"
+          ]
+        },
+        "purpose": {
+          "$ref": "#/$defs/localizedText"
+        },
+        "inputArtifactRef": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "expectedArtifactRef": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "applicableSurfaceIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "digest": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "deterministic": {
+          "type": "boolean"
+        },
+        "required": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "conformanceSuite": {
+      "description": "Versioned test definitions only; execution outcomes belong in conformanceReport.",
+      "type": "object",
+      "required": [
+        "suiteId",
+        "version",
+        "contentHash",
+        "specificationVersion",
+        "testVectors"
+      ],
+      "properties": {
+        "suiteId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "specificationVersion": {
+          "const": "0.5.0"
+        },
+        "testVectors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/testVector"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "testResult": {
+      "type": "object",
+      "required": [
+        "testVectorId",
+        "status",
+        "startedAt",
+        "finishedAt"
+      ],
+      "properties": {
+        "testVectorId": {
+          "$ref": "#/$defs/id"
+        },
+        "status": {
+          "enum": [
+            "passed",
+            "failed",
+            "skipped"
+          ]
+        },
+        "startedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "finishedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "evidenceArtifactRef": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "evidenceDigest": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "passed",
+                  "failed"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "evidenceArtifactRef": {
+                "type": "string",
+                "format": "uri-reference"
+              },
+              "evidenceDigest": {
+                "$ref": "#/$defs/contentHash"
+              }
+            },
+            "required": [
+              "evidenceArtifactRef",
+              "evidenceDigest"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "reportSummary": {
+      "type": "object",
+      "required": [
+        "total",
+        "passed",
+        "failed",
+        "skipped",
+        "outcome"
+      ],
+      "properties": {
+        "total": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "passed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "failed": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "skipped": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "outcome": {
+          "enum": [
+            "passed",
+            "failed",
+            "incomplete"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "conformanceReport": {
+      "description": "An immutable executed-suite report. External EvidenceStatusRecord entries determine whether it is currently admissible; suite definitions alone are never evidence.",
+      "type": "object",
+      "required": [
+        "reportId",
+        "version",
+        "contentHash",
+        "suiteRef",
+        "partRef",
+        "profileRef",
+        "environmentRef",
+        "executedAt",
+        "expiresAt",
+        "executor",
+        "environmentSnapshot",
+        "results",
+        "summary"
+      ],
+      "properties": {
+        "reportId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "suiteRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "partRef": {
+          "$ref": "#/$defs/exactPartRef"
+        },
+        "executedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "executor": {
+          "type": "string",
+          "minLength": 1
+        },
+        "results": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/testResult"
+          }
+        },
+        "summary": {
+          "$ref": "#/$defs/reportSummary"
+        },
+        "profileRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "environmentRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "environmentSnapshot": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "oneOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "conformance": {
+      "type": "object",
+      "required": [
+        "suite",
+        "reports"
+      ],
+      "properties": {
+        "suite": {
+          "$ref": "#/$defs/conformanceSuite"
+        },
+        "reports": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/conformanceReport"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "sourceLocation": {
+      "type": "object",
+      "required": [
+        "repository",
+        "revision"
+      ],
+      "properties": {
+        "repository": {
+          "type": "string",
+          "format": "uri"
+        },
+        "revision": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 128
+        },
+        "subdirectory": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "additionalProperties": false
+    },
+    "sbom": {
+      "type": "object",
+      "required": [
+        "format",
+        "locator",
+        "digest"
+      ],
+      "properties": {
+        "format": {
+          "enum": [
+            "SPDX-JSON",
+            "CycloneDX-JSON"
+          ]
+        },
+        "locator": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "digest": {
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "provenance": {
+      "type": "object",
+      "required": [
+        "builder",
+        "buildType",
+        "sourceRevision",
+        "reproducible",
+        "attestationRef",
+        "digest"
+      ],
+      "properties": {
+        "builder": {
+          "type": "string",
+          "minLength": 1
+        },
+        "buildType": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "sourceRevision": {
+          "type": "string",
+          "minLength": 7,
+          "maxLength": 128
+        },
+        "reproducible": {
+          "type": "boolean"
+        },
+        "attestationRef": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "digest": {
+          "$ref": "#/$defs/contentHash"
+        }
+      },
+      "additionalProperties": false
+    },
+    "supplyChain": {
+      "type": "object",
+      "required": [
+        "source",
+        "sbom",
+        "provenance"
+      ],
+      "properties": {
+        "source": {
+          "$ref": "#/$defs/sourceLocation"
+        },
+        "sbom": {
+          "$ref": "#/$defs/sbom"
+        },
+        "provenance": {
+          "$ref": "#/$defs/provenance"
+        }
+      },
+      "additionalProperties": false
+    },
+    "license": {
+      "type": "object",
+      "required": [
+        "expression",
+        "noticeRef"
+      ],
+      "properties": {
+        "expression": {
+          "type": "string",
+          "minLength": 1
+        },
+        "noticeRef": {
+          "type": "string",
+          "format": "uri-reference"
+        }
+      },
+      "additionalProperties": false
+    },
+    "signature": {
+      "type": "object",
+      "required": [
+        "status"
+      ],
+      "properties": {
+        "status": {
+          "enum": [
+            "unsigned",
+            "signed",
+            "verified",
+            "revoked"
+          ]
+        },
+        "algorithm": {
+          "type": "string",
+          "minLength": 1
+        },
+        "signer": {
+          "type": "string",
+          "minLength": 1
+        },
+        "signatureLocator": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "signedDigest": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "verifiedAt": {
+          "$ref": "#/$defs/timestamp"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "enum": [
+                  "signed",
+                  "verified",
+                  "revoked"
+                ]
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "algorithm": {
+                "type": "string",
+                "minLength": 1
+              },
+              "signer": {
+                "type": "string",
+                "minLength": 1
+              },
+              "signatureLocator": {
+                "type": "string",
+                "format": "uri-reference"
+              },
+              "signedDigest": {
+                "$ref": "#/$defs/contentHash"
+              }
+            },
+            "required": [
+              "algorithm",
+              "signer",
+              "signatureLocator",
+              "signedDigest"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "status": {
+                "const": "verified"
+              }
+            },
+            "required": [
+              "status"
+            ]
+          },
+          "then": {
+            "properties": {
+              "verifiedAt": {
+                "$ref": "#/$defs/timestamp"
+              }
+            },
+            "required": [
+              "verifiedAt"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "partPackage": {
+      "type": "object",
+      "required": [
+        "packageId",
+        "version",
+        "contentHash",
+        "artifactRef",
+        "locator",
+        "mediaType",
+        "supplyChain",
+        "license",
+        "signature"
+      ],
+      "properties": {
+        "packageId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "artifactRef": {
+          "$ref": "#/$defs/exactArtifactRef"
+        },
+        "locator": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "mediaType": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sizeBytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "supplyChain": {
+          "$ref": "#/$defs/supplyChain"
+        },
+        "license": {
+          "$ref": "#/$defs/license"
+        },
+        "signature": {
+          "$ref": "#/$defs/signature"
+        }
+      },
+      "additionalProperties": false
+    },
+    "adapterCapabilityRequirement": {
+      "type": "object",
+      "required": [
+        "sourceClaimId",
+        "fieldScope",
+        "operationCapabilities"
+      ],
+      "properties": {
+        "sourceClaimId": {
+          "$ref": "#/$defs/id"
+        },
+        "fieldScope": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "format": "json-pointer"
+          }
+        },
+        "operationCapabilities": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "view",
+              "edit",
+              "compile",
+              "roundTrip",
+              "hotReload",
+              "replace"
+            ]
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "failurePolicy": {
+      "type": "object",
+      "required": [
+        "onPreconditionFailure",
+        "onStepFailure",
+        "onAcceptanceFailure",
+        "onRollbackFailure",
+        "recipeDiffCompensationRequired",
+        "compensateExternalSideEffects"
+      ],
+      "properties": {
+        "onPreconditionFailure": {
+          "enum": [
+            "abort",
+            "pause"
+          ]
+        },
+        "onStepFailure": {
+          "enum": [
+            "rollback",
+            "abort",
+            "pause"
+          ]
+        },
+        "onAcceptanceFailure": {
+          "enum": [
+            "rollback",
+            "abort"
+          ]
+        },
+        "onRollbackFailure": {
+          "enum": [
+            "escalate",
+            "pause"
+          ]
+        },
+        "recipeDiffCompensationRequired": {
+          "type": "boolean"
+        },
+        "compensateExternalSideEffects": {
+          "type": "boolean"
+        }
+      },
+      "additionalProperties": false
+    },
+    "replacementStep": {
+      "type": "object",
+      "required": [
+        "stepId",
+        "phase",
+        "action",
+        "restartRequired",
+        "verificationTestVectorIds"
+      ],
+      "properties": {
+        "stepId": {
+          "$ref": "#/$defs/id"
+        },
+        "phase": {
+          "enum": [
+            "preflight",
+            "migrate",
+            "switch",
+            "verify",
+            "rollback"
+          ]
+        },
+        "action": {
+          "type": "string",
+          "minLength": 1
+        },
+        "restartRequired": {
+          "type": "boolean"
+        },
+        "verificationTestVectorIds": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "replacementPlan": {
+      "description": "A controlled replacement linked to one guarded RecipeDiff. replacementMode independently selects restart, rolling, hot-reload, offline, or manual execution; I4 never selects a mode implicitly.",
+      "type": "object",
+      "required": [
+        "planId",
+        "version",
+        "contentHash",
+        "profileRef",
+        "fromPart",
+        "toPart",
+        "replacementMode",
+        "recipePrecondition",
+        "riskAssessmentIds",
+        "requiredAdapterCapabilities",
+        "migrationReportRefs",
+        "acceptanceReportRefs",
+        "rollbackReportRefs",
+        "failurePolicy",
+        "steps"
+      ],
+      "properties": {
+        "planId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "profileRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "fromPart": {
+          "$ref": "#/$defs/exactPartRef"
+        },
+        "toPart": {
+          "$ref": "#/$defs/exactPartRef"
+        },
+        "replacementMode": {
+          "enum": [
+            "restart",
+            "rolling",
+            "hotReload",
+            "offline",
+            "manual"
+          ]
+        },
+        "recipePrecondition": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "riskAssessmentIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "requiredAdapterCapabilities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/adapterCapabilityRequirement"
+          }
+        },
+        "migrationReportRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        },
+        "acceptanceReportRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        },
+        "rollbackReportRefs": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        },
+        "failurePolicy": {
+          "$ref": "#/$defs/failurePolicy"
+        },
+        "steps": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/replacementStep"
+          }
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "replacementMode": {
+                "const": "hotReload"
+              }
+            },
+            "required": [
+              "replacementMode"
+            ]
+          },
+          "then": {
+            "properties": {
+              "requiredAdapterCapabilities": {
+                "type": "array",
+                "contains": {
+                  "type": "object",
+                  "properties": {
+                    "operationCapabilities": {
+                      "type": "array",
+                      "contains": {
+                        "const": "hotReload"
+                      }
+                    }
+                  },
+                  "required": [
+                    "operationCapabilities"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "lifecycleAction": {
+      "type": "object",
+      "required": [
+        "strategies",
+        "entrypoint",
+        "preconditions",
+        "verificationTestVectorIds",
+        "requiresApproval"
+      ],
+      "properties": {
+        "strategies": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "restart",
+              "rolling",
+              "hotReload",
+              "offline",
+              "manual"
+            ]
+          }
+        },
+        "entrypoint": {
+          "type": "string",
+          "format": "uri-reference"
+        },
+        "preconditions": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "verificationTestVectorIds": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/id"
+          }
+        },
+        "requiresApproval": {
+          "type": "boolean"
+        },
+        "retainedVersions": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "residualState": {
+          "enum": [
+            "none",
+            "retained",
+            "exported"
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "lifecycle": {
+      "type": "object",
+      "required": [
+        "install",
+        "replace",
+        "rollback",
+        "uninstall"
+      ],
+      "properties": {
+        "install": {
+          "$ref": "#/$defs/lifecycleAction"
+        },
+        "replace": {
+          "$ref": "#/$defs/lifecycleAction"
+        },
+        "rollback": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/lifecycleAction"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "retainedVersions": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "retainedVersions"
+              ]
+            }
+          ]
+        },
+        "uninstall": {
+          "allOf": [
+            {
+              "$ref": "#/$defs/lifecycleAction"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "residualState": {
+                  "enum": [
+                    "none",
+                    "retained",
+                    "exported"
+                  ]
+                }
+              },
+              "required": [
+                "residualState"
+              ]
+            }
+          ]
+        }
+      },
+      "additionalProperties": false
+    },
+    "interchangeabilityAssessment": {
+      "description": "A directed, time-bounded A-to-B interchangeability result under one exact profile and environment. It is evidence, not a reusable rule template.",
+      "type": "object",
+      "required": [
+        "assessmentId",
+        "version",
+        "contentHash",
+        "sourcePart",
+        "targetPart",
+        "profileRef",
+        "environmentRef",
+        "assessedLevel",
+        "levelEvidence",
+        "assessedAt",
+        "expiresAt"
+      ],
+      "properties": {
+        "assessmentId": {
+          "$ref": "#/$defs/id"
+        },
+        "version": {
+          "$ref": "#/$defs/semver"
+        },
+        "contentHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "sourcePart": {
+          "$ref": "#/$defs/exactPartRef"
+        },
+        "targetPart": {
+          "$ref": "#/$defs/exactPartRef"
+        },
+        "profileRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "environmentRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "assessedLevel": {
+          "$ref": "#/$defs/interchangeabilityLevel"
+        },
+        "assessedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "expiresAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "replacementPlanRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "levelEvidence": {
+          "$ref": "#/$defs/levelEvidence"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "assessedLevel": {
+                "const": "I4"
+              }
+            },
+            "required": [
+              "assessedLevel"
+            ]
+          },
+          "then": {
+            "properties": {
+              "replacementPlanRef": {
+                "$ref": "#/$defs/exactDocumentRef"
+              }
+            },
+            "required": [
+              "replacementPlanRef"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "levelEvidence": {
+      "description": "Exact executed-report references assigned to each cumulative interchangeability level. I0 carries no report evidence; I1-I4 are evaluated in order.",
+      "type": "object",
+      "required": [
+        "I0",
+        "I1",
+        "I2",
+        "I3",
+        "I4"
+      ],
+      "properties": {
+        "I0": {
+          "type": "array",
+          "maxItems": 0,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        },
+        "I1": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        },
+        "I2": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        },
+        "I3": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        },
+        "I4": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/exactDocumentRef"
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "evidenceStatusRecord": {
+      "description": "One immutable entry in an append-only status chain for an exact ConformanceReport. Revocation and tombstone append records and never mutate the report.",
+      "type": "object",
+      "required": [
+        "statusRecordId",
+        "reportRef",
+        "revision",
+        "recordHash",
+        "action",
+        "recordedAt"
+      ],
+      "properties": {
+        "statusRecordId": {
+          "$ref": "#/$defs/id"
+        },
+        "reportRef": {
+          "$ref": "#/$defs/exactDocumentRef"
+        },
+        "revision": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "recordHash": {
+          "description": "SHA-256 of RFC 8785 canonical JSON with this root recordHash member omitted.",
+          "$ref": "#/$defs/contentHash"
+        },
+        "previousRecordHash": {
+          "$ref": "#/$defs/contentHash"
+        },
+        "action": {
+          "enum": [
+            "active",
+            "revoke",
+            "tombstone"
+          ]
+        },
+        "recordedAt": {
+          "$ref": "#/$defs/timestamp"
+        },
+        "reason": {
+          "$ref": "#/$defs/localizedText"
+        }
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "revision": {
+                "type": "integer",
+                "minimum": 2
+              }
+            },
+            "required": [
+              "revision"
+            ]
+          },
+          "then": {
+            "properties": {
+              "previousRecordHash": {
+                "$ref": "#/$defs/contentHash"
+              }
+            },
+            "required": [
+              "previousRecordHash"
+            ]
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "action": {
+                "enum": [
+                  "revoke",
+                  "tombstone"
+                ]
+              }
+            },
+            "required": [
+              "action"
+            ]
+          },
+          "then": {
+            "properties": {
+              "reason": {
+                "$ref": "#/$defs/localizedText"
+              }
+            },
+            "required": [
+              "reason"
+            ]
+          }
+        }
+      ],
+      "additionalProperties": false
+    }
+  }
+}

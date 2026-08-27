@@ -2,15 +2,19 @@
 
 # WGP-ABF English guide
 
-[Bilingual home](README.md) · [Read the full English whitepaper](whitepaper/WGP-ABF_Whitepaper_v0.4.en.md) · [Download PDF](output/pdf/WGP-ABF-Whitepaper-v0.4.0-en.pdf)
+[Bilingual home](README.md) · [Read the full English whitepaper](whitepaper/WGP-ABF_Whitepaper_v0.5.en.md) · [Download PDF](output/pdf/WGP-ABF-Whitepaper-v0.5.0-en.pdf)
 
-WGP-ABF is an agent-configuration engineering method originated by Wang Guangping. It is not another node orchestrator. It is an open specification for honest structural extraction, visual editing, semantic diffing, native compilation, runtime evidence, and controlled validation.
+WGP-ABF is an agent-configuration engineering method originated by Wang Guangping. It is not another node orchestrator and does not standardize internal implementations. It standardizes the assembly surfaces of models, memory, tools, skills, workflows, and interfaces so they can be honestly extracted, freely assembled, visually edited, semantically diffed, natively compiled, evidenced at runtime, and validated under control.
 
 ## The system in one diagram
 
 ![WGP-ABF system map](assets/diagrams/wgp-abf-system-map.png)
 
 `WGP-ABIR + AssemblyRecipe` form the canonical structural record. The two-dimensional engineering blueprint is the authoritative human editing projection. Body and 3D experiences are optional, read-only explanation projections. Every view shares the same engineering identities and no view stores a second business model.
+
+![WGP-ABF standard-part ecosystem](assets/diagrams/wgp-abf-standard-parts.png)
+
+Diversity drives innovation; standard parts enable composition. `StandardPartDescriptor` standardizes identity, object kind, ports, capabilities, dependencies, permissions, state migration, and evidence entry points. I0-I4 is a directed, environment- and time-bounded interchangeability result derived by machine from cumulative evidence; it does not replace a declaration of concrete capabilities such as hot reload. An external append-only `EvidenceStatusRecord` withdraws an immutable report without rewriting it.
 
 ## What ordinary users should gain
 
@@ -22,7 +26,7 @@ WGP-ABF is an agent-configuration engineering method originated by Wang Guangpin
 
 ## Where implementers start
 
-1. Read Sections 3–10 of the whitepaper for conformance, the canonical record, source claims, diffs, and runtime events.
+1. Read the whitepaper sections on version discipline, standard parts, the canonical record, source claims, diffs, and runtime events.
 2. Inspect the JSON Schemas in [`spec/`](spec/).
 3. Follow the recipe, ABIR, diff, events, and evaluation loop in [`examples/minimal-agent/`](examples/minimal-agent/).
 4. Implement a version-pinned importer/compiler adapter for one target platform.
@@ -31,6 +35,7 @@ WGP-ABF is an agent-configuration engineering method originated by Wang Guangpin
 ## Important limits
 
 - F3–F0 describes information provenance; it does not grant editing or write-back.
+- I0-I4 describes interchangeability maturity; provenance, marketing claims, or similar file formats cannot grant it automatically.
 - A fixed model-response stream is a contract-regression tool, not causal proof.
 - A configuration inverse cannot undo external side effects such as sent messages or deleted records.
 - Security policy must be enforced outside the model; hidden structure is not a security boundary.
@@ -40,7 +45,7 @@ WGP-ABF is an agent-configuration engineering method originated by Wang Guangpin
 
 Small corrections may use a pull request. Proposals that change specification meaning should start as an RFC and update schemas, valid and invalid examples, migration notes, and both language editions together. Read [CONTRIBUTING.md](CONTRIBUTING.md) and [GOVERNANCE.md](GOVERNANCE.md).
 
-The canonical repository is [pingta-guangpingwang/wgp-agent-bodification-flow](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow), with public [Issues](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow/issues) for defects and proposals. Whitepaper series `0.4`, machine release `0.4.0`, format family `/0.4`, and immutable tag `v0.4.0` have distinct roles explained in Chapter 3.
+The canonical repository is [pingta-guangpingwang/wgp-agent-bodification-flow](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow), with public [Issues](https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow/issues) for defects and proposals. Whitepaper series `0.5`, machine release `0.5.0`, format family `/0.5`, and immutable tag `v0.5.0` have distinct roles explained in the version-discipline section.
 
 ## Licensing
 

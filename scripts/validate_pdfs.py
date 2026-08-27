@@ -14,15 +14,31 @@ ROOT = Path(__file__).resolve().parents[1]
 EDITIONS = (
     (
         "zh-CN",
-        ROOT / "output" / "pdf" / "WGP-ABF-Whitepaper-v0.4.0-zh-CN.pdf",
-        21,
-        ("WGP-ABF", "RecipeDiff", "Replay", "王广平"),
+        ROOT / "output" / "pdf" / "WGP-ABF-Whitepaper-v0.5.0-zh-CN.pdf",
+        27,
+        (
+            "WGP-ABF",
+            "StandardPartDescriptor",
+            "InterchangeabilityAssessment",
+            "EvidenceStatusRecord",
+            "RecipeDiff",
+            "Replay",
+            "王广平",
+        ),
     ),
     (
         "en",
-        ROOT / "output" / "pdf" / "WGP-ABF-Whitepaper-v0.4.0-en.pdf",
-        24,
-        ("WGP-ABF", "RecipeDiff", "Replay", "Wang Guangping"),
+        ROOT / "output" / "pdf" / "WGP-ABF-Whitepaper-v0.5.0-en.pdf",
+        34,
+        (
+            "WGP-ABF",
+            "StandardPartDescriptor",
+            "InterchangeabilityAssessment",
+            "EvidenceStatusRecord",
+            "RecipeDiff",
+            "Replay",
+            "Wang Guangping",
+        ),
     ),
 )
 

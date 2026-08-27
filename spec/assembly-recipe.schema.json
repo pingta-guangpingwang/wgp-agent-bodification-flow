@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.4.0/spec/assembly-recipe.schema.json",
-  "title": "WGP-ABF Assembly Recipe v0.4",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.5.0/spec/assembly-recipe.schema.json",
+  "title": "WGP-ABF Assembly Recipe v0.5",
   "description": "A versioned, hash-addressed selection of implementations, bindings, placements, and runtime settings for one WGP-ABIR document.",
   "type": "object",
   "required": [
@@ -12,20 +12,24 @@
     "contentHash",
     "createdAt",
     "abir",
+    "standardPartBindings",
     "componentBindings",
     "resourceBindings",
     "policyBindings",
     "containerPlacements",
     "interfaceBindings",
     "runtime",
-    "verification"
+    "verificationPlan"
   ],
   "properties": {
-    "format": { "const": "wgp-assembly-recipe/0.4" },
+    "format": { "const": "wgp-assembly-recipe/0.5" },
     "id": { "$ref": "#/$defs/id" },
     "name": { "$ref": "#/$defs/localizedText" },
     "version": { "$ref": "#/$defs/semver" },
-    "contentHash": { "$ref": "#/$defs/contentHash" },
+    "contentHash": {
+      "description": "SHA-256 of RFC 8785 canonical JSON with this root contentHash member omitted.",
+      "$ref": "#/$defs/contentHash"
+    },
     "createdAt": { "$ref": "#/$defs/timestamp" },
     "abir": {
       "type": "object",
@@ -36,6 +40,12 @@
         "contentHash": { "$ref": "#/$defs/contentHash" }
       },
       "additionalProperties": false
+    },
+    "standardPartBindings": {
+      "description": "Exact StandardPartDescriptor pins and explicit mappings from standardized surface ports to ABIR object ports.",
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/standardPartBinding" }
     },
     "componentBindings": {
       "type": "array",
@@ -58,9 +68,10 @@
       "items": { "$ref": "#/$defs/interfaceBinding" }
     },
     "runtime": { "$ref": "#/$defs/runtime" },
-    "verification": {
+    "verificationPlan": {
+      "description": "Checks to execute after assembly. Definitions are not evidence of execution or success; executed evidence belongs in a ConformanceReport.",
       "type": "array",
-      "items": { "$ref": "#/$defs/verificationCheck" }
+      "items": { "$ref": "#/$defs/verificationDefinition" }
     },
     "metadata": {
       "type": "object",
@@ -102,6 +113,79 @@
     "configObject": {
       "description": "Implementation-owned JSON configuration. Validation is delegated to the referenced component or provider schema.",
       "type": "object"
+    },
+    "exactPartRef": {
+      "type": "object",
+      "required": ["partId", "version", "contentHash"],
+      "properties": {
+        "partId": { "$ref": "#/$defs/id" },
+        "version": { "$ref": "#/$defs/semver" },
+        "contentHash": { "$ref": "#/$defs/contentHash" }
+      },
+      "additionalProperties": false
+    },
+    "exactDocumentRef": {
+      "type": "object",
+      "required": ["id", "version", "contentHash"],
+      "properties": {
+        "id": { "$ref": "#/$defs/id" },
+        "version": { "$ref": "#/$defs/semver" },
+        "contentHash": { "$ref": "#/$defs/contentHash" }
+      },
+      "additionalProperties": false
+    },
+    "partKind": {
+      "enum": ["component", "resource", "policy", "artifact", "interface", "container"]
+    },
+    "portMapping": {
+      "type": "object",
+      "required": ["partPortId", "targetPortId"],
+      "properties": {
+        "partPortId": { "$ref": "#/$defs/id" },
+        "targetPortId": { "$ref": "#/$defs/id" }
+      },
+      "additionalProperties": false
+    },
+    "surfaceMapping": {
+      "type": "object",
+      "required": ["surfaceId", "portMappings"],
+      "properties": {
+        "surfaceId": { "$ref": "#/$defs/id" },
+        "portMappings": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/portMapping" }
+        }
+      },
+      "additionalProperties": false
+    },
+    "standardPartBinding": {
+      "type": "object",
+      "required": [
+        "bindingId",
+        "descriptorRef",
+        "packageRef",
+        "partKind",
+        "targetObjectId",
+        "enabled",
+        "config",
+        "surfaceMappings"
+      ],
+      "properties": {
+        "bindingId": { "$ref": "#/$defs/id" },
+        "descriptorRef": { "$ref": "#/$defs/exactPartRef" },
+        "packageRef": { "$ref": "#/$defs/exactDocumentRef" },
+        "partKind": { "$ref": "#/$defs/partKind" },
+        "targetObjectId": { "$ref": "#/$defs/id" },
+        "enabled": { "type": "boolean" },
+        "config": { "$ref": "#/$defs/configObject" },
+        "surfaceMappings": {
+          "type": "array",
+          "minItems": 1,
+          "items": { "$ref": "#/$defs/surfaceMapping" }
+        }
+      },
+      "additionalProperties": false
     },
     "componentBinding": {
       "type": "object",
@@ -230,7 +314,8 @@
       },
       "additionalProperties": false
     },
-    "verificationCheck": {
+    "verificationDefinition": {
+      "description": "A check definition awaiting execution; this object never asserts a passing result.",
       "type": "object",
       "required": ["id", "kind", "required"],
       "properties": {

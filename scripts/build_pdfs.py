@@ -517,13 +517,13 @@ def draw_cover(canvas, doc: WhitepaperDocument, *, language: str) -> None:
     canvas.drawString(18 * mm, PAGE_HEIGHT - 41 * mm, "WGP AGENT BODIFICATION FLOW")
     if language == "zh":
         title = "WGP 智能体机体化流程（WGP-ABF）"
-        subtitle = "智能体工程图纸、证据化评测与验证式组件替换框架"
-        edition = "版本 0.4 · 中英双语图解公开草案"
+        subtitle = "智能体工程图纸、证据化评测与验证式标准件替换框架"
+        edition = "版本 0.5 · 中英双语图解公开草案"
         author = "概念提出者与主要作者：王广平"
     else:
         title = "WGP Agent Bodification Flow (WGP-ABF)"
-        subtitle = "Agent Blueprints, Evidence-Backed Evaluation, and Validated Component Replacement"
-        edition = "Version 0.4 · Bilingual Illustrated Public Draft"
+        subtitle = "Agent Blueprints, Evidence-Backed Evaluation, and Validated Standard-Part Replacement"
+        edition = "Version 0.5 · Bilingual Illustrated Public Draft"
         author = "Originator and Principal Author: Wang Guangping"
     canvas.setFont("WGPBold", 25 if language == "zh" else 23)
     canvas.drawString(18 * mm, PAGE_HEIGHT - 57 * mm, title)
@@ -548,7 +548,7 @@ def draw_body_page(canvas, doc: WhitepaperDocument, *, language: str) -> None:
     canvas.line(20 * mm, PAGE_HEIGHT - 16 * mm, PAGE_WIDTH - 20 * mm, PAGE_HEIGHT - 16 * mm)
     canvas.setFont("WGPBold", 7.8)
     canvas.setFillColor(MUTED)
-    canvas.drawString(20 * mm, PAGE_HEIGHT - 12.3 * mm, "WGP-ABF · PUBLIC DRAFT 0.4")
+    canvas.drawString(20 * mm, PAGE_HEIGHT - 12.3 * mm, "WGP-ABF · PUBLIC DRAFT 0.5")
     right = "中文图解版" if language == "zh" else "English illustrated edition"
     canvas.drawRightString(PAGE_WIDTH - 20 * mm, PAGE_HEIGHT - 12.3 * mm, right)
     canvas.line(20 * mm, 15 * mm, PAGE_WIDTH - 20 * mm, 15 * mm)
@@ -579,7 +579,7 @@ def build_one(*, language: str, source: Path, destination: Path) -> None:
         bottomMargin=bottom,
         title="WGP Agent Bodification Flow (WGP-ABF)",
         author="Wang Guangping / 王广平",
-        subject="Bilingual illustrated public draft 0.4",
+        subject="Bilingual illustrated public draft 0.5",
         creator="WGP-ABF deterministic PDF builder",
     )
     document.addPageTemplates(
@@ -641,12 +641,12 @@ def main() -> None:
     OUTPUT.mkdir(parents=True, exist_ok=True)
     jobs = {
         "zh": (
-            ROOT / "whitepaper" / "WGP-ABF_Whitepaper_v0.4.zh-CN.md",
-            OUTPUT / "WGP-ABF-Whitepaper-v0.4.0-zh-CN.pdf",
+            ROOT / "whitepaper" / "WGP-ABF_Whitepaper_v0.5.zh-CN.md",
+            OUTPUT / "WGP-ABF-Whitepaper-v0.5.0-zh-CN.pdf",
         ),
         "en": (
-            ROOT / "whitepaper" / "WGP-ABF_Whitepaper_v0.4.en.md",
-            OUTPUT / "WGP-ABF-Whitepaper-v0.4.0-en.pdf",
+            ROOT / "whitepaper" / "WGP-ABF_Whitepaper_v0.5.en.md",
+            OUTPUT / "WGP-ABF-Whitepaper-v0.5.0-en.pdf",
         ),
     }
     selected: Iterable[str] = jobs if args.language == "both" else [args.language]

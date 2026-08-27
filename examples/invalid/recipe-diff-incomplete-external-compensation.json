@@ -1,80 +1,147 @@
 {
-  "format": "wgp-recipe-diff/0.4",
-  "id": "diff.invalid-external-compensation",
-  "createdAt": "2026-08-26T10:05:00Z",
-  "recipeId": "recipe.example",
-  "baseVersion": "0.4.0",
-  "baseContentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  "targetVersion": "0.4.1",
-  "targetContentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "format": "wgp-recipe-diff/0.5",
+  "id": "diff.raise-max-tokens",
+  "createdAt": "2026-08-26T09:10:00Z",
+  "createdBy": "example.operator",
+  "recipeId": "recipe.minimal-chat",
+  "baseVersion": "0.5.0",
+  "baseContentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "targetVersion": "0.5.1",
+  "targetContentHash": "sha256:ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
   "atomic": true,
   "dryRun": false,
-  "restartRequired": false,
+  "restartRequired": true,
   "preconditions": [
     {
       "kind": "contentHash",
       "required": true,
-      "expectedHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+      "expectedHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    },
+    {
+      "kind": "recipeVersion",
+      "required": true,
+      "expectedVersion": "0.5.0"
+    },
+    {
+      "kind": "pathValue",
+      "required": true,
+      "path": "/componentBindings/0/config/maxTokens",
+      "expectedValue": 2048
     }
   ],
   "riskAssessments": [
     {
-      "id": "risk.external-notification",
+      "id": "risk.restart-availability",
       "category": "externalSideEffect",
-      "severity": "high",
-      "affectedPaths": ["/componentBindings/0/enabled"],
-      "description": "The operation may publish a notification outside the recipe store.",
+      "severity": "medium",
+      "affectedPaths": [
+        "/standardPartBindings/0/partRef",
+        "/componentBindings/0/config/maxTokens"
+      ],
+      "description": "Replacing the pinned standard part and applying the candidate configuration require a process restart and may briefly interrupt the local chat interface.",
       "mitigation": {
-        "actions": ["Use a deduplication key for the notification."],
-        "verification": "Confirm the external notification state by effect id."
+        "actions": [
+          "Run the schema and smoke checks before commit.",
+          "Apply the change only when no active session is using the local process."
+        ],
+        "verification": "Confirm the chat health check and fixture.greeting smoke check after restart."
       },
       "residualRisk": {
-        "severity": "medium",
-        "description": "The external service may be unavailable during compensation."
+        "severity": "low",
+        "description": "A short restart interruption remains possible after the checks and idle-session guard."
       },
       "approval": {
-        "required": true,
-        "state": "pending",
-        "policyId": "policy.external-effect"
+        "required": false,
+        "state": "notRequired"
       }
     }
   ],
   "operations": [
     {
-      "id": "operation.example",
+      "id": "operation.replace-standard-part",
       "op": "replace",
-      "path": "/componentBindings/0/enabled",
-      "value": true,
-      "precondition": {
-        "path": "/componentBindings/0/enabled",
-        "exists": true,
-        "contentHash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+      "path": "/standardPartBindings/0/partRef",
+      "value": {
+        "partId": "component.orchestrator",
+        "version": "0.5.1",
+        "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
       },
-      "restartRequired": false,
+      "precondition": {
+        "path": "/standardPartBindings/0/partRef",
+        "exists": true,
+        "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "restartRequired": true,
+      "reason": "Move the recipe from the exact source standard part to the assessed target standard part.",
       "compensation": {
         "op": "replace",
-        "path": "/componentBindings/0/enabled",
-        "value": false
+        "path": "/standardPartBindings/0/partRef",
+        "value": {
+          "partId": "component.orchestrator",
+          "version": "0.5.0",
+          "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        },
+        "precondition": {
+          "path": "/standardPartBindings/0/partRef",
+          "exists": true,
+          "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        }
+      }
+    },
+    {
+      "id": "operation.replace-max-tokens",
+      "op": "replace",
+      "path": "/componentBindings/0/config/maxTokens",
+      "value": 4096,
+      "precondition": {
+        "path": "/componentBindings/0/config/maxTokens",
+        "exists": true,
+        "contentHash": "sha256:1111111111111111111111111111111111111111111111111111111111111111"
+      },
+      "restartRequired": true,
+      "reason": "Increase the response budget for the controlled candidate evaluation.",
+      "compensation": {
+        "op": "replace",
+        "path": "/componentBindings/0/config/maxTokens",
+        "value": 2048,
+        "precondition": {
+          "path": "/componentBindings/0/config/maxTokens",
+          "exists": true,
+          "contentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222"
+        }
       }
     }
   ],
   "compensation": {
-    "strategy": "manual",
-    "trigger": "anyFailure",
+    "strategy": "automatic",
+    "trigger": "verificationFailure",
     "verifyAfterCompensation": true,
+    "timeoutMs": 30000,
     "externalSideEffects": [
       {
-        "effectId": "effect.notification",
-        "description": "A notification sent to an external service.",
-        "action": "Cancel the notification using its deduplication key.",
-        "verification": "Read back the notification state and confirm it is cancelled.",
+        "effectId": "effect.cache-invalidation",
+        "description": "Invalidate an external deployment cache after replacement.",
+        "action": "Restore the prior cache pointer.",
+        "verification": "Read the cache pointer and compare it with the pre-change value.",
         "idempotent": true,
-        "owner": "integration.operator"
+        "owner": "example.operator"
       }
     ]
   },
+  "replacementPlanRef": {
+    "standardPart": {
+      "partId": "component.orchestrator",
+      "version": "0.5.0",
+      "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+    },
+    "plan": {
+      "id": "plan.orchestrator-restart",
+      "version": "0.5.0",
+      "contentHash": "sha256:5555555555555555555555555555555555555555555555555555555555555555"
+    }
+  },
   "approval": {
-    "required": true,
-    "state": "pending"
+    "required": false,
+    "state": "notRequired"
   }
 }

@@ -1,8 +1,10 @@
 {
-  "format": "wgp-abir/0.4",
+  "format": "wgp-abir/0.5",
   "id": "agent.invalid-legacy-claim",
-  "name": { "en": "Invalid legacy source claim" },
-  "version": "0.4.0",
+  "name": {
+    "en": "Invalid legacy source claim"
+  },
+  "version": "0.5.0",
   "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "createdAt": "2026-08-26T10:00:00Z",
   "objects": {
@@ -10,12 +12,16 @@
       {
         "objectType": "Component",
         "id": "component.example",
-        "name": { "en": "Example component" },
+        "name": {
+          "en": "Example component"
+        },
         "componentKind": "custom",
         "ports": [
           {
             "id": "input.in",
-            "name": { "en": "Input" },
+            "name": {
+              "en": "Input"
+            },
             "direction": "in",
             "protocol": "example/v1",
             "cardinality": "one"
@@ -34,7 +40,9 @@
     {
       "id": "claim.legacy",
       "subjectId": "component.example",
-      "fieldScope": ["/objects/components/0"],
+      "fieldScope": [
+        "/objects/components/0"
+      ],
       "structuralProvenance": "F3-native",
       "identityAssurance": "stableObserved",
       "fieldCoverage": "complete",

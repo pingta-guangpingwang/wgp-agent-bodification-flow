@@ -1,3 +1,3 @@
-6dff94bd96d19ac401aeea34c6fae2e1b6bb6e78761429d153b5da36aa79ccaf  WGP-ABF-Whitepaper-v0.4.0-zh-CN.pdf
-c2f0be90755224dfe51705b484fa8ac9b255f727ab17ffb970b579a398aa81d5  WGP-ABF-Whitepaper-v0.4.0-en.pdf
-a3549dbb088990362158ad8f6933b93593af100dc067de300f75093dce1b6600  WGP-ABF-Spec-Bundle-v0.4.0.zip
+fd13b2891b1cddb5d4d2fda538a5f5825a49d1d1a8464eea5d899aabf5f9c65a  WGP-ABF-Whitepaper-v0.5.0-zh-CN.pdf
+3ac2016417d82144dc298a986043b42a88f76da1196d413fa3cd7f80daa75922  WGP-ABF-Whitepaper-v0.5.0-en.pdf
+471235b80e16a0f77d6292969ae323e9e61a385fd863f0d034fb9c43617aefa9  WGP-ABF-Spec-Bundle-v0.5.0.zip

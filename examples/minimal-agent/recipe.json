@@ -1,18 +1,57 @@
 {
-  "format": "wgp-assembly-recipe/0.4",
+  "format": "wgp-assembly-recipe/0.5",
   "id": "recipe.minimal-chat",
   "name": {
     "zh-CN": "最小聊天智能体装配配方",
     "en": "Minimal Chat Agent Assembly Recipe"
   },
-  "version": "0.4.0",
+  "version": "0.5.0",
   "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
   "createdAt": "2026-08-26T09:05:00Z",
   "abir": {
     "id": "agent.minimal-chat",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
   },
+  "standardPartBindings": [
+    {
+      "bindingId": "binding.standard-orchestrator",
+      "descriptorRef": {
+        "partId": "component.orchestrator",
+        "version": "0.5.0",
+        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+      },
+      "packageRef": {
+        "id": "package.orchestrator",
+        "version": "0.5.0",
+        "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+      },
+      "partKind": "component",
+      "targetObjectId": "component.orchestrator",
+      "enabled": true,
+      "config": {
+        "systemPromptArtifactId": "artifact.system-prompt",
+        "maxTokens": 2048,
+        "stream": true
+      },
+      "surfaceMappings": [
+        {
+          "surfaceId": "surface.chat",
+          "portMappings": [
+            { "partPortId": "chat.input", "targetPortId": "input.in" },
+            { "partPortId": "chat.output", "targetPortId": "output.out" }
+          ]
+        },
+        {
+          "surfaceId": "surface.model-client",
+          "portMappings": [
+            { "partPortId": "model.request", "targetPortId": "model.request" },
+            { "partPortId": "model.response", "targetPortId": "model.response" }
+          ]
+        }
+      ]
+    }
+  ],
   "componentBindings": [
     {
       "componentId": "component.orchestrator",
@@ -84,7 +123,7 @@
     },
     "restartPolicy": "onFailure"
   },
-  "verification": [
+  "verificationPlan": [
     {
       "id": "check.recipe-schema",
       "kind": "schema",
@@ -104,6 +143,6 @@
   ],
   "metadata": {
     "example": true,
-    "specVersion": "0.4"
+    "specVersion": "0.5"
   }
 }
