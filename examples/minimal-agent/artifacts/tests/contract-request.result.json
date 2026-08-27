@@ -1,0 +1,17 @@
+{
+  "outcome": "compatible",
+  "channelId": "channel.model-request",
+  "sourceRoleId": "role.orchestrator-model-output",
+  "targetRoleId": "role.model-provider-input",
+  "direction": "1.0.0-to-1.1.0",
+  "schema": "compatible",
+  "fieldSemantics": "compatible",
+  "protocol": "compatible",
+  "ordering": "compatible",
+  "delivery": "compatible",
+  "timeout": "compatible",
+  "error": "compatible",
+  "retry": "compatible",
+  "idempotency": "compatible",
+  "cancellation": "compatible"
+}

@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-exchange-error-v1.schema.json",
+  "title": "Minimal exchange error v1",
+  "type": "object",
+  "required": ["code", "message", "retryable", "classification", "terminal"],
+  "properties": {
+    "code": { "type": "string", "minLength": 1 },
+    "message": { "type": "string", "minLength": 1 },
+    "retryable": { "type": "boolean", "default": false },
+    "classification": { "enum": ["validation", "authorization", "rateLimit", "transport", "timeout", "provider", "unknown"] },
+    "terminal": { "type": "boolean", "default": true }
+  },
+  "additionalProperties": false
+}

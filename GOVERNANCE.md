@@ -13,7 +13,7 @@ WGP-ABF 初期采用创始人维护制。王广平是概念提出者、初始规
 - The maintainer records `Draft → Accepted → Implemented → Superseded/Rejected` status.
 - A decision must cite affected schemas, examples, language editions, migration impact, and conformance impact.
 - No contributor may turn an observational result into a causal or certification claim without the required evidence.
-- A public or private Part Registry provides discovery and immutable indexing only; registry presence, `active` status, and conformance evidence do not constitute WGP-ABF certification or maintainer endorsement.
+- A public or private Contract or Part Registry provides discovery and immutable indexing only; registry presence, `active` status, schema-compatibility evidence, and runtime-stability evidence do not constitute WGP-ABF certification or maintainer endorsement.
 
 ## Future structure / 后续结构
 

@@ -1,0 +1,19 @@
+{
+  "outcome": "passed",
+  "events": [
+    {
+      "eventId": "66666666-6666-4666-8666-666666666666",
+      "eventDigest": "sha256:020c30410139784a26fbac7d8f1b99c06f937ca6c4f5d3350d77673aba6375ff",
+      "bindingId": "contract-binding.model-request"
+    },
+    {
+      "eventId": "77777777-7777-4777-8777-777777777777",
+      "eventDigest": "sha256:f151a7e3e8632e2e087c91fb9f0b77f79964b8b1c0bf5a825044648f8981065f",
+      "bindingId": "contract-binding.model-response"
+    }
+  ],
+  "distinctPackageIds": [
+    "package.model-provider",
+    "package.orchestrator"
+  ]
+}

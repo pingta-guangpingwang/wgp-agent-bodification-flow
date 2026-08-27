@@ -1,0 +1,9 @@
+{
+  "outcome": "passed",
+  "lossPolicy": "explicitDrop",
+  "checkpointed": true,
+  "roundTripRestored": true,
+  "droppedFields": [
+    "/providerMetadata"
+  ]
+}

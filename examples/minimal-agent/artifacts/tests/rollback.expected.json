@@ -1,0 +1,6 @@
+{
+  "outcome": "passed",
+  "requireDistinctReplacementPackage": true,
+  "requireExactTarget": true,
+  "requireExactRestoration": true
+}

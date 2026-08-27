@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.5.0/spec/assembly-recipe.schema.json",
-  "title": "WGP-ABF Assembly Recipe v0.5",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/spec/assembly-recipe.schema.json",
+  "title": "WGP-ABF Assembly Recipe v0.6",
   "description": "A versioned, hash-addressed selection of implementations, bindings, placements, and runtime settings for one WGP-ABIR document.",
   "type": "object",
   "required": [
@@ -13,6 +13,7 @@
     "createdAt",
     "abir",
     "standardPartBindings",
+    "contractBindings",
     "componentBindings",
     "resourceBindings",
     "policyBindings",
@@ -22,7 +23,7 @@
     "verificationPlan"
   ],
   "properties": {
-    "format": { "const": "wgp-assembly-recipe/0.5" },
+    "format": { "const": "wgp-assembly-recipe/0.6" },
     "id": { "$ref": "#/$defs/id" },
     "name": { "$ref": "#/$defs/localizedText" },
     "version": { "$ref": "#/$defs/semver" },
@@ -46,6 +47,11 @@
       "type": "array",
       "minItems": 1,
       "items": { "$ref": "#/$defs/standardPartBinding" }
+    },
+    "contractBindings": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/contractBinding" }
     },
     "componentBindings": {
       "type": "array",
@@ -134,15 +140,25 @@
       },
       "additionalProperties": false
     },
+    "exactContractRef": {
+      "type": "object",
+      "required": ["contractId", "version", "contentHash"],
+      "properties": {
+        "contractId": { "$ref": "#/$defs/id" },
+        "version": { "$ref": "#/$defs/semver" },
+        "contentHash": { "$ref": "#/$defs/contentHash" }
+      },
+      "additionalProperties": false
+    },
     "partKind": {
       "enum": ["component", "resource", "policy", "artifact", "interface", "container"]
     },
     "portMapping": {
       "type": "object",
-      "required": ["partPortId", "targetPortId"],
+      "required": ["assemblyBindingId", "abirPortId"],
       "properties": {
-        "partPortId": { "$ref": "#/$defs/id" },
-        "targetPortId": { "$ref": "#/$defs/id" }
+        "assemblyBindingId": { "$ref": "#/$defs/id" },
+        "abirPortId": { "$ref": "#/$defs/id" }
       },
       "additionalProperties": false
     },
@@ -187,6 +203,106 @@
       },
       "additionalProperties": false
     },
+    "contractBindingParty": {
+      "type": "object",
+      "properties": {
+        "standardPartBindingId": { "$ref": "#/$defs/id" },
+        "surfaceId": { "$ref": "#/$defs/id" },
+        "assemblyBindingId": { "$ref": "#/$defs/id" },
+        "abirObjectId": { "$ref": "#/$defs/id" },
+        "abirPortId": { "$ref": "#/$defs/id" }
+      },
+      "oneOf": [
+        {
+          "required": ["standardPartBindingId", "surfaceId", "assemblyBindingId"],
+          "properties": {
+            "standardPartBindingId": { "$ref": "#/$defs/id" },
+            "surfaceId": { "$ref": "#/$defs/id" },
+            "assemblyBindingId": { "$ref": "#/$defs/id" },
+            "abirObjectId": false,
+            "abirPortId": false
+          }
+        },
+        {
+          "description": "A Contract-typed ABIR boundary port whose counterpart is not packaged as a Standard Part in this Recipe.",
+          "required": ["abirObjectId", "abirPortId"],
+          "properties": {
+            "abirObjectId": { "$ref": "#/$defs/id" },
+            "abirPortId": { "$ref": "#/$defs/id" },
+            "standardPartBindingId": false,
+            "surfaceId": false,
+            "assemblyBindingId": false
+          }
+        }
+      ],
+      "additionalProperties": false
+    },
+    "contractBinding": {
+      "type": "object",
+      "required": ["contractBindingId", "producer", "consumer", "resolution"],
+      "properties": {
+        "contractBindingId": { "$ref": "#/$defs/id" },
+        "producer": { "$ref": "#/$defs/contractBindingParty" },
+        "consumer": { "$ref": "#/$defs/contractBindingParty" },
+        "resolution": {
+          "type": "object",
+          "required": ["mode"],
+          "properties": {
+            "mode": { "enum": ["exact", "compatible", "adapter"] },
+            "compatibilityAssessmentRef": { "$ref": "#/$defs/exactDocumentRef" },
+            "adapterArtifactRef": {
+              "type": "object",
+              "required": ["artifactId", "version", "contentHash"],
+              "properties": {
+                "artifactId": { "$ref": "#/$defs/id" },
+                "version": { "$ref": "#/$defs/semver" },
+                "contentHash": { "$ref": "#/$defs/contentHash" }
+              },
+              "additionalProperties": false
+            },
+            "migrationPlanRef": { "$ref": "#/$defs/exactDocumentRef" }
+          },
+          "allOf": [
+            {
+              "if": {
+                "properties": { "mode": { "const": "exact" } },
+                "required": ["mode"]
+              },
+              "then": {
+                "properties": {
+                  "compatibilityAssessmentRef": false,
+                  "adapterArtifactRef": false,
+                  "migrationPlanRef": false
+                }
+              }
+            },
+            {
+              "if": {
+                "properties": { "mode": { "const": "compatible" } },
+                "required": ["mode"]
+              },
+              "then": {
+                "properties": {
+                  "compatibilityAssessmentRef": { "$ref": "#/$defs/exactDocumentRef" },
+                  "adapterArtifactRef": false,
+                  "migrationPlanRef": false
+                },
+                "required": ["compatibilityAssessmentRef"]
+              }
+            },
+            {
+              "if": {
+                "properties": { "mode": { "const": "adapter" } },
+                "required": ["mode"]
+              },
+              "then": { "required": ["compatibilityAssessmentRef", "adapterArtifactRef", "migrationPlanRef"] }
+            }
+          ],
+          "additionalProperties": false
+        }
+      },
+      "additionalProperties": false
+    },
     "componentBinding": {
       "type": "object",
       "required": ["componentId", "implementationArtifactId", "enabled", "config"],
@@ -194,8 +310,7 @@
         "componentId": { "$ref": "#/$defs/id" },
         "implementationArtifactId": { "$ref": "#/$defs/id" },
         "enabled": { "type": "boolean" },
-        "config": { "$ref": "#/$defs/configObject" },
-        "configSchemaRef": { "type": "string", "format": "uri-reference" }
+        "config": { "$ref": "#/$defs/configObject" }
       },
       "additionalProperties": false
     },

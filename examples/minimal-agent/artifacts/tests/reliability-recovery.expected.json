@@ -1,0 +1,7 @@
+{
+  "outcome": "passed",
+  "recoveredAttempt": 2,
+  "duplicateDisposition": "returnPrevious",
+  "sideEffectCount": 1,
+  "cancellationAcknowledged": true
+}

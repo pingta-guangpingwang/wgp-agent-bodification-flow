@@ -1,0 +1,1 @@
+WGP-ABF minimal-agent example artifacts are provided under Apache-2.0.

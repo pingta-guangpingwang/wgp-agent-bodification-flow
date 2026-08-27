@@ -96,7 +96,7 @@ def render_system_map() -> None:
     draw.text((625, 525), "2D blueprint: authoritative editing projection", font=font(15), fill=MUTED)
 
     boxes = [
-        ((90, 180, 500, 350), "标准件与结构 / Standard Parts", "StandardPartDescriptor · ABIR\n装配面、强类型边、配方与差分", CYAN),
+        ((90, 180, 500, 350), "数据契约与结构 / Data Contracts", "ModuleDataContract · ABIR\nSchema、字段语义、协议、绑定与差分", CYAN),
         ((1100, 180, 1510, 350), "运行协议 / Runtime", "存储 · 来源 · 回放角色三轴\n事件、因果顺序、回放与审计", BLUE),
         ((90, 610, 500, 780), "证据协议 / Evidence", "三级评测 · 双重评分\n样本量、方差、置信区间", GREEN),
         ((1100, 610, 1510, 780), "呈现投影 / Presentation", "机体视图 · 三维视图\n只读投影，不保存第二份结构", AMBER),
@@ -110,7 +110,7 @@ def render_system_map() -> None:
     arrow(draw, (1000, 545), (1100, 695), AMBER)
     draw.text((640, 660), "工程纪律 / Discipline", font=font(24, True), fill=WHITE)
     draw.text((585, 705), "可差分 · 可审查 · 可回滚 · 可验证", font=font(20), fill=MUTED)
-    save(image, "wgp-abf-system-map.png")
+    save(image, "wgp-abf-system-map-v0.6.png")
 
 
 def render_nine_stage_flow() -> None:
@@ -118,8 +118,8 @@ def render_nine_stage_flow() -> None:
     stages = [
         ("01", "导入与拆解", "Import & Decompose"),
         ("02", "模块显形", "Reveal Modules"),
-        ("03", "标准件归一", "Normalize Parts"),
-        ("04", "关系显形", "Type Relationships"),
+        ("03", "契约归一", "Normalize Contracts"),
+        ("04", "稳定串联", "Bind Stable Chains"),
         ("05", "生成图纸", "Build Blueprint"),
         ("06", "装配改装", "Assemble & Modify"),
         ("07", "差分审查", "Diff & Review"),
@@ -143,7 +143,7 @@ def render_nine_stage_flow() -> None:
             arrow(draw, (x, y + 85), (positions[index + 1][0] + 258, positions[index + 1][1] + 85), GREEN)
     draw.rounded_rectangle((80, 760, 1520, 835), radius=20, fill="#0a304b", outline=AMBER, width=2)
     draw.text((170, 781), "通过条件 / Gate：图纸上的一次改动真实改变运行行为，并由同条件证据证明改进或触发回滚。", font=font(20, True), fill=WHITE)
-    save(image, "wgp-abf-nine-stage-flow.png")
+    save(image, "wgp-abf-nine-stage-flow-v0.6.png")
 
 
 def render_evolution_loop() -> None:
@@ -168,7 +168,7 @@ def render_evolution_loop() -> None:
     draw.text((690, 468), "REPRODUCIBLE", font=font(23, True), fill=CYAN)
     draw.text((730, 504), "EVOLUTION", font=font(23, True), fill=CYAN)
     draw.text((680, 562), "Promote or Roll Back", font=font(18), fill=MUTED)
-    save(image, "wgp-abf-evolution-loop.png")
+    save(image, "wgp-abf-evolution-loop-v0.6.png")
 
 
 def render_fidelity_matrix() -> None:
@@ -202,18 +202,84 @@ def render_fidelity_matrix() -> None:
             draw.multiline_text((x_positions[col] + 16, y1 + 42), value, font=font(18, col == 0), fill=color, spacing=6)
     draw.rounded_rectangle((100, 770, 1500, 842), radius=18, fill="#0a304b", outline=AMBER, width=2)
     draw.text((108, 791), "operationCapabilities = view / edit / compile / roundTrip / hotReload / replace；能力逐字段证明，不由 F 等级推导。", font=font(15, True), fill=WHITE)
-    save(image, "wgp-abf-fidelity-matrix.png")
+    save(image, "wgp-abf-fidelity-matrix-v0.6.png")
+
+
+def render_data_contract_chain() -> None:
+    image, draw = canvas(
+        "关键模块数据契约 / Critical Module Data Contract",
+        "内部实现自由演进；跨模块数据结构、字段语义与执行协议必须精确对齐",
+    )
+
+    rounded_box(
+        draw,
+        (70, 225, 405, 650),
+        "生产模块 / Producer",
+        "模型 · 工具 · 记忆 · 工作流\n\n声明 produces 角色\n固定端口与契约摘要\n发出可验证消息",
+        accent=BLUE,
+        title_size=24,
+        subtitle_size=18,
+    )
+    rounded_box(
+        draw,
+        (1195, 225, 1530, 650),
+        "消费模块 / Consumer",
+        "工作流 · 界面 · 状态 · 子智能体\n\n声明 consumes 角色\n固定端口与契约摘要\n拒绝不兼容输入",
+        accent=GREEN,
+        title_size=24,
+        subtitle_size=18,
+    )
+
+    draw.rounded_rectangle((485, 150, 1115, 720), radius=32, fill="#0a3356", outline=CYAN, width=4)
+    draw.text((525, 176), "ModuleDataContract", font=font(30, True), fill=WHITE)
+    draw.text((525, 222), "边界真相 / Boundary Contract", font=font(19, True), fill=CYAN)
+    contract_rows = [
+        ("结构身份", "Exact SchemaBundle ref · digest · media type"),
+        ("字段语义", "Meaning · nullability · unit · encoding"),
+        ("交互模式", "Request · event · stream · state transfer"),
+        ("流与终止", "Ordering · chunks · completion · backpressure"),
+        ("失败语义", "Error · timeout · retry · idempotency"),
+        ("兼容策略", "Versions · change policy · suite entry points"),
+    ]
+    for index, (zh, en) in enumerate(contract_rows):
+        y1 = 275 + index * 66
+        draw.rounded_rectangle((520, y1, 1080, y1 + 52), radius=12, fill=PANEL_ALT, outline=GRID, width=2)
+        draw.text((542, y1 + 12), zh, font=font(18, True), fill=WHITE)
+        draw.text((695, y1 + 14), en, font=font(14), fill=MUTED)
+
+    arrow(draw, (405, 425), (485, 425), BLUE, 6)
+    arrow(draw, (1115, 425), (1195, 425), GREEN, 6)
+    draw.text((413, 377), "精确引用", font=font(16, True), fill=BLUE)
+    draw.text((414, 454), "Exact ref", font=font(13), fill=MUTED)
+    draw.text((1124, 377), "验证交付", font=font(16, True), fill=GREEN)
+    draw.text((1125, 454), "Validate", font=font(13), fill=MUTED)
+
+    draw.rounded_rectangle((70, 770, 1530, 852), radius=20, fill="#0a304b", outline=AMBER, width=3)
+    draw.text((100, 788), "稳定串联 / Stable Chain =", font=font(21, True), fill=WHITE)
+    draw.text(
+        (390, 790),
+        "结构有效 ∧ 语义一致 ∧ 顺序/终止一致 ∧ 错误/重试/幂等一致 ∧ 运行证据有效",
+        font=font(18, True),
+        fill=AMBER,
+    )
+    draw.text(
+        (390, 824),
+        "valid structure ∧ aligned semantics ∧ flow agreement ∧ failure agreement ∧ runtime evidence",
+        font=font(14),
+        fill=MUTED,
+    )
+    save(image, "wgp-abf-data-contract-chain-v0.6.png")
 
 
 def render_standard_parts() -> None:
     image, draw = canvas(
         "智能体标准件生态 / Standard-part Ecosystem",
-        "不统一内部实现，只标准化装配面；百花齐放负责创新，标准件负责组合",
+        "不统一内部实现；关键模块数据契约负责稳定串联，标准件负责封装与组合",
     )
 
     draw.rounded_rectangle((55, 155, 445, 675), radius=28, fill="#092944", outline=BLUE, width=3)
     draw.text((85, 180), "多样实现 / Diverse Implementations", font=font(23, True), fill=WHITE)
-    draw.text((86, 220), "内部自由演进，外部声明可装配事实", font=font(16), fill=MUTED)
+    draw.text((86, 220), "内部自由演进，边界结构与协议精确声明", font=font(16), fill=MUTED)
     implementation_boxes = [
         ((85, 270, 250, 360), "模型 / Model", "ABIR: Resource", CYAN),
         ((270, 270, 415, 360), "记忆 / Memory", "ABIR: Resource", GREEN),
@@ -232,46 +298,47 @@ def render_standard_parts() -> None:
         draw.text((box[0] + (box[2] - box[0] - kind_width) / 2, box[1] + 57), part_kind, font=font(12), fill=MUTED)
 
     draw.rounded_rectangle((520, 155, 1055, 675), radius=32, fill="#0a3356", outline=CYAN, width=4)
-    draw.text((560, 180), "StandardPartDescriptor", font=font(27, True), fill=WHITE)
-    draw.text((560, 225), "标准化装配面 / Standardized Assembly Surface", font=font(18, True), fill=CYAN)
+    draw.text((560, 180), "ModuleDataContract", font=font(27, True), fill=WHITE)
+    draw.text((560, 225), "关键模块边界 / Critical Module Boundary", font=font(18, True), fill=CYAN)
     descriptor_rows = [
-        ("身份与版本", "Identity · Version · Kind"),
-        ("端口与能力", "Typed Ports · Capabilities"),
-        ("依赖与权限", "Runtime · Dependencies · Permissions"),
-        ("状态与迁移", "State Schema · Migration"),
-        ("兼容与生命周期", "Compatibility · Lifecycle"),
-        ("证据与供应链", "Conformance · Evidence · Provenance"),
+        ("结构与摘要", "Schema · Digest · Media type"),
+        ("字段与语义", "Meaning · Nullability · Unit"),
+        ("交互与流", "Request · Event · Stream · State"),
+        ("顺序与终止", "Ordering · Completion · Backpressure"),
+        ("错误与恢复", "Error · Timeout · Retry · Idempotency"),
+        ("兼容与证据", "Evolution · Migration · Conformance"),
     ]
     for index, (zh, en) in enumerate(descriptor_rows):
         y1 = 275 + index * 59
         draw.rounded_rectangle((555, y1, 1020, y1 + 46), radius=12, fill=PANEL_ALT, outline=GRID, width=2)
         draw.text((575, y1 + 10), zh, font=font(17, True), fill=WHITE)
         draw.text((735, y1 + 12), en, font=font(14), fill=MUTED)
+    draw.text((563, 637), "StandardPartDescriptor: provides / consumes exact contract refs", font=font(13, True), fill=CYAN)
 
     arrow(draw, (445, 415), (520, 415), CYAN, 5)
-    draw.text((451, 374), "声明", font=font(16, True), fill=CYAN)
-    draw.text((448, 442), "Declare", font=font(13), fill=MUTED)
+    draw.text((451, 374), "实现", font=font(16, True), fill=CYAN)
+    draw.text((448, 442), "Implement", font=font(13), fill=MUTED)
 
     draw.rounded_rectangle((1130, 155, 1545, 675), radius=28, fill="#092944", outline=GREEN, width=3)
     draw.text((1160, 180), "开放生态 / Open Ecosystem", font=font(23, True), fill=WHITE)
     ecosystem_rows = [
-        ((1160, 245, 1515, 325), "1 发现 / Registry", "签名描述符与版本索引", CYAN),
-        ((1160, 345, 1515, 425), "2 求解 / Compatibility", "端口、策略、运行时与状态约束", BLUE),
-        ((1160, 445, 1515, 525), "3 验证 / Conformance", "测试向量、证据和互换等级", GREEN),
+        ((1160, 245, 1515, 325), "1 发现 / Registry", "契约、描述符与版本索引", CYAN),
+        ((1160, 345, 1515, 425), "2 对齐 / Data Alignment", "Schema、语义与执行协议", BLUE),
+        ((1160, 445, 1515, 525), "3 串联 / Chain Verification", "生产到消费的运行证据", GREEN),
         ((1160, 545, 1515, 625), "4 替换 / Replacement", "迁移、验收、回滚与副作用补偿", AMBER),
     ]
     for box, title, subtitle, accent in ecosystem_rows:
         rounded_box(draw, box, title, subtitle, accent=accent, title_size=18, subtitle_size=14)
     arrow(draw, (1055, 415), (1130, 415), GREEN, 5)
-    draw.text((1066, 374), "验证", font=font(16, True), fill=GREEN)
-    draw.text((1063, 442), "Verify", font=font(13), fill=MUTED)
+    draw.text((1066, 374), "证明", font=font(16, True), fill=GREEN)
+    draw.text((1063, 442), "Prove", font=font(13), fill=MUTED)
 
     ladder_x = [55, 353, 651, 949, 1247, 1545]
     ladder = [
         ("I0 封闭", "Closed", RED),
-        ("I1 适配", "Adapter-wrapped", AMBER),
-        ("I2 可装配", "Interface-conformant", BLUE),
-        ("I3 可替换", "Behavior-verified", CYAN),
+        ("I1 契约显式", "Contract-exposed", AMBER),
+        ("I2 数据对齐", "Data-aligned", BLUE),
+        ("I3 串联验证", "Chain-verified", CYAN),
         ("I4 受控互换", "Migration + rollback evidence", GREEN),
     ]
     for index, (title, subtitle, accent) in enumerate(ladder):
@@ -280,7 +347,7 @@ def render_standard_parts() -> None:
         draw.text((box[0] + 20, 748), title, font=font(19, True), fill=accent)
         draw.text((box[0] + 20, 790), subtitle, font=font(14), fill=MUTED)
     draw.text((60, 690), "互换成熟度 / Interchangeability maturity（独立于 F3–F0 结构来源）", font=font(18, True), fill=WHITE)
-    save(image, "wgp-abf-standard-parts.png")
+    save(image, "wgp-abf-standard-parts-v0.6.png")
 
 
 def main() -> None:
@@ -288,8 +355,9 @@ def main() -> None:
     render_nine_stage_flow()
     render_evolution_loop()
     render_fidelity_matrix()
+    render_data_contract_chain()
     render_standard_parts()
-    print(f"Rendered 5 diagrams to {OUTPUT}")
+    print(f"Rendered 6 diagrams to {OUTPUT}")
 
 
 if __name__ == "__main__":

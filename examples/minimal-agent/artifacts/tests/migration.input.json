@@ -1,0 +1,8 @@
+{
+  "sourcePayloadPath": "examples/minimal-agent/artifacts/model-response-provider.json",
+  "adaptedPayloadPath": "examples/minimal-agent/artifacts/model-response-orchestrator.json",
+  "checkpointPath": "examples/minimal-agent/artifacts/migration-checkpoint.json",
+  "migrationModulePath": "examples/minimal-agent/artifacts/contract-adapter.mjs",
+  "rollbackModulePath": "examples/minimal-agent/artifacts/contract-adapter-rollback.mjs",
+  "droppedField": "providerMetadata"
+}

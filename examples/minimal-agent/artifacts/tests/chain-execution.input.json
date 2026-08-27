@@ -1,0 +1,17 @@
+{
+  "recipeId": "recipe.minimal-chat",
+  "recipeVersion": "0.6.1",
+  "recipePath": "examples/minimal-agent/recipe-target.json",
+  "eventsPath": "examples/minimal-agent/events.jsonl",
+  "companionPath": "examples/minimal-agent/standard-part-companions.json",
+  "requiredBindings": [
+    {
+      "bindingId": "contract-binding.model-request",
+      "eventId": "66666666-6666-4666-8666-666666666666"
+    },
+    {
+      "bindingId": "contract-binding.model-response",
+      "eventId": "77777777-7777-4777-8777-777777777777"
+    }
+  ]
+}

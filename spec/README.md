@@ -1,50 +1,61 @@
 <!-- SPDX-License-Identifier: CC-BY-4.0 -->
 
-# WGP-ABF v0.5 machine-readable specifications
+# WGP-ABF v0.6 machine-readable specifications / 机器规范
 
-These strict JSON Schema 2020-12 envelopes form the v0.5 interoperable family. Declared envelopes reject unknown properties. Deliberate extension points remain open: namespaced `extensions`, implementation-owned recipe configuration, runtime-event `payload`, and metric-value maps. An open extension point does not make its containing envelope open.
+These strict JSON Schema 2020-12 documents form the v0.6 family. Declared envelopes reject unknown properties. The explicitly open values are namespaced `extensions`, implementation configuration, RuntimeEvent `payload`, and metric maps.
 
-这些严格的 JSON Schema 2020-12 信封共同组成 v0.5 可互操作格式族。已声明信封拒绝未知字段，同时保留带命名空间的 `extensions`、实现方拥有的配方配置、运行事件 `payload` 与指标值映射等明确扩展点。局部扩展点开放不代表外层信封开放。
+这些严格的 JSON Schema 2020-12 文档组成 v0.6 格式族。已声明信封拒绝未知字段；明确开放的值仅包括命名空间 `extensions`、实现配置、RuntimeEvent `payload` 与指标映射。
 
 | Schema | Purpose / 用途 |
-|---|---|
-| [`abir.schema.json`](abir.schema.json) | Six object categories, ports, typed edges, source claims, and projection profiles / 六类对象、端口、强类型边、来源声明与投影配置 |
-| [`assembly-recipe.schema.json`](assembly-recipe.schema.json) | Exact standard-part/package pins, surface mappings, runtime bindings, and verification definitions / 标准件与包精确固定、表面映射、运行绑定及验证定义 |
-| [`recipe-diff.schema.json`](recipe-diff.schema.json) | Guarded operations, risks, compensation, and an exact ReplacementPlan link / 受保护操作、风险、补偿与 ReplacementPlan 精确引用 |
-| [`runtime-event.schema.json`](runtime-event.schema.json) | Storage/origin/replay axes plus executed part and package identity / 存储、来源、回放三轴及实际运行的标准件与包身份 |
-| [`evaluation.schema.json`](evaluation.schema.json) | Paired evidence, uncertainty, claims, limitations, and decisions / 配对证据、不确定性、主张、限制与决策 |
-| [`standard-part-descriptor.schema.json`](standard-part-descriptor.schema.json) | Immutable StandardPartDescriptor plus reusable companion definitions / 不可变 StandardPartDescriptor 与可复用伴随文档定义 |
+| --- | --- |
+| [`module-data-contract.schema.json`](module-data-contract.schema.json) | The single source of truth for module boundary roles, structures, field semantics, channel protocols, timeout/retry/idempotency, ordering, delivery, cancellation, error and state semantics / 模块边界角色、数据结构、字段语义、通道协议及可靠性语义的唯一真相 |
+| [`abir.schema.json`](abir.schema.json) | Six object categories, exact Contract channel-role references on critical directed ports, typed edges, source claims and projections / 六类对象、关键定向端口上的精确 Contract 通道角色引用、强类型边、来源声明与投影 |
+| [`assembly-recipe.schema.json`](assembly-recipe.schema.json) | Exact part/package pins, Descriptor-to-ABIR mappings, and explicit producer-to-consumer Contract resolution / 标准件与包精确固定、Descriptor 到 ABIR 映射及显式生产者到消费者契约解析 |
+| [`recipe-diff.schema.json`](recipe-diff.schema.json) | Guarded changes, risk coverage, compensation and exact ReplacementPlan linkage / 受保护变更、风险覆盖、补偿与 ReplacementPlan 精确联动 |
+| [`runtime-event.schema.json`](runtime-event.schema.json) | Exact ABIR/Recipe subject identity and dual producer/consumer Contract exchange evidence / 精确 ABIR/Recipe 主体身份及生产者、消费者双端契约交换证据 |
+| [`evaluation.schema.json`](evaluation.schema.json) | Paired evaluation records, uncertainty, claims, limitations and decisions / 配对评测、不确定性、主张、限制与决策 |
+| [`standard-part-descriptor.schema.json`](standard-part-descriptor.schema.json) | Immutable Descriptor plus Package, Profile, Suite, Report, Assessment, Plan, Registry and artifact-resolution companions / 不可变 Descriptor 及包、Profile、Suite、Report、Assessment、Plan、Registry 与制品解析伴随对象 |
 
-## Standard parts and evidence / 标准件与证据
+## Contract ownership and assembly / 契约归属与装配
 
-`partKind` maps exactly to ABIR `component`, `resource`, `policy`, `artifact`, `interface`, and `container`; a model or vector store can remain a Resource, while a skill or prompt can remain an Artifact. Standardized ports pin `protocolId`, `protocolVersion`, `schemaRef`, `schemaContentHash`, `mediaType`, direction, and cardinality. Assembly Recipes map those ports explicitly to ABIR ports and pin both the descriptor and package with exact identity, version, and hash.
+`ModuleDataContract` owns boundary identity/version/hash, producer and consumer roles, exact SchemaBundle identities, message/stream/event/state structures, field requiredness/nullability/default/unit/encoding, framing, ordering, backpressure, lifecycle, timeout, retry, idempotency, duplicate handling, delivery, cancellation and error classification. It does not standardize internal algorithms or implementation layout. Resource ceilings, authorization propagation, data-protection policy, tenant isolation, deadlines/leases and late-result policy are future extensions and are not v0.6 conformance claims.
 
-`partKind` 精确映射 ABIR 的 `component`、`resource`、`policy`、`artifact`、`interface`、`container`，因此模型或向量库仍可作为 Resource，skill 或 prompt 仍可作为 Artifact。标准端口固定 `protocolId`、`protocolVersion`、`schemaRef`、`schemaContentHash`、`mediaType`、方向与基数；装配配方把这些端口显式映射到 ABIR 端口，并以身份、版本、哈希精确固定描述符与包。
+`ModuleDataContract` 拥有边界身份、版本、哈希、生产者与消费者角色、精确 SchemaBundle、消息/流/事件/状态结构、字段必填性/可空性/默认值/单位/编码、分帧、顺序、背压、生命周期、超时、重试、幂等、重复处理、交付、取消与错误分类。它不统一内部算法或实现布局。资源上限、授权传播、数据保护策略、租户隔离、deadline/lease 与迟到结果策略属于未来扩展，不属于 v0.6 合规声明。
 
-`CompatibilityProfile` is a stable rule and context template. `InterchangeabilityAssessment` is a directed, time-bounded A-to-B result that pins a profile, environment, cumulative `levelEvidence`, and—at I4—a ReplacementPlan. The maximum admissible level is derived in order: `I0` Closed; `I1` Adapter-wrapped requires identified source and target adapters plus executed surface-contract evidence; `I2` Interface-conformant additionally closes standardized surfaces, configuration, runtime, environment, permission policy, exact dependencies, and executed configuration/permission evidence; `I3` Behavior-verified adds executed behavioral evidence; and `I4` Evidence-backed controlled interchangeability adds an exact plan with migration, acceptance, and rollback evidence. A later level cannot skip an earlier level's static closure or executed evidence. These values never overlap provenance `F3/F2/F1/F0`, and I4 never implies `hotReload`; `replacementMode` and field-level `operationCapabilities` decide execution mode.
+A Descriptor surface declares only `bindingId → exact contractRef + channelId + contractRoleId`. A Recipe maps that local binding to an ABIR port and declares each producer-to-consumer `contractBinding`; every enabled required Descriptor binding must occur exactly once. A non-Standard-Part boundary may participate through a Contract-typed direct ABIR-port party. Resolution is `exact`, directed `compatible`, or directed `adapter`; compatible and adapter modes pin a `ContractCompatibilityAssessment`, while adapter mode also pins the Assessment's exact artifact and required directed MigrationPlan. The Plan migration artifact, Recipe adapter artifact and Assessment adapter artifact must be the same exact identity. ABIR ports repeat only the exact Contract channel-role identity needed to validate port direction; they do not copy schema, protocol or field facts.
 
-`CompatibilityProfile` 是稳定的规则与上下文模板；`InterchangeabilityAssessment` 是有方向、有有效期的 A→B 结果，精确固定 profile、环境、累计 `levelEvidence`，并在 I4 固定 ReplacementPlan。最高可接受等级按顺序推导：`I0` Closed；`I1` Adapter-wrapped 要求源与目标 adapter 具有明确身份，并有已执行的表面协议证据；`I2` Interface-conformant 再要求标准表面、配置、运行时、环境、权限策略、精确依赖闭包，以及已执行的配置/权限证据；`I3` Behavior-verified 增加已执行行为证据；`I4` Evidence-backed controlled interchangeability 再增加精确计划与迁移、验收、回滚证据。高等级不得跳过低等级的静态闭包或已执行证据。它们绝不与来源等级 `F3/F2/F1/F0` 混用，I4 也绝不隐含 `hotReload`；实际方式由独立的 `replacementMode` 与字段级 `operationCapabilities` 决定。
+Descriptor 表面只声明 `bindingId → 精确 contractRef + channelId + contractRoleId`。Recipe 把该本地 binding 映射到 ABIR 端口，并声明每条生产者到消费者 `contractBinding`；每个已启用的 required Descriptor binding 必须恰好出现一次。非标准件边界可通过契约化的 ABIR 端口 party 参与。解析模式为 `exact`、有向 `compatible` 或有向 `adapter`；后两者精确固定 `ContractCompatibilityAssessment`，adapter 还必须固定该 Assessment 的精确适配制品与有向 MigrationPlan。Plan 的迁移制品、Recipe 的适配制品和 Assessment 的适配制品必须是同一精确身份。ABIR 端口仅重复校验方向所必需的精确 Contract 通道角色身份，不复制 Schema、协议或字段事实。
 
-`ConformanceSuite` defines tests; it is not proof that they ran. An immutable `ConformanceReport` records one execution and pins its profile, environment, expiry, individual results, and summary. A passing report requires every required test to pass. Separate append-only `EvidenceStatusRecord` entries activate, revoke, or tombstone an exact report through contiguous revisions and predecessor hashes; the current chain head decides current admissibility, so a later revoke or tombstone invalidates assessments that depended on that report. Report execution and expiry are still checked at `assessedAt`. Registry records independently provide append-only discovery revisions, revocation, and tombstones. A descriptor does not embed or reverse-reference Registry records, Reports, Assessments, or ReplacementPlans; those documents point to the immutable descriptor and are discovered through a Registry or query index, avoiding hash cycles.
+`ContractCompatibilityAssessment`, `ContractMigrationPlan`, and `DataLossApproval` are strict normative companion objects under `module-data-contract.schema.json#/$defs`; examples validate them individually. Assessments are source-to-target only and bind exact source/target channels and roles. Reverse compatibility requires a second assessment. An explicit field drop requires an approval for the exact Contract direction, structure and JSON Pointer; its decision time and expiry must cover the complete Assessment evidence window. Applicable aspect matrices cover schema, field semantics, protocol, ordering, delivery, timeout, error, retry, idempotency and cancellation; stream/state aspects apply only to matching interaction types. Schema and field comparison aggregates every structure referenced by the channel, including response, end, error and delta structures; protocol comparison also includes interaction kind and connection cardinality.
 
-`ConformanceSuite` 只定义测试，并不证明测试已经运行；不可变的 `ConformanceReport` 记录一次执行，固定 profile、环境、有效期、逐项结果和汇总。只有全部必需测试通过，报告才能通过。独立的只追加 `EvidenceStatusRecord` 通过连续 revision 与前序哈希激活、撤销或 tombstone 一份精确报告；当前链头决定当前可采信性，因此后续 revoke 或 tombstone 会使依赖该报告的旧 assessment 失效。报告是否已执行以及是否过期，仍在 `assessedAt` 时点检查。Registry 记录另行提供只追加的发现 revision、撤销与 tombstone。Descriptor 不嵌入或反向引用 Registry、Report、Assessment、ReplacementPlan；这些后置文档单向指向不可变 Descriptor，并通过 Registry 或查询索引发现，从而避免哈希环。
+`ContractCompatibilityAssessment`、`ContractMigrationPlan` 与 `DataLossApproval` 是 `module-data-contract.schema.json#/$defs` 下可独立校验的严格规范伴随对象。Assessment 仅表达 source→target，并精确绑定两端通道与角色；反向兼容必须另建记录。显式字段丢弃必须有针对精确契约方向、结构与 JSON Pointer 的批准，且其决定时间与有效期必须覆盖完整 Assessment 证据时窗。适用矩阵覆盖 Schema、字段语义、协议、顺序、交付、超时、错误、重试、幂等与取消；stream/state 只在对应交互类型适用。Schema 与字段比较聚合通道引用的全部结构，包括 response、end、error 与 delta；协议比较还包括交互类型与连接基数。
 
-## Source claims and guarded changes / 来源声明与受保护变更
+## Evidence levels and one-way DAG / 证据等级与单向 DAG
 
-`structuralProvenance` remains `F3` Native, `F2` Exported, `F1` Inferred, or `F0` Manual. Independent `operationCapabilities` may compose `view`, `edit`, `compile`, `roundTrip`, `hotReload`, and `replace`. Every RecipeDiff carries risk, approval, exact preconditions, inverse recipe operations, and external-side-effect compensation. `verificationPlan` and ConformanceSuite entries are definitions, never passing evidence.
+`InterchangeabilityAssessment.assessedLevel` is the maximum level derived from its exact closure at `assessedAt`:
 
-`structuralProvenance` 保持 `F3` Native、`F2` Exported、`F1` Inferred、`F0` Manual；独立的 `operationCapabilities` 可组合 `view`、`edit`、`compile`、`roundTrip`、`hotReload`、`replace`。每个 RecipeDiff 都包含风险、审批、精确前置条件、配方反向操作与外部副作用补偿。`verificationPlan` 与 ConformanceSuite 条目只是定义，绝不冒充通过证据。
+- `I0 Closed`: source and target are closed, identifiable parts of the same category.
+- `I1 Contract-exposed`: both parts expose exact Contract channel-role bindings required by the Profile.
+- `I2 Data-aligned`: directed Contract assessments prove the applicable schema, field, protocol and execution semantics.
+- `I3 Chain-verified`: an active, unexpired Report proves a real producer-to-consumer chain between distinct packages, with exact RuntimeEvent digests covering every Profile-required binding.
+- `I4 Evidence-backed controlled interchangeability`: an exact ReplacementPlan adds migration, acceptance and rollback execution evidence.
 
-## Hashing and version pinning / 哈希与版本固定
+`InterchangeabilityAssessment.assessedLevel` 是在 `assessedAt` 基于精确闭包推导出的最高等级：`I0 Closed` 为同类且身份闭合；`I1 Contract-exposed` 为双方暴露 Profile 所需精确通道角色；`I2 Data-aligned` 为有向契约评估证明适用数据与执行语义；`I3 Chain-verified` 为 active 且未过期的 Report 通过精确 RuntimeEvent 摘要证明不同包之间的真实链路，并覆盖 Profile 全部必需 binding；`I4 Evidence-backed controlled interchangeability` 再增加精确 ReplacementPlan 及迁移、验收、回滚执行证据。
 
-A root `contentHash` is SHA-256 over RFC 8785 canonical JSON with that root `contentHash` member omitted. A Registry `recordHash` uses the same rule with its root `recordHash` omitted. Exact references always contain id, version, and content hash. Example digests are visibly repeated placeholders; production validators must calculate and verify real digests before accepting a document.
+I3 requires structured successful, invalid/failure, and recovery RuntimeEvent sequences for every required Profile binding; a normal-path Report or a checker scenario without exact RuntimeEvent evidence is insufficient. The v0.6 minimal example therefore derives only I2, and the reference validator rejects I3/I4 overclaims until the structured timeout/retry/dedup/error/cancellation evidence model is implemented.
 
-根 `contentHash` 定义为：删除该根 `contentHash` 成员后，对 RFC 8785 规范化 JSON 计算 SHA-256。Registry `recordHash` 同理，但删除根 `recordHash`。精确引用始终同时包含身份、版本和内容哈希。样例使用明显重复的占位摘要；生产验证器必须计算并校验真实摘要后才能接受文档。
+I3 要求 Profile 每条必需 binding 都具有结构化的成功、无效/失败与恢复 RuntimeEvent 序列；只有正常路径 Report，或没有精确 RuntimeEvent 的 checker 场景，都不充分。因此 v0.6 最小示例最高只推导 I2；在结构化 timeout/retry/dedup/error/cancellation 证据模型实现前，参考验证器拒绝 I3/I4 过度声明。
 
-Every `$id` points to the immutable `v0.5.0` tag of the canonical GitHub repository. A semantic change receives a new tag and schema version; an existing tag must never be replaced.
+The digest graph is one-way: SchemaBundle → Contract → Descriptor/Profile/Suite and ContractCompatibilityAssessment → Recipe → RuntimeEvent → ConformanceReport → InterchangeabilityAssessment. Plans and Reports point to earlier immutable objects; Contracts and Assessments never reverse-reference their later evidence. Artifact retrieval locators live in `ArtifactRecord`, so adding a GitHub, Gitee or object-storage mirror does not change Package or ABIR artifact identity.
 
-每个 `$id` 指向规范 GitHub 仓库不可变的 `v0.5.0` tag。语义变化必须产生新 tag 与 Schema 版本，绝不原地替换已发布 tag。
+摘要图保持单向：SchemaBundle → Contract → Descriptor/Profile/Suite 与 ContractCompatibilityAssessment → Recipe → RuntimeEvent → ConformanceReport → InterchangeabilityAssessment。Plan 与 Report 只指向更早的不可变对象，Contract 与 Assessment 不反向引用后续证据。制品下载位置归 `ArtifactRecord` 所有，因此增加 GitHub、Gitee 或对象存储镜像不会改变 Package 或 ABIR 制品身份。
 
-See [`examples/minimal-agent`](../examples/minimal-agent/) for the closed positive set and [`examples/invalid`](../examples/invalid/) for schema and semantic rejection fixtures. `node scripts/validate_examples.mjs` runs Ajv strict validation and verifies exact references, category and port mappings, Suite/Report separation, cumulative I-level derivation, report-status and Registry chains, RecipeDiff/ReplacementPlan linkage, runtime part/package identity, event ordering, and evaluation closure.
+## Hashing and validation / 哈希与验证
 
-完整正例见 [`examples/minimal-agent`](../examples/minimal-agent/)，Schema 与语义拒绝样例见 [`examples/invalid`](../examples/invalid/)。`node scripts/validate_examples.mjs` 以 Ajv 严格模式验证，并检查精确引用、类别与端口映射、Suite/Report 分离、I 级累计推导、报告状态链与 Registry 链、RecipeDiff/ReplacementPlan 联动、运行标准件与包身份、事件顺序及评测闭包。
+Every example root uses a real SHA-256 over RFC 8785-style canonical JSON with only that root's `contentHash` omitted; append-only records omit `recordHash`. Exact references contain identity, semantic version and content hash. Every `schemaContentHash` covers the RFC 8785 canonical UTF-8 JSON serialization of the complete Schema document, so source whitespace and member order do not change Schema identity. SchemaBundle entries pin every schema and external `$ref` edge. Artifact records verify local bytes. `scripts/update_example_hashes.mjs` rebuilds the acyclic digest graph, and `node scripts/validate_examples.mjs` independently recomputes it and runs schema, semantic, executable-checker and directed mutation gates.
+
+每个示例根都使用真实 SHA-256：对仅删除该根 `contentHash` 的 RFC 8785 风格规范化 JSON 计算；只追加记录则删除 `recordHash`。精确引用同时包含身份、语义版本与内容哈希。每个 `schemaContentHash` 都覆盖完整 Schema 文档的 RFC 8785 规范化 UTF-8 JSON，因此源文件空白与成员顺序不改变 Schema 身份。SchemaBundle 固定每份 Schema 及外部 `$ref` 边，ArtifactRecord 校验本地字节。`scripts/update_example_hashes.mjs` 重建无环摘要图，`node scripts/validate_examples.mjs` 独立重算，并执行 Schema、语义、可执行 checker 与定向变异门禁。
+
+Every `$id` points to the immutable `v0.6.0` repository path. Published tags are never replaced.
+
+每个 `$id` 指向不可变 `v0.6.0` 仓库路径；已发布 tag 不得替换。

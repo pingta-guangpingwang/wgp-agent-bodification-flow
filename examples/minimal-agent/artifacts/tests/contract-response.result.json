@@ -1,0 +1,18 @@
+{
+  "outcome": "migrationRequired",
+  "channelId": "channel.model-response",
+  "sourceRoleId": "role.model-provider-output",
+  "targetRoleId": "role.orchestrator-model-input",
+  "direction": "1.1.0-to-1.0.0",
+  "schema": "migrationRequired",
+  "fieldSemantics": "migrationRequired",
+  "protocol": "compatible",
+  "ordering": "compatible",
+  "delivery": "compatible",
+  "timeout": "compatible",
+  "error": "compatible",
+  "retry": "compatible",
+  "idempotency": "compatible",
+  "cancellation": "compatible",
+  "lossPolicy": "explicitDrop"
+}

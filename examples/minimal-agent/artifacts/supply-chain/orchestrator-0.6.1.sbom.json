@@ -1,0 +1,7 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "name": "package.orchestrator@0.6.1",
+  "packages": [
+    { "SPDXID": "SPDXRef-Package", "name": "minimal-orchestrator-alternative", "versionInfo": "0.6.1", "licenseConcluded": "Apache-2.0" }
+  ]
+}

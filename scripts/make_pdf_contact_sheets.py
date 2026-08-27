@@ -4,6 +4,7 @@ SPDX-License-Identifier: Apache-2.0
 """
 
 from pathlib import Path
+import re
 
 from PIL import Image, ImageDraw, ImageFont
 
@@ -19,7 +20,14 @@ def build(language: str) -> None:
     source = ROOT / "tmp" / "pdfs" / language
     target = source / "contact"
     target.mkdir(parents=True, exist_ok=True)
-    pages = sorted(source.glob("page-*.png"))
+    pages = sorted(
+        source.glob("page-*.png"),
+        key=lambda path: int(re.search(r"(\d+)$", path.stem).group(1)),
+    )
+    if not pages:
+        raise FileNotFoundError(
+            f"No rendered pages found in {source}; render the PDF with pdftoppm before creating contact sheets."
+        )
     for sheet_index in range(0, len(pages), 4):
         group = pages[sheet_index : sheet_index + 4]
         canvas = Image.new("RGB", (1420, 1900), "#d8e0e7")
@@ -34,6 +42,7 @@ def build(language: str) -> None:
             draw.text((x, 15 + (position // 2) * 915), f"{language.upper()} · PAGE {page_number}", fill="#102d44", font=FONT)
         output = target / f"sheet-{sheet_index // 4 + 1:02d}.jpg"
         canvas.save(output, quality=92, optimize=True)
+    print(f"{language}: {len(pages)} rendered pages, {(len(pages) + 3) // 4} contact sheets")
 
 
 def main() -> None:

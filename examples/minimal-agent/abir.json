@@ -1,5 +1,5 @@
 {
-  "format": "wgp-abir/0.5",
+  "format": "wgp-abir/0.6",
   "id": "agent.minimal-chat",
   "name": {
     "zh-CN": "最小聊天智能体",
@@ -9,8 +9,8 @@
     "zh-CN": "展示六类结构对象、端口级连线、多轴来源声明与独立投影视图的最小 ABIR。",
     "en": "A minimal ABIR demonstrating six structural object classes, port-level edges, multi-axis source claims, and an independent projection profile."
   },
-  "version": "0.5.0",
-  "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "version": "0.6.0",
+  "contentHash": "sha256:6f4f21936ee519721982fd88b7acdb41df80d78f32a9f9b8943e85eaab52224b",
   "createdAt": "2026-08-26T09:00:00Z",
   "objects": {
     "components": [
@@ -26,42 +26,81 @@
         "ports": [
           {
             "id": "input.in",
-            "name": { "zh-CN": "用户输入", "en": "User input" },
+            "name": {
+              "zh-CN": "用户输入",
+              "en": "User input"
+            },
             "direction": "in",
-            "protocol": "wgp.message/v1",
-            "mediaType": "application/json",
-            "cardinality": "one",
-            "required": true
+            "required": true,
+            "contractChannel": {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "channelId": "channel.chat-input",
+              "roleId": "role.orchestrator-chat-input"
+            }
           },
           {
             "id": "output.out",
-            "name": { "zh-CN": "助手输出", "en": "Assistant output" },
+            "name": {
+              "zh-CN": "助手输出",
+              "en": "Assistant output"
+            },
             "direction": "out",
-            "protocol": "wgp.message/v1",
-            "mediaType": "application/json",
-            "cardinality": "one",
-            "required": true
+            "required": true,
+            "contractChannel": {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "channelId": "channel.chat-output",
+              "roleId": "role.orchestrator-chat-output"
+            }
           },
           {
             "id": "model.request",
-            "name": { "zh-CN": "模型请求", "en": "Model request" },
+            "name": {
+              "zh-CN": "模型请求",
+              "en": "Model request"
+            },
             "direction": "out",
-            "protocol": "wgp.model/v1",
-            "mediaType": "application/json",
-            "cardinality": "one",
-            "required": true
+            "required": true,
+            "contractChannel": {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "channelId": "channel.model-request",
+              "roleId": "role.orchestrator-model-output"
+            }
           },
           {
             "id": "model.response",
-            "name": { "zh-CN": "模型响应", "en": "Model response" },
+            "name": {
+              "zh-CN": "模型响应",
+              "en": "Model response"
+            },
             "direction": "in",
-            "protocol": "wgp.model/v1",
-            "mediaType": "application/json",
-            "cardinality": "one",
-            "required": true
+            "required": true,
+            "contractChannel": {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "channelId": "channel.model-response",
+              "roleId": "role.orchestrator-model-input"
+            }
           }
         ],
-        "tags": ["minimal", "chat"]
+        "tags": [
+          "minimal",
+          "chat"
+        ]
       }
     ],
     "resources": [
@@ -77,21 +116,39 @@
         "ports": [
           {
             "id": "invoke.in",
-            "name": { "zh-CN": "推理请求", "en": "Inference request" },
+            "name": {
+              "zh-CN": "推理请求",
+              "en": "Inference request"
+            },
             "direction": "in",
-            "protocol": "wgp.model/v1",
-            "mediaType": "application/json",
-            "cardinality": "many",
-            "required": true
+            "required": true,
+            "contractChannel": {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.1.0",
+                "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+              },
+              "channelId": "channel.model-request",
+              "roleId": "role.model-provider-input"
+            }
           },
           {
             "id": "completion.out",
-            "name": { "zh-CN": "推理结果", "en": "Inference result" },
+            "name": {
+              "zh-CN": "推理结果",
+              "en": "Inference result"
+            },
             "direction": "out",
-            "protocol": "wgp.model/v1",
-            "mediaType": "application/json",
-            "cardinality": "many",
-            "required": true
+            "required": true,
+            "contractChannel": {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.1.0",
+                "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1"
+              },
+              "channelId": "channel.model-response",
+              "roleId": "role.model-provider-output"
+            }
           }
         ],
         "sensitivity": "internal"
@@ -107,7 +164,9 @@
         },
         "policyKind": "approval",
         "enforcement": "preventive",
-        "appliesTo": ["component.orchestrator"],
+        "appliesTo": [
+          "component.orchestrator"
+        ],
         "rules": [
           {
             "id": "rule.require-approval",
@@ -130,10 +189,8 @@
           "en": "Orchestrator Implementation Package"
         },
         "artifactKind": "package",
-        "locator": "https://example.org/packages/minimal-orchestrator-0.5.0.tgz",
-        "digest": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-        "version": "0.5.0",
-        "mediaType": "application/gzip",
+        "digest": "sha256:36566540f6c6d44074a9bce82538720ae2803b74d9488738a417d06e437aaf69",
+        "version": "0.6.0",
         "licenseExpression": "Apache-2.0"
       },
       {
@@ -144,10 +201,8 @@
           "en": "System Prompt"
         },
         "artifactKind": "prompt",
-        "locator": "file:./system-prompt.md",
-        "digest": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
-        "version": "1",
-        "mediaType": "text/markdown",
+        "digest": "sha256:593208fdc2d2a692a1916eb5e2775251a9cab358f70d768b77b36c076842bc8a",
+        "version": "1.0.0",
         "licenseExpression": "CC-BY-4.0"
       }
     ],
@@ -164,21 +219,39 @@
         "ports": [
           {
             "id": "request.out",
-            "name": { "zh-CN": "请求输出", "en": "Request output" },
+            "name": {
+              "zh-CN": "请求输出",
+              "en": "Request output"
+            },
             "direction": "out",
-            "protocol": "wgp.message/v1",
-            "mediaType": "application/json",
-            "cardinality": "many",
-            "required": true
+            "required": true,
+            "contractChannel": {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "channelId": "channel.chat-input",
+              "roleId": "role.chat-client-output"
+            }
           },
           {
             "id": "response.in",
-            "name": { "zh-CN": "响应输入", "en": "Response input" },
+            "name": {
+              "zh-CN": "响应输入",
+              "en": "Response input"
+            },
             "direction": "in",
-            "protocol": "wgp.message/v1",
-            "mediaType": "application/json",
-            "cardinality": "many",
-            "required": true
+            "required": true,
+            "contractChannel": {
+              "contractRef": {
+                "contractId": "contract.minimal-agent-boundaries",
+                "version": "1.0.0",
+                "contentHash": "sha256:043b37c2435c38495f465579bc2284ea522a0690d57b025e4beec5dd2fd97eac"
+              },
+              "channelId": "channel.chat-output",
+              "roleId": "role.chat-client-input"
+            }
           }
         ],
         "authentication": "session"
@@ -205,33 +278,53 @@
     {
       "id": "edge.user-input",
       "edgeKind": "data",
-      "from": { "objectId": "interface.chat.http", "portId": "request.out" },
-      "to": { "objectId": "component.orchestrator", "portId": "input.in" },
-      "protocol": "wgp.message/v1",
+      "from": {
+        "objectId": "interface.chat.http",
+        "portId": "request.out"
+      },
+      "to": {
+        "objectId": "component.orchestrator",
+        "portId": "input.in"
+      },
       "required": true
     },
     {
       "id": "edge.model-request",
       "edgeKind": "invocation",
-      "from": { "objectId": "component.orchestrator", "portId": "model.request" },
-      "to": { "objectId": "resource.model.deepseek", "portId": "invoke.in" },
-      "protocol": "wgp.model/v1",
+      "from": {
+        "objectId": "component.orchestrator",
+        "portId": "model.request"
+      },
+      "to": {
+        "objectId": "resource.model.deepseek",
+        "portId": "invoke.in"
+      },
       "required": true
     },
     {
       "id": "edge.model-response",
       "edgeKind": "data",
-      "from": { "objectId": "resource.model.deepseek", "portId": "completion.out" },
-      "to": { "objectId": "component.orchestrator", "portId": "model.response" },
-      "protocol": "wgp.model/v1",
+      "from": {
+        "objectId": "resource.model.deepseek",
+        "portId": "completion.out"
+      },
+      "to": {
+        "objectId": "component.orchestrator",
+        "portId": "model.response"
+      },
       "required": true
     },
     {
       "id": "edge.assistant-output",
       "edgeKind": "data",
-      "from": { "objectId": "component.orchestrator", "portId": "output.out" },
-      "to": { "objectId": "interface.chat.http", "portId": "response.in" },
-      "protocol": "wgp.message/v1",
+      "from": {
+        "objectId": "component.orchestrator",
+        "portId": "output.out"
+      },
+      "to": {
+        "objectId": "interface.chat.http",
+        "portId": "response.in"
+      },
       "required": true
     }
   ],
@@ -239,34 +332,62 @@
     {
       "id": "claim.orchestrator-native",
       "subjectId": "component.orchestrator",
-      "fieldScope": ["/objects/components/0"],
+      "fieldScope": [
+        "/objects/components/0"
+      ],
       "structuralProvenance": "F3",
       "identityAssurance": "stableObserved",
       "fieldCoverage": "complete",
       "runtimeEvidence": "observed",
-      "operationCapabilities": ["view", "edit", "compile", "roundTrip", "replace"],
+      "operationCapabilities": [
+        "view",
+        "edit",
+        "compile",
+        "roundTrip",
+        "replace"
+      ],
       "trustState": "verified",
       "method": "nativeIntrospection",
       "adapter": {
         "name": "minimal-agent-adapter",
-        "version": "0.5.0",
-        "implementationDigest": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        "version": "0.6.0",
+        "implementationArtifactRef": {
+          "artifactId": "artifact.contract-adapter",
+          "version": "0.6.0",
+          "contentHash": "sha256:ab489091d0fe73e94deede47899aa789d873586a72ec1ab9da757451340c626a"
+        }
       },
-      "evidenceRefs": ["events.jsonl"],
+      "evidenceRefs": [
+        {
+          "artifactId": "artifact.orchestrator-package",
+          "version": "0.6.0",
+          "contentHash": "sha256:36566540f6c6d44074a9bce82538720ae2803b74d9488738a417d06e437aaf69"
+        }
+      ],
       "observedAt": "2026-08-26T09:00:00Z"
     },
     {
       "id": "claim.model-declared",
       "subjectId": "resource.model.deepseek",
-      "fieldScope": ["/objects/resources/0"],
+      "fieldScope": [
+        "/objects/resources/0"
+      ],
       "structuralProvenance": "F0",
       "identityAssurance": "declared",
       "fieldCoverage": "partial",
       "runtimeEvidence": "observed",
-      "operationCapabilities": ["view"],
+      "operationCapabilities": [
+        "view"
+      ],
       "trustState": "attested",
       "method": "manualDeclaration",
-      "evidenceRefs": ["events.jsonl"],
+      "evidenceRefs": [
+        {
+          "artifactId": "artifact.model-provider-package",
+          "version": "0.6.0",
+          "contentHash": "sha256:24892e02321a35a78f451f2c13486a18556de42381e32c1fe47e612c46aa3496"
+        }
+      ],
       "observedAt": "2026-08-26T09:00:00Z",
       "notes": {
         "zh-CN": "运行事件证明该服务被调用，但不把人工声明提升为原生结构来源。",
@@ -292,8 +413,20 @@
         "seed": 42
       },
       "visibility": {
-        "objectTypes": ["Component", "Resource", "Policy", "Artifact", "Interface", "Container"],
-        "edgeKinds": ["data", "invocation", "policy", "dependency"],
+        "objectTypes": [
+          "Component",
+          "Resource",
+          "Policy",
+          "Artifact",
+          "Interface",
+          "Container"
+        ],
+        "edgeKinds": [
+          "data",
+          "invocation",
+          "policy",
+          "dependency"
+        ],
         "showPorts": true,
         "showSourceClaims": true
       },

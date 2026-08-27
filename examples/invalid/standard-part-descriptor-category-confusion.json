@@ -1,6 +1,6 @@
 {
-  "format": "wgp-standard-part-descriptor/0.5",
-  "descriptorVersion": "0.5.0",
+  "format": "wgp-standard-part-descriptor/0.6",
+  "descriptorVersion": "0.6.0",
   "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999",
   "createdAt": "2026-08-27T08:00:00Z",
   "identity": {
@@ -13,7 +13,7 @@
       "zh-CN": "通过标准消息与模型端口装配的最小对话编排标准件。",
       "en": "A minimal conversation-orchestration standard part assembled through standard message and model ports."
     },
-    "version": "0.5.0",
+    "version": "0.6.0",
     "partKind": "Component",
     "roles": [
       "orchestrator",
@@ -34,76 +34,46 @@
       {
         "surfaceId": "surface.chat",
         "category": "data",
-        "standard": {
-          "standardId": "standard.wgp-message",
+        "contractRef": {
+          "contractId": "contract.minimal-agent-boundaries",
           "version": "1.0.0",
-          "specRef": "https://example.org/standards/wgp-message/v1",
-          "contentHash": "sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+          "contentHash": "sha256:abababababababababababababababababababababababababababababababab"
         },
-        "ports": [
+        "bindings": [
           {
-            "portId": "chat.input",
-            "abirPortId": "input.in",
-            "direction": "in",
-            "protocolId": "wgp.message",
-            "protocolVersion": "v1",
-            "schemaRef": "https://example.org/schemas/wgp-message.schema.json",
-            "schemaContentHash": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
-            "mediaType": "application/json",
-            "cardinality": "one",
-            "required": true,
-            "compatibilityKey": "wgp.message.input/v1"
+            "bindingId": "chat.input",
+            "channelId": "channel.chat-input",
+            "contractRoleId": "role.orchestrator-chat-input",
+            "required": true
           },
           {
-            "portId": "chat.output",
-            "abirPortId": "output.out",
-            "direction": "out",
-            "protocolId": "wgp.message",
-            "protocolVersion": "v1",
-            "schemaRef": "https://example.org/schemas/wgp-message.schema.json",
-            "schemaContentHash": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
-            "mediaType": "application/json",
-            "cardinality": "one",
-            "required": true,
-            "compatibilityKey": "wgp.message.output/v1"
+            "bindingId": "chat.output",
+            "channelId": "channel.chat-output",
+            "contractRoleId": "role.orchestrator-chat-output",
+            "required": true
           }
         ]
       },
       {
         "surfaceId": "surface.model-client",
         "category": "control",
-        "standard": {
-          "standardId": "standard.wgp-model",
+        "contractRef": {
+          "contractId": "contract.minimal-agent-boundaries",
           "version": "1.0.0",
-          "specRef": "https://example.org/standards/wgp-model/v1",
-          "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+          "contentHash": "sha256:abababababababababababababababababababababababababababababababab"
         },
-        "ports": [
+        "bindings": [
           {
-            "portId": "model.request",
-            "abirPortId": "model.request",
-            "direction": "out",
-            "protocolId": "wgp.model",
-            "protocolVersion": "v1",
-            "schemaRef": "https://example.org/schemas/wgp-model-request.schema.json",
-            "schemaContentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
-            "mediaType": "application/json",
-            "cardinality": "one",
-            "required": true,
-            "compatibilityKey": "wgp.model.request/v1"
+            "bindingId": "model.request",
+            "channelId": "channel.model-request",
+            "contractRoleId": "role.orchestrator-model-output",
+            "required": true
           },
           {
-            "portId": "model.response",
-            "abirPortId": "model.response",
-            "direction": "in",
-            "protocolId": "wgp.model",
-            "protocolVersion": "v1",
-            "schemaRef": "https://example.org/schemas/wgp-model-response.schema.json",
-            "schemaContentHash": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
-            "mediaType": "application/json",
-            "cardinality": "one",
-            "required": true,
-            "compatibilityKey": "wgp.model.response/v1"
+            "bindingId": "model.response",
+            "channelId": "channel.model-response",
+            "contractRoleId": "role.orchestrator-model-input",
+            "required": true
           }
         ]
       }
@@ -112,9 +82,18 @@
   "configuration": {
     "schemaRef": "https://example.org/schemas/minimal-orchestrator-config.schema.json",
     "schemaDigest": "sha256:6666666666666666666666666666666666666666666666666666666666666666",
-    "defaultsRef": "https://example.org/config/minimal-orchestrator-defaults.json",
     "secretFields": [],
-    "unknownFieldPolicy": "reject"
+    "unknownFieldPolicy": "reject",
+    "schemaBundleRef": {
+      "id": "schema-bundle.minimal-agent",
+      "version": "1.0.0",
+      "contentHash": "sha256:1212121212121212121212121212121212121212121212121212121212121212"
+    },
+    "defaultsArtifactRef": {
+      "artifactId": "artifact.orchestrator-defaults",
+      "version": "0.6.0",
+      "contentHash": "sha256:3939393939393939393939393939393939393939393939393939393939393939"
+    }
   },
   "capabilities": [
     {
@@ -179,20 +158,20 @@
   },
   "packageRef": {
     "id": "package.orchestrator",
-    "version": "0.5.0",
+    "version": "0.6.0",
     "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
   },
   "compatibilityProfileRefs": [
     {
       "id": "profile.orchestrator-controlled",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "contentHash": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
     }
   ],
   "conformanceSuiteRefs": [
     {
       "id": "suite.orchestrator",
-      "version": "0.5.0",
+      "version": "0.6.0",
       "contentHash": "sha256:7777777777777777777777777777777777777777777777777777777777777777"
     }
   ],

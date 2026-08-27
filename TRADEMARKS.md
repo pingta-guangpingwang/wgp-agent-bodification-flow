@@ -8,9 +8,9 @@
 
 ## Permitted factual use / 允许的事实性使用
 
-You may accurately state that a project “implements WGP-ABF v0.4,” “is based on the WGP-ABF whitepaper,” or “is an unofficial community adaptation.” You may link to this repository and quote the project name to identify compatibility.
+You may accurately state that a project “implements WGP-ABF” together with the exact implemented version, “is based on the WGP-ABF whitepaper,” or “is an unofficial community adaptation.” You may link to this repository and quote the project name to identify compatibility.
 
-你可以准确表述某项目“实现 WGP-ABF v0.4”“基于 WGP-ABF 白皮书”或“属于非官方社区改编”，也可以链接本仓库并为说明兼容性而引用项目名称。
+你可以在同时标明所实现精确版本的前提下，准确表述某项目“实现 WGP-ABF”“基于 WGP-ABF 白皮书”或“属于非官方社区改编”，也可以链接本仓库并为说明兼容性而引用项目名称。
 
 ## Restricted use / 受限制的使用
 

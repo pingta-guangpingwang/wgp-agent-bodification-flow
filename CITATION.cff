@@ -1,8 +1,8 @@
 cff-version: 1.2.0
 message: "If you use WGP-ABF, please cite this report and preserve attribution. / 如使用 WGP-ABF，请引用本报告并保留署名。"
-title: "WGP Agent Bodification Flow (WGP-ABF): Standard Agent Parts, Engineering Blueprints, Evidence-Backed Evaluation, and Validated Standard-Part Replacement"
+title: "WGP Agent Bodification Flow (WGP-ABF): Module Data Contracts, Agent Engineering Blueprints, and Evidence-Governed Evolution"
 type: report
-version: "0.5.0"
+version: "0.6.0"
 date-released: "2026-08-27"
 authors:
   - family-names: Wang
@@ -16,6 +16,7 @@ keywords:
   - agent configuration
   - agent observability
   - agent evaluation
+  - module data contracts
   - standard agent parts
   - component interoperability
   - visual programming

@@ -1,0 +1,17 @@
+{
+  "contractPath": "examples/minimal-agent/module-data-contract.json",
+  "channelId": "channel.model-response",
+  "producerRoleId": "role.model-provider-output",
+  "consumerRoleId": "role.orchestrator-model-input",
+  "message": {
+    "attempt": 2,
+    "idempotencyKey": "unexpected-key",
+    "orderingDomain": "invented-domain",
+    "orderingSequence": 1,
+    "error": {
+      "classification": "unknown",
+      "retryable": true,
+      "terminal": false
+    }
+  }
+}

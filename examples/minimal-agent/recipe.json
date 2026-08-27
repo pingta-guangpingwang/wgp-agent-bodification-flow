@@ -1,30 +1,30 @@
 {
-  "format": "wgp-assembly-recipe/0.5",
+  "format": "wgp-assembly-recipe/0.6",
   "id": "recipe.minimal-chat",
   "name": {
     "zh-CN": "最小聊天智能体装配配方",
     "en": "Minimal Chat Agent Assembly Recipe"
   },
-  "version": "0.5.0",
-  "contentHash": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "version": "0.6.0",
+  "contentHash": "sha256:eaf9de1637c178a54204a5357b0da2463e8cc652aa252601b9d0471aae859777",
   "createdAt": "2026-08-26T09:05:00Z",
   "abir": {
     "id": "agent.minimal-chat",
-    "version": "0.5.0",
-    "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    "version": "0.6.0",
+    "contentHash": "sha256:6f4f21936ee519721982fd88b7acdb41df80d78f32a9f9b8943e85eaab52224b"
   },
   "standardPartBindings": [
     {
       "bindingId": "binding.standard-orchestrator",
       "descriptorRef": {
         "partId": "component.orchestrator",
-        "version": "0.5.0",
-        "contentHash": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+        "version": "0.6.0",
+        "contentHash": "sha256:e12468fcdae13ef4c87e4058664fb383a4dd5e09c6172a8d8645f1f57226efbf"
       },
       "packageRef": {
         "id": "package.orchestrator",
-        "version": "0.5.0",
-        "contentHash": "sha256:0000000000000000000000000000000000000000000000000000000000000000"
+        "version": "0.6.0",
+        "contentHash": "sha256:4314ce8df784b3697f64f8175620af8193efdbcde47fbfb6f98f214bf7c80e84"
       },
       "partKind": "component",
       "targetObjectId": "component.orchestrator",
@@ -38,18 +38,149 @@
         {
           "surfaceId": "surface.chat",
           "portMappings": [
-            { "partPortId": "chat.input", "targetPortId": "input.in" },
-            { "partPortId": "chat.output", "targetPortId": "output.out" }
+            {
+              "assemblyBindingId": "chat.input",
+              "abirPortId": "input.in"
+            },
+            {
+              "assemblyBindingId": "chat.output",
+              "abirPortId": "output.out"
+            }
           ]
         },
         {
           "surfaceId": "surface.model-client",
           "portMappings": [
-            { "partPortId": "model.request", "targetPortId": "model.request" },
-            { "partPortId": "model.response", "targetPortId": "model.response" }
+            {
+              "assemblyBindingId": "model.request",
+              "abirPortId": "model.request"
+            },
+            {
+              "assemblyBindingId": "model.response",
+              "abirPortId": "model.response"
+            }
           ]
         }
       ]
+    },
+    {
+      "bindingId": "binding.standard-model-provider",
+      "descriptorRef": {
+        "partId": "resource.model.deepseek",
+        "version": "0.6.0",
+        "contentHash": "sha256:935d8aab677ddca361a7bb7d20acb2ce7ffbb430eb277d89228c04d34f9cb6ec"
+      },
+      "packageRef": {
+        "id": "package.model-provider",
+        "version": "0.6.0",
+        "contentHash": "sha256:a6021352591bf5efe795369dd0218b798f4bffdc141eb49ce840cba32c3fcb18"
+      },
+      "partKind": "resource",
+      "targetObjectId": "resource.model.deepseek",
+      "enabled": true,
+      "config": {
+        "model": "deepseek-chat",
+        "apiKey": "credential:deepseek-api-key"
+      },
+      "surfaceMappings": [
+        {
+          "surfaceId": "surface.model-provider",
+          "portMappings": [
+            {
+              "assemblyBindingId": "model.consume-request",
+              "abirPortId": "invoke.in"
+            },
+            {
+              "assemblyBindingId": "model.produce-response",
+              "abirPortId": "completion.out"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "contractBindings": [
+    {
+      "contractBindingId": "contract-binding.chat-input",
+      "producer": {
+        "abirObjectId": "interface.chat.http",
+        "abirPortId": "request.out"
+      },
+      "consumer": {
+        "standardPartBindingId": "binding.standard-orchestrator",
+        "surfaceId": "surface.chat",
+        "assemblyBindingId": "chat.input"
+      },
+      "resolution": {
+        "mode": "exact"
+      }
+    },
+    {
+      "contractBindingId": "contract-binding.chat-output",
+      "producer": {
+        "standardPartBindingId": "binding.standard-orchestrator",
+        "surfaceId": "surface.chat",
+        "assemblyBindingId": "chat.output"
+      },
+      "consumer": {
+        "abirObjectId": "interface.chat.http",
+        "abirPortId": "response.in"
+      },
+      "resolution": {
+        "mode": "exact"
+      }
+    },
+    {
+      "contractBindingId": "contract-binding.model-request",
+      "producer": {
+        "standardPartBindingId": "binding.standard-orchestrator",
+        "surfaceId": "surface.model-client",
+        "assemblyBindingId": "model.request"
+      },
+      "consumer": {
+        "standardPartBindingId": "binding.standard-model-provider",
+        "surfaceId": "surface.model-provider",
+        "assemblyBindingId": "model.consume-request"
+      },
+      "resolution": {
+        "mode": "compatible",
+        "compatibilityAssessmentRef": {
+          "id": "contract-assessment.orchestrator-to-model-provider",
+          "version": "0.6.0",
+          "contentHash": "sha256:9621ee82c772c84ca8941c3f264e887ae4f3cc5cfe30b741e40843280af8d13d"
+        }
+      }
+    },
+    {
+      "contractBindingId": "contract-binding.model-response",
+      "producer": {
+        "standardPartBindingId": "binding.standard-model-provider",
+        "surfaceId": "surface.model-provider",
+        "assemblyBindingId": "model.produce-response"
+      },
+      "consumer": {
+        "standardPartBindingId": "binding.standard-orchestrator",
+        "surfaceId": "surface.model-client",
+        "assemblyBindingId": "model.response"
+      },
+      "resolution": {
+        "mode": "adapter",
+        "compatibilityAssessmentRef": {
+          "id": "contract-assessment.model-provider-to-orchestrator",
+          "version": "0.6.0",
+          "contentHash": "sha256:b3a9556e1e8015d72a70fc7296f83edc8c08d0c7d48ba8bbc8f2636e69c7f467"
+        },
+        "adapterArtifactRef": {
+          "artifactId": "artifact.contract-adapter",
+          "version": "0.6.0",
+          "contentHash": "sha256:ab489091d0fe73e94deede47899aa789d873586a72ec1ab9da757451340c626a"
+        },
+        "migrationPlanRef": {
+          "id": "contract-migration.model-provider-to-orchestrator",
+          "version": "0.6.0",
+          "contentHash": "sha256:e2b93238d6e6b4b3ccba2059b98844b53abe6ca34a8c04c907a8a19a896380ce"
+        }
+      }
     }
   ],
   "componentBindings": [
@@ -61,8 +192,7 @@
         "systemPromptArtifactId": "artifact.system-prompt",
         "maxTokens": 2048,
         "stream": true
-      },
-      "configSchemaRef": "https://example.org/schemas/minimal-orchestrator-config.schema.json"
+      }
     }
   ],
   "resourceBindings": [
@@ -74,20 +204,27 @@
         "model": "deepseek-chat",
         "temperature": 0.2
       },
-      "credentialRefs": ["credential.deepseek-api-key"]
+      "credentialRefs": [
+        "credential.deepseek-api-key"
+      ]
     }
   ],
   "policyBindings": [
     {
       "policyId": "policy.tool-approval",
-      "enforcedBy": ["component.orchestrator"],
+      "enforcedBy": [
+        "component.orchestrator"
+      ],
       "mode": "enforce"
     }
   ],
   "containerPlacements": [
     {
       "containerId": "container.local-process",
-      "objectIds": ["component.orchestrator", "interface.chat.http"],
+      "objectIds": [
+        "component.orchestrator",
+        "interface.chat.http"
+      ],
       "limits": {
         "cpu": 1,
         "memoryMiB": 512,
@@ -113,12 +250,20 @@
     },
     "entryComponentId": "component.orchestrator",
     "environment": {
-      "requiredVariables": ["DEEPSEEK_API_KEY"],
-      "optionalVariables": ["DEEPSEEK_BASE_URL"]
+      "requiredVariables": [
+        "DEEPSEEK_API_KEY"
+      ],
+      "optionalVariables": [
+        "DEEPSEEK_BASE_URL"
+      ]
     },
     "startup": {
       "command": "node",
-      "arguments": ["./dist/start.mjs", "--recipe", "./recipe.json"],
+      "arguments": [
+        "./dist/start.mjs",
+        "--recipe",
+        "./recipe.json"
+      ],
       "workingDirectory": "."
     },
     "restartPolicy": "onFailure"
@@ -130,7 +275,9 @@
       "required": true,
       "command": "validate recipe.json",
       "timeoutMs": 10000,
-      "expected": { "valid": true }
+      "expected": {
+        "valid": true
+      }
     },
     {
       "id": "check.chat-smoke",
@@ -138,7 +285,9 @@
       "required": true,
       "command": "run fixture.greeting",
       "timeoutMs": 30000,
-      "expected": { "eventType": "agent.response.completed" }
+      "expected": {
+        "eventType": "agent.response.completed"
+      }
     }
   ],
   "metadata": {

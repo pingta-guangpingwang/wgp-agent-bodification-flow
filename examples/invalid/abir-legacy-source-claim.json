@@ -1,10 +1,10 @@
 {
-  "format": "wgp-abir/0.5",
+  "format": "wgp-abir/0.6",
   "id": "agent.invalid-legacy-claim",
   "name": {
     "en": "Invalid legacy source claim"
   },
-  "version": "0.5.0",
+  "version": "0.6.0",
   "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
   "createdAt": "2026-08-26T10:00:00Z",
   "objects": {
@@ -23,8 +23,15 @@
               "en": "Input"
             },
             "direction": "in",
-            "protocol": "example/v1",
-            "cardinality": "one"
+            "contractChannel": {
+              "contractRef": {
+                "contractId": "contract.example",
+                "version": "1.0.0",
+                "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+              },
+              "channelId": "channel.input",
+              "roleId": "role.example-consumer"
+            }
           }
         ]
       }
@@ -43,10 +50,13 @@
       "fieldScope": [
         "/objects/components/0"
       ],
-      "structuralProvenance": "F3-native",
+      "structuralProvenance": "F3",
       "identityAssurance": "stableObserved",
       "fieldCoverage": "complete",
       "runtimeEvidence": "observed",
+      "operationCapabilities": [
+        "view"
+      ],
       "adapterCapability": "fieldWriteBack",
       "trustState": "verified",
       "method": "nativeIntrospection",

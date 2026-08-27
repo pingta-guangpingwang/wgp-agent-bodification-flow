@@ -1,0 +1,8 @@
+{
+  "companionPath": "examples/minimal-agent/standard-part-companions.json",
+  "policyId": "policy.tool-approval",
+  "descriptorPaths": [
+    "examples/minimal-agent/standard-part-descriptor-target.json",
+    "examples/minimal-agent/standard-part-descriptor-model-provider.json"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-response-v1.schema.json",
+  "title": "Minimal model response v1",
+  "type": "object",
+  "required": ["requestId", "content", "usage"],
+  "properties": {
+    "requestId": { "type": "string", "format": "uuid" },
+    "content": { "type": "string" },
+    "usage": { "type": "integer", "minimum": 0, "x-wgp-unit": { "system": "custom", "code": "token" } }
+  },
+  "additionalProperties": false
+}

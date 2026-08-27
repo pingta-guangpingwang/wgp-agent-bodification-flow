@@ -1,0 +1,14 @@
+{
+  "outcome": "passed",
+  "verifiedBindings": [
+    "contract-binding.model-request",
+    "contract-binding.model-response"
+  ],
+  "assertions": {
+    "schemaClosed": true,
+    "fieldSemanticsAccountedFor": true,
+    "protocolComposable": true,
+    "rolesDirected": true,
+    "responseAdapterPinned": true
+  }
+}

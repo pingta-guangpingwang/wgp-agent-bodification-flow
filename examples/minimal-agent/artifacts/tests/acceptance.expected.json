@@ -1,0 +1,6 @@
+{
+  "outcome": "passed",
+  "expectedContent": "pong",
+  "expectedOutcome": "accepted",
+  "expectedBindingId": "contract-binding.model-response"
+}

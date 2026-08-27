@@ -1,0 +1,12 @@
+{
+  "outcome": "passed",
+  "requiredEventIds": [
+    "66666666-6666-4666-8666-666666666666",
+    "77777777-7777-4777-8777-777777777777"
+  ],
+  "requiredBindings": [
+    "contract-binding.model-request",
+    "contract-binding.model-response"
+  ],
+  "requireDistinctPackages": true
+}

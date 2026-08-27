@@ -1,0 +1,1055 @@
+{
+  "format": "wgp-module-data-contract/0.6",
+  "specificationVersion": "0.6.0",
+  "contentHash": "sha256:b411ce2fa534a755086652673803a9aef6d1d55dce7c5f44376c1eac7888c3b1",
+  "createdAt": "2026-08-27T07:59:30Z",
+  "identity": {
+    "contractId": "contract.minimal-agent-boundaries",
+    "name": {
+      "zh-CN": "最小智能体模块数据契约",
+      "en": "Minimal Agent Module Data Contract"
+    },
+    "description": {
+      "zh-CN": "对齐对话、模型、事件与状态模块边界的数据结构和交换语义，不约束模块内部实现。",
+      "en": "Aligns data structures and exchange semantics for chat, model, event, and state module boundaries without constraining internal implementations."
+    },
+    "version": "1.1.0",
+    "status": "stable",
+    "publisher": {
+      "publisherId": "publisher.wgp-abf",
+      "name": {
+        "zh-CN": "WGP-ABF 参考实现",
+        "en": "WGP-ABF Reference Implementation"
+      },
+      "url": "https://github.com/pingta-guangpingwang/wgp-agent-bodification-flow"
+    }
+  },
+  "roles": [
+    {
+      "roleId": "role.chat-client-output",
+      "kind": "producer",
+      "name": {
+        "zh-CN": "对话客户端输出",
+        "en": "Chat client output"
+      },
+      "responsibility": {
+        "zh-CN": "产生规范化用户消息。",
+        "en": "Produce normalized user messages."
+      }
+    },
+    {
+      "roleId": "role.orchestrator-chat-input",
+      "kind": "consumer",
+      "name": {
+        "zh-CN": "编排器对话输入",
+        "en": "Orchestrator chat input"
+      },
+      "responsibility": {
+        "zh-CN": "接收并验证用户消息。",
+        "en": "Accept and validate user messages."
+      }
+    },
+    {
+      "roleId": "role.orchestrator-chat-output",
+      "kind": "producer",
+      "name": {
+        "zh-CN": "编排器对话输出",
+        "en": "Orchestrator chat output"
+      },
+      "responsibility": {
+        "zh-CN": "产生有序助手数据块。",
+        "en": "Produce ordered assistant chunks."
+      }
+    },
+    {
+      "roleId": "role.chat-client-input",
+      "kind": "consumer",
+      "name": {
+        "zh-CN": "对话客户端输入",
+        "en": "Chat client input"
+      },
+      "responsibility": {
+        "zh-CN": "消费助手流直至结束或错误。",
+        "en": "Consume the assistant stream through end or error."
+      }
+    },
+    {
+      "roleId": "role.orchestrator-model-output",
+      "kind": "producer",
+      "name": {
+        "zh-CN": "编排器模型输出",
+        "en": "Orchestrator model output"
+      },
+      "responsibility": {
+        "zh-CN": "产生固定结构的模型请求。",
+        "en": "Produce schema-pinned model requests."
+      }
+    },
+    {
+      "roleId": "role.model-provider-input",
+      "kind": "consumer",
+      "name": {
+        "zh-CN": "模型提供方输入",
+        "en": "Model provider input"
+      },
+      "responsibility": {
+        "zh-CN": "消费模型请求。",
+        "en": "Consume model requests."
+      }
+    },
+    {
+      "roleId": "role.model-provider-output",
+      "kind": "producer",
+      "name": {
+        "zh-CN": "模型提供方输出",
+        "en": "Model provider output"
+      },
+      "responsibility": {
+        "zh-CN": "产生模型响应。",
+        "en": "Produce model responses."
+      }
+    },
+    {
+      "roleId": "role.orchestrator-model-input",
+      "kind": "consumer",
+      "name": {
+        "zh-CN": "编排器模型输入",
+        "en": "Orchestrator model input"
+      },
+      "responsibility": {
+        "zh-CN": "消费并验证模型响应。",
+        "en": "Consume and validate model responses."
+      }
+    },
+    {
+      "roleId": "role.orchestrator-event-output",
+      "kind": "producer",
+      "name": {
+        "zh-CN": "编排器事件输出",
+        "en": "Orchestrator event output"
+      },
+      "responsibility": {
+        "zh-CN": "产生可去重的生命周期事件。",
+        "en": "Produce deduplicable lifecycle events."
+      }
+    },
+    {
+      "roleId": "role.observer-event-input",
+      "kind": "consumer",
+      "name": {
+        "zh-CN": "观察器事件输入",
+        "en": "Observer event input"
+      },
+      "responsibility": {
+        "zh-CN": "按生产者顺序消费事件。",
+        "en": "Consume events in producer order."
+      }
+    },
+    {
+      "roleId": "role.orchestrator-state-output",
+      "kind": "producer",
+      "name": {
+        "zh-CN": "编排器状态输出",
+        "en": "Orchestrator state output"
+      },
+      "responsibility": {
+        "zh-CN": "产生版本化状态快照与增量。",
+        "en": "Produce versioned state snapshots and deltas."
+      }
+    },
+    {
+      "roleId": "role.state-store-input",
+      "kind": "consumer",
+      "name": {
+        "zh-CN": "状态存储输入",
+        "en": "State store input"
+      },
+      "responsibility": {
+        "zh-CN": "强一致地应用状态更新。",
+        "en": "Apply state updates with strong consistency."
+      }
+    }
+  ],
+  "structures": [
+    {
+      "structureId": "structure.chat-message",
+      "kind": "message",
+      "schema": {
+        "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-chat-message-v1.schema.json",
+        "schemaContentHash": "sha256:aaa79c421d96ab62d0d56576ba1ea0ab4af5f05c8e3c21b2331c36a900ce47bb",
+        "schemaBundleRef": {
+          "id": "schema-bundle.minimal-agent",
+          "version": "1.1.0",
+          "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0"
+        },
+        "dialect": "https://json-schema.org/draft/2020-12/schema",
+        "payloadMediaType": "application/json",
+        "payloadEncoding": "utf-8"
+      },
+      "fields": [
+        {
+          "path": "/messageId",
+          "meaning": {
+            "zh-CN": "消息幂等标识。",
+            "en": "Message idempotency identifier."
+          },
+          "required": true,
+          "nullable": false,
+          "valueEncoding": "UUID",
+          "classification": "internal"
+        },
+        {
+          "path": "/role",
+          "meaning": {
+            "zh-CN": "消息作者角色。",
+            "en": "Message author role."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "public"
+        },
+        {
+          "path": "/content",
+          "meaning": {
+            "zh-CN": "UTF-8 文本内容。",
+            "en": "UTF-8 text content."
+          },
+          "required": true,
+          "nullable": false,
+          "valueEncoding": "utf-8",
+          "classification": "confidential"
+        }
+      ],
+      "unknownFieldPolicy": "reject"
+    },
+    {
+      "structureId": "structure.assistant-chunk",
+      "kind": "streamChunk",
+      "schema": {
+        "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-assistant-chunk-v1.schema.json",
+        "schemaContentHash": "sha256:6a1fe262038822b74842f4052a3092d98fca36aeacbc13b25251d340fc9e4a95",
+        "schemaBundleRef": {
+          "id": "schema-bundle.minimal-agent",
+          "version": "1.1.0",
+          "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0"
+        },
+        "dialect": "https://json-schema.org/draft/2020-12/schema",
+        "payloadMediaType": "application/json",
+        "payloadEncoding": "utf-8"
+      },
+      "fields": [
+        {
+          "path": "/sequence",
+          "meaning": {
+            "zh-CN": "从零开始连续递增的数据块序号。",
+            "en": "Zero-based contiguous chunk sequence."
+          },
+          "required": true,
+          "nullable": false,
+          "unit": {
+            "system": "custom",
+            "code": "chunk"
+          },
+          "classification": "internal"
+        },
+        {
+          "path": "/text",
+          "meaning": {
+            "zh-CN": "助手输出增量。",
+            "en": "Assistant output delta."
+          },
+          "required": true,
+          "nullable": false,
+          "valueEncoding": "utf-8",
+          "classification": "confidential"
+        }
+      ],
+      "unknownFieldPolicy": "reject"
+    },
+    {
+      "structureId": "structure.stream-end",
+      "kind": "streamEnd",
+      "schema": {
+        "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-stream-end-v1.schema.json",
+        "schemaContentHash": "sha256:8072ac27b073bd5dc1095888d7ebd584b73094c5985773db9655bbb43f705771",
+        "schemaBundleRef": {
+          "id": "schema-bundle.minimal-agent",
+          "version": "1.1.0",
+          "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0"
+        },
+        "dialect": "https://json-schema.org/draft/2020-12/schema",
+        "payloadMediaType": "application/json",
+        "payloadEncoding": "utf-8"
+      },
+      "fields": [
+        {
+          "path": "/finishReason",
+          "meaning": {
+            "zh-CN": "流正常终止原因。",
+            "en": "Normal stream termination reason."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "public"
+        }
+      ],
+      "unknownFieldPolicy": "reject"
+    },
+    {
+      "structureId": "structure.exchange-error",
+      "kind": "error",
+      "schema": {
+        "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-exchange-error-v1.schema.json",
+        "schemaContentHash": "sha256:f968f9e54efe62a338e227013b11def47f4713d15e01c7ecdc205d391f0bbc6b",
+        "schemaBundleRef": {
+          "id": "schema-bundle.minimal-agent",
+          "version": "1.1.0",
+          "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0"
+        },
+        "dialect": "https://json-schema.org/draft/2020-12/schema",
+        "payloadMediaType": "application/problem+json",
+        "payloadEncoding": "utf-8"
+      },
+      "fields": [
+        {
+          "path": "/code",
+          "meaning": {
+            "zh-CN": "稳定的机器错误码。",
+            "en": "Stable machine-readable error code."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "public"
+        },
+        {
+          "path": "/message",
+          "meaning": {
+            "zh-CN": "面向操作者的错误摘要。",
+            "en": "Operator-facing error summary."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "internal"
+        },
+        {
+          "path": "/retryable",
+          "meaning": {
+            "zh-CN": "错误能否按契约重试。",
+            "en": "Whether the contract permits retrying the error."
+          },
+          "required": true,
+          "nullable": false,
+          "defaultValue": false,
+          "classification": "public"
+        },
+        {
+          "path": "/classification",
+          "meaning": {
+            "zh-CN": "错误类别，用于稳定重试决策。",
+            "en": "Error classification for stable retry decisions."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "public"
+        },
+        {
+          "path": "/terminal",
+          "meaning": {
+            "zh-CN": "错误是否终止当前交换或流。",
+            "en": "Whether the error terminates the current exchange or stream."
+          },
+          "required": true,
+          "nullable": false,
+          "defaultValue": true,
+          "classification": "public"
+        }
+      ],
+      "unknownFieldPolicy": "reject"
+    },
+    {
+      "structureId": "structure.model-request",
+      "kind": "message",
+      "schema": {
+        "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-request-v1.schema.json",
+        "schemaContentHash": "sha256:9caed9390266fc0ed6f4f8a1d688f49f6556de47c94c4a9f2e9fb2a6dc788eeb",
+        "schemaBundleRef": {
+          "id": "schema-bundle.minimal-agent",
+          "version": "1.1.0",
+          "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0"
+        },
+        "dialect": "https://json-schema.org/draft/2020-12/schema",
+        "payloadMediaType": "application/json",
+        "payloadEncoding": "utf-8"
+      },
+      "fields": [
+        {
+          "path": "/requestId",
+          "meaning": {
+            "zh-CN": "模型请求幂等标识。",
+            "en": "Model-request idempotency identifier."
+          },
+          "required": true,
+          "nullable": false,
+          "valueEncoding": "UUID",
+          "classification": "internal"
+        },
+        {
+          "path": "/model",
+          "meaning": {
+            "zh-CN": "目标模型标识。",
+            "en": "Target model identifier."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "public"
+        },
+        {
+          "path": "/messages",
+          "meaning": {
+            "zh-CN": "有序模型输入消息。",
+            "en": "Ordered model input messages."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "confidential"
+        },
+        {
+          "path": "/maxTokens",
+          "meaning": {
+            "zh-CN": "最大输出令牌数。",
+            "en": "Maximum output token count."
+          },
+          "required": false,
+          "nullable": false,
+          "defaultValue": 2048,
+          "unit": {
+            "system": "custom",
+            "code": "token"
+          },
+          "classification": "public"
+        }
+      ],
+      "unknownFieldPolicy": "reject"
+    },
+    {
+      "structureId": "structure.model-response",
+      "kind": "message",
+      "schema": {
+        "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-model-response-v1.1.schema.json",
+        "schemaContentHash": "sha256:850ab8983da1f160265707f0370ad044459bbb08a7508b724f810e48e333e678",
+        "schemaBundleRef": {
+          "id": "schema-bundle.minimal-agent",
+          "version": "1.1.0",
+          "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0"
+        },
+        "dialect": "https://json-schema.org/draft/2020-12/schema",
+        "payloadMediaType": "application/json",
+        "payloadEncoding": "utf-8"
+      },
+      "fields": [
+        {
+          "path": "/requestId",
+          "meaning": {
+            "zh-CN": "被响应的请求标识。",
+            "en": "Identifier of the answered request."
+          },
+          "required": true,
+          "nullable": false,
+          "valueEncoding": "UUID",
+          "classification": "internal"
+        },
+        {
+          "path": "/content",
+          "meaning": {
+            "zh-CN": "模型输出文本。",
+            "en": "Model output text."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "confidential"
+        },
+        {
+          "path": "/usage",
+          "meaning": {
+            "zh-CN": "令牌用量统计。",
+            "en": "Token usage statistics."
+          },
+          "required": true,
+          "nullable": false,
+          "unit": {
+            "system": "custom",
+            "code": "token"
+          },
+          "classification": "internal"
+        },
+        {
+          "path": "/providerMetadata",
+          "meaning": {
+            "zh-CN": "可选提供方元数据。",
+            "en": "Optional provider metadata."
+          },
+          "required": false,
+          "nullable": false,
+          "defaultValue": {},
+          "classification": "internal"
+        }
+      ],
+      "unknownFieldPolicy": "reject"
+    },
+    {
+      "structureId": "structure.lifecycle-event",
+      "kind": "event",
+      "schema": {
+        "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-lifecycle-event-v1.schema.json",
+        "schemaContentHash": "sha256:a91594adb36eca7874487925df4952c095440d28aa4351ec09dce6c7869fdad1",
+        "schemaBundleRef": {
+          "id": "schema-bundle.minimal-agent",
+          "version": "1.1.0",
+          "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0"
+        },
+        "dialect": "https://json-schema.org/draft/2020-12/schema",
+        "payloadMediaType": "application/json",
+        "payloadEncoding": "utf-8"
+      },
+      "fields": [
+        {
+          "path": "/eventId",
+          "meaning": {
+            "zh-CN": "事件幂等标识。",
+            "en": "Event idempotency identifier."
+          },
+          "required": true,
+          "nullable": false,
+          "valueEncoding": "UUID",
+          "classification": "internal"
+        },
+        {
+          "path": "/sequence",
+          "meaning": {
+            "zh-CN": "生产者内连续事件序号。",
+            "en": "Producer-local contiguous event sequence."
+          },
+          "required": true,
+          "nullable": false,
+          "unit": {
+            "system": "custom",
+            "code": "event"
+          },
+          "classification": "internal"
+        },
+        {
+          "path": "/occurredAt",
+          "meaning": {
+            "zh-CN": "事件发生时间。",
+            "en": "Event occurrence time."
+          },
+          "required": true,
+          "nullable": false,
+          "valueEncoding": "RFC3339",
+          "classification": "public"
+        }
+      ],
+      "unknownFieldPolicy": "reject"
+    },
+    {
+      "structureId": "structure.state-snapshot",
+      "kind": "stateSnapshot",
+      "schema": {
+        "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-state-snapshot-v1.schema.json",
+        "schemaContentHash": "sha256:826dc9538c6a57ef9ebc3ddd811b88c7ded8a278787795ece2a6bdff5b8a5857",
+        "schemaBundleRef": {
+          "id": "schema-bundle.minimal-agent",
+          "version": "1.1.0",
+          "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0"
+        },
+        "dialect": "https://json-schema.org/draft/2020-12/schema",
+        "payloadMediaType": "application/json",
+        "payloadEncoding": "utf-8"
+      },
+      "fields": [
+        {
+          "path": "/stateVersion",
+          "meaning": {
+            "zh-CN": "单调递增状态版本。",
+            "en": "Monotonically increasing state version."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "internal"
+        },
+        {
+          "path": "/sessionId",
+          "meaning": {
+            "zh-CN": "状态所属会话。",
+            "en": "Session owning the state."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "confidential"
+        }
+      ],
+      "unknownFieldPolicy": "reject"
+    },
+    {
+      "structureId": "structure.state-delta",
+      "kind": "stateDelta",
+      "schema": {
+        "schemaRef": "https://raw.githubusercontent.com/pingta-guangpingwang/wgp-agent-bodification-flow/v0.6.0/examples/minimal-agent/schemas/wgp-state-delta-v1.schema.json",
+        "schemaContentHash": "sha256:0e789a2291432b185959537c6d02e9e59a9658daa05b9ef56eb8ef03df1b8d97",
+        "schemaBundleRef": {
+          "id": "schema-bundle.minimal-agent",
+          "version": "1.1.0",
+          "contentHash": "sha256:d7e3c744278be6ee152775acef266907ef7823dcad3f41f9e6c2283c5d4938f0"
+        },
+        "dialect": "https://json-schema.org/draft/2020-12/schema",
+        "payloadMediaType": "application/json",
+        "payloadEncoding": "utf-8"
+      },
+      "fields": [
+        {
+          "path": "/stateVersion",
+          "meaning": {
+            "zh-CN": "应用增量后的状态版本。",
+            "en": "State version after applying the delta."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "internal"
+        },
+        {
+          "path": "/operation",
+          "meaning": {
+            "zh-CN": "状态变更操作。",
+            "en": "State mutation operation."
+          },
+          "required": true,
+          "nullable": false,
+          "classification": "internal"
+        },
+        {
+          "path": "/value",
+          "meaning": {
+            "zh-CN": "操作值；删除时为 null。",
+            "en": "Operation value; null for deletion."
+          },
+          "required": false,
+          "nullable": true,
+          "defaultValue": null,
+          "classification": "confidential"
+        }
+      ],
+      "unknownFieldPolicy": "reject"
+    }
+  ],
+  "channels": [
+    {
+      "channelId": "channel.chat-input",
+      "interaction": "message",
+      "producerRoleId": "role.chat-client-output",
+      "consumerRoleIds": [
+        "role.orchestrator-chat-input"
+      ],
+      "protocol": {
+        "protocolId": "wgp.message",
+        "protocolVersion": "v1",
+        "framingMediaType": "application/json",
+        "framingEncoding": "utf-8"
+      },
+      "reliability": {
+        "timeout": {
+          "durationMs": 30000,
+          "startsAt": "accepted",
+          "onTimeout": "retry"
+        },
+        "retry": {
+          "maxAttempts": 3,
+          "strategy": "exponential",
+          "initialDelayMs": 100,
+          "maxDelayMs": 2000,
+          "jitter": true,
+          "retryOn": [
+            "timeout",
+            "transportError"
+          ]
+        },
+        "idempotency": {
+          "mode": "required",
+          "keyPointer": "/messageId",
+          "scope": "channel",
+          "retentionMs": 86400000,
+          "duplicatePolicy": "returnPrevious"
+        },
+        "delivery": "atMostOnce",
+        "cancellation": {
+          "supported": true,
+          "propagation": "downstream",
+          "terminal": true,
+          "acknowledgementTimeoutMs": 5000
+        },
+        "errorHandling": {
+          "classificationField": "/classification",
+          "retryableField": "/retryable",
+          "terminalField": "/terminal",
+          "unknownError": {
+            "classification": "unknown",
+            "retryable": false,
+            "terminal": true
+          }
+        }
+      },
+      "message": {
+        "payloadStructureId": "structure.chat-message",
+        "errorStructureId": "structure.exchange-error",
+        "ordering": {
+          "mode": "none",
+          "gapPolicy": "fail"
+        }
+      },
+      "connectionCardinality": "one"
+    },
+    {
+      "channelId": "channel.chat-output",
+      "interaction": "stream",
+      "producerRoleId": "role.orchestrator-chat-output",
+      "consumerRoleIds": [
+        "role.chat-client-input"
+      ],
+      "protocol": {
+        "protocolId": "wgp.message",
+        "protocolVersion": "v1",
+        "framingMediaType": "application/json",
+        "framingEncoding": "utf-8"
+      },
+      "reliability": {
+        "timeout": {
+          "durationMs": 60000,
+          "startsAt": "lastProgress",
+          "onTimeout": "cancel"
+        },
+        "retry": {
+          "maxAttempts": 1,
+          "strategy": "none",
+          "initialDelayMs": 0,
+          "maxDelayMs": 0,
+          "jitter": false,
+          "retryOn": []
+        },
+        "idempotency": {
+          "mode": "none",
+          "duplicatePolicy": "accept"
+        },
+        "delivery": "atMostOnce",
+        "cancellation": {
+          "supported": true,
+          "propagation": "downstream",
+          "terminal": true,
+          "acknowledgementTimeoutMs": 5000
+        },
+        "errorHandling": {
+          "classificationField": "/classification",
+          "retryableField": "/retryable",
+          "terminalField": "/terminal",
+          "unknownError": {
+            "classification": "unknown",
+            "retryable": false,
+            "terminal": true
+          }
+        }
+      },
+      "stream": {
+        "chunk": {
+          "structureId": "structure.assistant-chunk",
+          "maxBytes": 65536
+        },
+        "end": {
+          "structureId": "structure.stream-end",
+          "required": true,
+          "exactlyOnce": true
+        },
+        "error": {
+          "structureId": "structure.exchange-error",
+          "terminal": true,
+          "partialDataPolicy": "retainMarkedIncomplete"
+        },
+        "ordering": {
+          "mode": "total",
+          "sequenceField": "/sequence",
+          "gapPolicy": "fail"
+        },
+        "backpressure": {
+          "strategy": "window",
+          "maxInFlight": 16,
+          "overflowPolicy": "block",
+          "acknowledgement": "window"
+        }
+      },
+      "connectionCardinality": "one"
+    },
+    {
+      "channelId": "channel.model-request",
+      "interaction": "message",
+      "producerRoleId": "role.orchestrator-model-output",
+      "consumerRoleIds": [
+        "role.model-provider-input"
+      ],
+      "protocol": {
+        "protocolId": "wgp.model",
+        "protocolVersion": "v1",
+        "framingMediaType": "application/json",
+        "framingEncoding": "utf-8"
+      },
+      "reliability": {
+        "timeout": {
+          "durationMs": 120000,
+          "startsAt": "accepted",
+          "onTimeout": "retry"
+        },
+        "retry": {
+          "maxAttempts": 3,
+          "strategy": "exponential",
+          "initialDelayMs": 500,
+          "maxDelayMs": 5000,
+          "jitter": true,
+          "retryOn": [
+            "timeout",
+            "transportError",
+            "retryableError"
+          ]
+        },
+        "idempotency": {
+          "mode": "required",
+          "keyPointer": "/requestId",
+          "scope": "channel",
+          "retentionMs": 86400000,
+          "duplicatePolicy": "returnPrevious"
+        },
+        "delivery": "atMostOnce",
+        "cancellation": {
+          "supported": true,
+          "propagation": "downstream",
+          "terminal": true,
+          "acknowledgementTimeoutMs": 5000
+        },
+        "errorHandling": {
+          "classificationField": "/classification",
+          "retryableField": "/retryable",
+          "terminalField": "/terminal",
+          "unknownError": {
+            "classification": "unknown",
+            "retryable": false,
+            "terminal": true
+          }
+        }
+      },
+      "message": {
+        "payloadStructureId": "structure.model-request",
+        "errorStructureId": "structure.exchange-error",
+        "ordering": {
+          "mode": "none",
+          "gapPolicy": "fail"
+        }
+      },
+      "connectionCardinality": "one"
+    },
+    {
+      "channelId": "channel.model-response",
+      "interaction": "message",
+      "producerRoleId": "role.model-provider-output",
+      "consumerRoleIds": [
+        "role.orchestrator-model-input"
+      ],
+      "protocol": {
+        "protocolId": "wgp.model",
+        "protocolVersion": "v1",
+        "framingMediaType": "application/json",
+        "framingEncoding": "utf-8"
+      },
+      "reliability": {
+        "timeout": {
+          "durationMs": 120000,
+          "startsAt": "accepted",
+          "onTimeout": "error"
+        },
+        "retry": {
+          "maxAttempts": 1,
+          "strategy": "none",
+          "initialDelayMs": 0,
+          "maxDelayMs": 0,
+          "jitter": false,
+          "retryOn": []
+        },
+        "idempotency": {
+          "mode": "none",
+          "duplicatePolicy": "accept"
+        },
+        "delivery": "atMostOnce",
+        "cancellation": {
+          "supported": true,
+          "propagation": "downstream",
+          "terminal": true,
+          "acknowledgementTimeoutMs": 5000
+        },
+        "errorHandling": {
+          "classificationField": "/classification",
+          "retryableField": "/retryable",
+          "terminalField": "/terminal",
+          "unknownError": {
+            "classification": "unknown",
+            "retryable": false,
+            "terminal": true
+          }
+        }
+      },
+      "message": {
+        "payloadStructureId": "structure.model-response",
+        "errorStructureId": "structure.exchange-error",
+        "ordering": {
+          "mode": "none",
+          "gapPolicy": "fail"
+        }
+      },
+      "connectionCardinality": "one"
+    },
+    {
+      "channelId": "channel.lifecycle-events",
+      "interaction": "event",
+      "producerRoleId": "role.orchestrator-event-output",
+      "consumerRoleIds": [
+        "role.observer-event-input"
+      ],
+      "protocol": {
+        "protocolId": "wgp.lifecycle",
+        "protocolVersion": "v1",
+        "framingMediaType": "application/json",
+        "framingEncoding": "utf-8"
+      },
+      "reliability": {
+        "timeout": {
+          "durationMs": 10000,
+          "startsAt": "accepted",
+          "onTimeout": "retry"
+        },
+        "retry": {
+          "maxAttempts": 3,
+          "strategy": "fixed",
+          "initialDelayMs": 250,
+          "maxDelayMs": 250,
+          "jitter": false,
+          "retryOn": [
+            "timeout",
+            "transportError"
+          ]
+        },
+        "idempotency": {
+          "mode": "required",
+          "keyPointer": "/eventId",
+          "scope": "channel",
+          "retentionMs": 86400000,
+          "duplicatePolicy": "returnPrevious"
+        },
+        "delivery": "effectivelyOnce",
+        "cancellation": {
+          "supported": false,
+          "propagation": "none",
+          "terminal": true
+        },
+        "errorHandling": {
+          "classificationField": "/classification",
+          "retryableField": "/retryable",
+          "terminalField": "/terminal",
+          "unknownError": {
+            "classification": "unknown",
+            "retryable": false,
+            "terminal": true
+          }
+        }
+      },
+      "event": {
+        "eventStructureId": "structure.lifecycle-event",
+        "errorStructureId": "structure.exchange-error",
+        "ordering": {
+          "mode": "perProducer",
+          "sequenceField": "/sequence",
+          "gapPolicy": "buffer"
+        }
+      },
+      "connectionCardinality": "many"
+    },
+    {
+      "channelId": "channel.conversation-state",
+      "interaction": "state",
+      "producerRoleId": "role.orchestrator-state-output",
+      "consumerRoleIds": [
+        "role.state-store-input"
+      ],
+      "protocol": {
+        "protocolId": "wgp.state",
+        "protocolVersion": "v1",
+        "framingMediaType": "application/json",
+        "framingEncoding": "utf-8"
+      },
+      "reliability": {
+        "timeout": {
+          "durationMs": 15000,
+          "startsAt": "accepted",
+          "onTimeout": "retry"
+        },
+        "retry": {
+          "maxAttempts": 3,
+          "strategy": "exponential",
+          "initialDelayMs": 100,
+          "maxDelayMs": 1000,
+          "jitter": true,
+          "retryOn": [
+            "timeout",
+            "transportError"
+          ]
+        },
+        "idempotency": {
+          "mode": "required",
+          "keyPointer": "/stateVersion",
+          "scope": "session",
+          "retentionMs": 86400000,
+          "duplicatePolicy": "returnPrevious"
+        },
+        "delivery": "atMostOnce",
+        "cancellation": {
+          "supported": false,
+          "propagation": "none",
+          "terminal": true
+        },
+        "errorHandling": {
+          "classificationField": "/classification",
+          "retryableField": "/retryable",
+          "terminalField": "/terminal",
+          "unknownError": {
+            "classification": "unknown",
+            "retryable": false,
+            "terminal": true
+          }
+        }
+      },
+      "state": {
+        "snapshotStructureId": "structure.state-snapshot",
+        "deltaStructureId": "structure.state-delta",
+        "errorStructureId": "structure.exchange-error",
+        "ordering": {
+          "mode": "total",
+          "sequenceField": "/stateVersion",
+          "gapPolicy": "fail"
+        },
+        "consistency": "strong",
+        "conflictPolicy": "reject",
+        "versionField": "/stateVersion"
+      },
+      "connectionCardinality": "one"
+    }
+  ],
+  "compatibility": {
+    "mode": "backward",
+    "unknownFieldPolicy": "reject",
+    "fieldRemoval": "majorVersionOnly",
+    "semanticChange": "majorVersionOnly",
+    "protocolChange": "majorVersionOnly"
+  }
+}

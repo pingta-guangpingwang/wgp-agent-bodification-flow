@@ -27,14 +27,35 @@ body:
     attributes:
       label: Interchangeability evidence / 互换证据
       description: Select only for a directed A→B assessment under one pinned CompatibilityProfile; this is independent from C0–C3.
-      options: [Not assessed, I0 Closed, I1 Adapter-wrapped, I2 Interface-conformant, I3 Behavior-verified, I4 Evidence-backed controlled interchangeability]
+      options: [Not assessed, I0 Closed, I1 Contract-exposed, I2 Data-aligned, I3 Chain-verified, I4 Evidence-backed controlled interchangeability]
     validations:
       required: true
   - type: textarea
     id: exact-references
     attributes:
       label: Exact releases and profile / 精确发布与 Profile
-      description: Provide id + version + contentHash for the baseline, candidate, package, profile, suite, and report when applicable. Do not use latest or a version range.
+      description: Provide id + version + contentHash for the baseline, candidate, ModuleDataContract, package, profile, suite, and report when applicable. Do not use latest or a version range.
+    validations:
+      required: true
+  - type: input
+    id: contract-binding
+    attributes:
+      label: Contract binding / 契约绑定
+      description: Provide the recipe ID, contract binding ID, and directed producer→consumer endpoint pair.
+    validations:
+      required: true
+  - type: dropdown
+    id: compatibility-method
+    attributes:
+      label: Schema-compatibility method / Schema 兼容证明方法
+      options: [Exact contract digest, Bounded compatibility checker, Exact adapter with scoped execution evidence, Not claimed]
+    validations:
+      required: true
+  - type: input
+    id: evidence-window
+    attributes:
+      label: Runtime-stability evidence window / 运行稳定证据时窗
+      description: State the environment, assessedAt, expiresAt, and whether any supporting report is revoked.
     validations:
       required: true
   - type: textarea

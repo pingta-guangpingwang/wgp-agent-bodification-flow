@@ -1,8 +1,9 @@
 {
-  "format": "wgp-runtime-event/0.5",
+  "format": "wgp-runtime-event/0.6",
   "eventId": "99999999-9999-4999-8999-999999999999",
   "runId": "run.invalid-legacy-time",
   "sequence": 0,
+  "occurredAt": "2026-08-26T10:00:00Z",
   "timestamp": "2026-08-26T10:00:00Z",
   "eventType": "run.started",
   "storageClass": "durable",
@@ -10,11 +11,25 @@
   "replayRole": "input",
   "producer": {
     "name": "invalid-example",
-    "version": "0.5.0",
-    "instanceId": "runtime.invalid"
+    "version": "0.6.0",
+    "instanceId": "runtime.invalid",
+    "artifactRef": {
+      "artifactId": "artifact.invalid-runtime",
+      "version": "0.6.0",
+      "contentHash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    }
   },
   "subject": {
-    "abirId": "agent.example"
+    "abirRef": {
+      "id": "agent.example",
+      "version": "0.6.0",
+      "contentHash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+    },
+    "recipeRef": {
+      "id": "recipe.example",
+      "version": "0.6.0",
+      "contentHash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc"
+    }
   },
   "payload": {},
   "redaction": {

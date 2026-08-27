@@ -1,0 +1,14 @@
+{
+  "contractPath": "examples/minimal-agent/module-data-contract.json",
+  "channelId": "channel.model-request",
+  "producerRoleId": "role.orchestrator-model-output",
+  "consumerRoleId": "role.model-provider-input",
+  "sequence": [
+    { "phase": "accepted", "attempt": 1, "elapsedMs": 0, "idempotencyKey": "123e4567-e89b-42d3-a456-426614174000" },
+    { "phase": "timeout", "attempt": 1, "elapsedMs": 120000, "classification": "timeout", "retryable": true, "terminal": false },
+    { "phase": "retry", "attempt": 2, "elapsedMs": 120500, "reason": "timeout", "idempotencyKey": "123e4567-e89b-42d3-a456-426614174000" },
+    { "phase": "accepted", "attempt": 2, "elapsedMs": 120501, "idempotencyKey": "123e4567-e89b-42d3-a456-426614174000" },
+    { "phase": "duplicate", "attempt": 2, "elapsedMs": 120510, "idempotencyKey": "123e4567-e89b-42d3-a456-426614174000", "disposition": "returnPrevious", "sideEffectExecuted": false },
+    { "phase": "cancel", "attempt": 2, "elapsedMs": 120600, "propagation": "downstream", "acknowledgementMs": 250, "terminal": true }
+  ]
+}

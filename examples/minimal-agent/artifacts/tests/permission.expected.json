@@ -1,0 +1,12 @@
+{
+  "outcome": "passed",
+  "decision": "allow",
+  "requiredPolicyId": "policy.tool-approval",
+  "requiredDescriptorPartIds": [
+    "component.orchestrator-alternative",
+    "resource.model.deepseek"
+  ],
+  "requiredPermissionTupleCount": 2,
+  "promptRequired": true,
+  "secretValueExposed": false
+}
